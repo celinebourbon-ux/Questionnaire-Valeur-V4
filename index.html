@@ -18,25 +18,13 @@
   // Désactive le clic droit
   document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
 
-  // Désactive les raccourcis clavier de copie/sauvegarde/impression
+  // Désactive Ctrl+S (sauvegarder), Ctrl+U (voir source), F12 (outils dev)
   document.addEventListener('keydown', function(e) {
     const k = e.key.toLowerCase();
     const ctrl = e.ctrlKey || e.metaKey;
-    // Ctrl+S (sauvegarder), Ctrl+U (source), Ctrl+A (tout sélectionner),
-    // Ctrl+P (imprimer page entière), Ctrl+C (copier), F12 (outils développeur)
-    if (ctrl && ['s','u','a','p','c'].includes(k)) { e.preventDefault(); return false; }
+    if (ctrl && ['s','u'].includes(k)) { e.preventDefault(); return false; }
     if (e.key === 'F12') { e.preventDefault(); return false; }
   });
-
-  // Désactive la sélection de texte par glisser-déposer
-  document.addEventListener('selectstart', e => { e.preventDefault(); return false; });
-
-  // Détection outils développeur (basique)
-  setInterval(function(){
-    const t = new Date();
-    debugger;
-    if (new Date() - t > 100) { document.body.innerHTML = ''; }
-  }, 3000);
 })();
 </script>
 
@@ -442,14 +430,6 @@ const CONFIG = {
   // Format : { token, label (affiché au participant), used }
   // Après ajout de tokens → redéployez sur Netlify (30 sec)
   TOKENS: [
-       { token: 'VALEUR-CELINE', label: 'Céline Bourbon', used: false },
-```
-
-**8.** Faites défiler tout en bas → section **"Commit changes"** → tapez `Ajout token Céline` → cliquez **"Commit changes"**
-
-**9.** Attendez 30 secondes → testez votre lien personnel :
-```
-https://questionnaire-valeur-psyh.netlify.app/?token=VALEUR-CELINE
     { token: 'V25-DEMO-0001', label: 'Participant démo',  used: false },
     { token: 'V25-ABCD-1234', label: 'Marie D.',          used: false },
     { token: 'V25-EFGH-5678', label: 'Jean-Paul M.',      used: false },
