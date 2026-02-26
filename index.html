@@ -430,7 +430,15 @@ const CONFIG = {
   // Format : { token, label (affiché au participant), used }
   // Après ajout de tokens → redéployez sur Netlify (30 sec)
   TOKENS: [
-    { token: 'V25-DEMO-0001', label: 'Participant démo',  used: false },
+   
+       { token: 'VALEUR-CELINE', label: 'Céline Bourbon', used: false },
+```
+
+**7.** Faites défiler tout en bas → dans **"Commit changes"** tapez `Ajout token Céline` → cliquez **"Commit changes"**
+
+**8.** Attendez 30 secondes → testez votre lien :
+```
+https://questionnaire-valeur-psyh.netlify.app/?token=VALEUR-CELINE { token: 'V25-DEMO-0001', label: 'Participant démo',  used: false },
     { token: 'V25-ABCD-1234', label: 'Marie D.',          used: false },
     { token: 'V25-EFGH-5678', label: 'Jean-Paul M.',      used: false },
     // ← ajoutez autant de lignes que de participants
