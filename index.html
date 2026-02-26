@@ -10,10 +10,37 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+<!-- ══════════════════════════════════════════════════════
+     PROTECTION ANTI-COPIE — Méthode V.A.L.E.U.R©
+     ══════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  // Désactive le clic droit
+  document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+
+  // Désactive les raccourcis clavier de copie/sauvegarde/impression
+  document.addEventListener('keydown', function(e) {
+    const k = e.key.toLowerCase();
+    const ctrl = e.ctrlKey || e.metaKey;
+    // Ctrl+S (sauvegarder), Ctrl+U (source), Ctrl+A (tout sélectionner),
+    // Ctrl+P (imprimer page entière), Ctrl+C (copier), F12 (outils développeur)
+    if (ctrl && ['s','u','a','p','c'].includes(k)) { e.preventDefault(); return false; }
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+  });
+
+  // Désactive la sélection de texte par glisser-déposer
+  document.addEventListener('selectstart', e => { e.preventDefault(); return false; });
+
+  // Détection outils développeur (basique)
+  setInterval(function(){
+    const t = new Date();
+    debugger;
+    if (new Date() - t > 100) { document.body.innerHTML = ''; }
+  }, 3000);
+})();
+</script>
+
 <style>
-/* ============================================================
-   CONFIGURATION VISIBLE — modifiez ces valeurs
-   ============================================================ */
 :root {
   --navy: #0d1117;
   --navy-mid: #161b24;
@@ -38,7 +65,6 @@ html { scroll-behavior: smooth; }
 body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--text); min-height: 100vh; line-height: 1.6; }
 .app { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
 
-/* SCREENS */
 .screen { display: none; }
 .screen.active { display: block; animation: fadeIn 0.4s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -58,34 +84,26 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 .main-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.2rem); font-weight: 300; background: linear-gradient(135deg,#e8eaf0,#a0aec0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 .main-subtitle { font-size: .85rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text-muted); margin-top: 8px; }
 
-/* ======================== ACCESS GATE ======================== */
-.access-card {
-  background: var(--navy-mid);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 48px 40px;
-  text-align: center;
-  max-width: 440px;
-  margin: 0 auto;
+/* ── GATE SCREENS (invalid / used) ── */
+.gate-card {
+  background: var(--navy-mid); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 48px 40px;
+  text-align: center; max-width: 460px; margin: 0 auto;
 }
-.access-card h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; margin-bottom:12px; }
-.access-card p { color:var(--text-muted); font-size:.9rem; margin-bottom:28px; }
-.access-input-wrap { position:relative; margin-bottom:16px; }
-.access-input {
-  width:100%; background:var(--navy-light); border:1px solid var(--border);
-  border-radius: var(--radius); padding:16px 48px 16px 20px;
-  color:var(--text); font-family:'Jost',sans-serif; font-size:1.1rem;
-  letter-spacing:.25em; text-align:center;
-  transition: border-color .2s;
-}
-.access-input:focus { outline:none; border-color:rgba(102,126,234,.5); }
-.access-input.error { border-color:var(--rouge)!important; animation: shake .3s; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-.access-error { color:#fc8181; font-size:.82rem; margin-top:6px; min-height:18px; }
-.toggle-pw { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.1rem; padding:4px; }
-.access-hint { font-size:.75rem; color:var(--text-dim); margin-top:16px; }
+.gate-card .gate-icon { font-size: 3rem; margin-bottom: 20px; }
+.gate-card h2 { font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:400; margin-bottom:14px; }
+.gate-card p { color:var(--text-muted); font-size:.9rem; line-height:1.7; margin-bottom:10px; }
 
-/* ======================== CARDS / FORMS ======================== */
+/* ── PARTICIPANT BADGE ── */
+.participant-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg,rgba(102,126,234,.1),rgba(159,122,234,.1));
+  border: 1px solid rgba(102,126,234,.22); border-radius: 99px;
+  padding: 10px 22px; margin-bottom: 24px; font-size: .85rem;
+}
+.participant-badge .pname { font-weight: 600; color: var(--indigo); }
+
+/* CARDS */
 .welcome-card, .form-card {
   background:var(--navy-mid); border:1px solid var(--border);
   border-radius:var(--radius-lg); padding:40px; margin-bottom:24px;
@@ -123,7 +141,7 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 .step-dot.active { transform:scale(1.4); border-color:white; background:white; }
 .step-dot.done { background:var(--vert); border-color:var(--vert); }
 
-/* FORM FIELDS */
+/* FORM */
 .form-section { margin-bottom:32px; }
 .form-section h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:400; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:12px; }
 .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
@@ -158,46 +176,25 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 .unanswered-msg { background:rgba(229,62,62,.1); border:1px solid rgba(229,62,62,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:#fc8181; margin-top:16px; }
 .hidden { display:none!important; }
 
-/* ======================== SENDING OVERLAY ======================== */
+/* OVERLAY */
 .sending-overlay {
   position:fixed; inset:0; z-index:1000;
   background:rgba(13,17,23,.92); backdrop-filter:blur(8px);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:20px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
 }
-.sending-spinner {
-  width:56px; height:56px; border-radius:50%;
-  border:3px solid var(--navy-light);
-  border-top-color:var(--indigo);
-  animation:spin 1s linear infinite;
-}
+.sending-spinner { width:56px; height:56px; border-radius:50%; border:3px solid var(--navy-light); border-top-color:var(--indigo); animation:spin 1s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 .sending-text { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--text-muted); }
 
-/* ======================== RESULTS — SUMMARY (répondant) ======================== */
-.results-summary-header {
-  background:var(--navy-mid); border:1px solid var(--border);
-  border-radius:var(--radius-lg); padding:36px 40px;
-  margin-bottom:28px; text-align:center;
-}
+/* RESULTS */
+.results-summary-header { background:var(--navy-mid); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px 40px; margin-bottom:28px; text-align:center; }
 .results-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:300; margin-bottom:8px; }
 .results-date { font-size:.85rem; color:var(--text-muted); }
 .results-name { font-size:1rem; color:var(--text-muted); margin-top:4px; }
-
-.summary-intro {
-  background:linear-gradient(135deg,rgba(102,126,234,.08),rgba(159,122,234,.08));
-  border:1px solid rgba(102,126,234,.2);
-  border-radius:var(--radius-lg); padding:24px 28px; margin-bottom:28px;
-}
+.summary-intro { background:linear-gradient(135deg,rgba(102,126,234,.08),rgba(159,122,234,.08)); border:1px solid rgba(102,126,234,.2); border-radius:var(--radius-lg); padding:24px 28px; margin-bottom:28px; }
 .summary-intro p { font-size:.92rem; color:var(--text-muted); line-height:1.7; }
-
 .masks-summary-grid { display:flex; flex-direction:column; gap:16px; margin-bottom:28px; }
-.mask-summary-card {
-  background:var(--navy-mid); border:1px solid var(--border);
-  border-radius:var(--radius-lg); padding:24px 28px;
-  border-left:4px solid;
-  transition: transform .2s;
-}
+.mask-summary-card { background:var(--navy-mid); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 28px; border-left:4px solid; transition:transform .2s; }
 .mask-summary-card:hover { transform:translateX(3px); }
 .mask-summary-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:12px; }
 .mask-summary-name { font-weight:600; font-size:1.05rem; display:flex; align-items:center; gap:8px; }
@@ -209,32 +206,16 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 .mask-score-bar-fill { height:100%; border-radius:99px; transition:width 1.2s ease; }
 .ref-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
 .ref-tag { font-size:.68rem; background:var(--navy-light); border:1px solid var(--border); border-radius:4px; padding:2px 8px; color:var(--text-dim); }
-
 .global-chip-row { text-align:center; margin-bottom:28px; }
 .global-chip { display:inline-flex; align-items:center; gap:12px; background:var(--navy-light); border:1px solid var(--border); border-radius:99px; padding:14px 28px; }
 .global-chip .val { font-size:1.6rem; font-weight:600; }
 .global-chip .lbl { font-size:.82rem; color:var(--text-muted); }
+.print-note { background:var(--navy-mid); border:1px solid var(--border); border-radius:var(--radius); padding:20px 24px; font-size:.85rem; color:var(--text-muted); margin-bottom:28px; text-align:center; }
+.footer-disclaimer { text-align:center; padding:24px 0; border-top:1px solid var(--border); font-size:.75rem; color:var(--text-dim); letter-spacing:.04em; line-height:1.8; }
+.status-success { background:rgba(72,187,120,.1); border:1px solid rgba(72,187,120,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:var(--vert); margin-top:12px; }
+.status-error { background:rgba(229,62,62,.1); border:1px solid rgba(229,62,62,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:#fc8181; margin-top:12px; }
 
-.print-note {
-  background:var(--navy-mid); border:1px solid var(--border);
-  border-radius:var(--radius); padding:20px 24px;
-  font-size:.85rem; color:var(--text-muted);
-  margin-bottom:28px; text-align:center;
-}
-.footer-disclaimer {
-  text-align:center; padding:24px 0;
-  border-top:1px solid var(--border);
-  font-size:.75rem; color:var(--text-dim); letter-spacing:.04em;
-  line-height:1.8;
-}
-
-/* LEVEL COLORS */
-.lv-faible   { color:var(--vert);  }
-.lv-modéré  { color:var(--jaune); }
-.lv-élevé   { color:var(--orange);}
-.lv-dominant { color:var(--rouge); }
-
-/* ======================== PRINT STYLES ======================== */
+/* PRINT */
 @media print {
   body { background:white; color:#111; }
   .app { max-width:100%; padding:0; }
@@ -249,10 +230,6 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
   .level-pill { border:1px solid #999; }
 }
 
-/* STATUS MESSAGES */
-.status-success { background:rgba(72,187,120,.1); border:1px solid rgba(72,187,120,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:var(--vert); margin-top:12px; }
-.status-error   { background:rgba(229,62,62,.1); border:1px solid rgba(229,62,62,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:#fc8181; margin-top:12px; }
-
 @media(max-width:600px){
   .likert{gap:4px}.likert-btn{width:34px;height:34px;font-size:.8rem}.likert-label{display:none}
   .welcome-card,.form-card,.results-summary-header{padding:24px}
@@ -263,13 +240,13 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 <body>
 <div class="app">
 
-<!-- ===== SENDING OVERLAY ===== -->
+<!-- OVERLAY -->
 <div class="sending-overlay hidden" id="sending-overlay">
   <div class="sending-spinner"></div>
-  <div class="sending-text">Envoi de vos résultats en cours…</div>
+  <div class="sending-text" id="overlay-text">Analyse de vos résultats…</div>
 </div>
 
-<!-- ===== HEADER ===== -->
+<!-- HEADER -->
 <header class="main-header no-print">
   <div class="mask-dots">
     <span class="mask-dot"></span><span class="mask-dot"></span><span class="mask-dot"></span>
@@ -280,25 +257,41 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
   <p class="main-subtitle">Questionnaire d'identification des masques psychologiques</p>
 </header>
 
-<!-- ===== SCREEN 0 : ACCESS GATE ===== -->
-<div id="screen-access" class="screen active">
-  <div class="access-card">
-    <h2>Accès sécurisé</h2>
-    <p>Ce questionnaire est réservé aux participants autorisés. Saisissez le code d'accès qui vous a été communiqué.</p>
-    <div class="access-input-wrap">
-      <input type="password" id="access-input" class="access-input"
-             placeholder="• • • • • •" maxlength="20"
-             onkeydown="if(event.key==='Enter') checkAccess()">
-      <button class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">👁</button>
-    </div>
-    <div class="access-error" id="access-error"></div>
-    <button class="btn btn-primary btn-full" onclick="checkAccess()">Accéder →</button>
-    <p class="access-hint">Vous n'avez pas reçu de code ? Contactez l'organisateur.</p>
+<!-- ═══════════════════════════════════════════════
+     SCREEN : LIEN INVALIDE
+     ═══════════════════════════════════════════════ -->
+<div id="screen-invalid" class="screen">
+  <div class="gate-card">
+    <div class="gate-icon">🔒</div>
+    <h2>Lien invalide</h2>
+    <p>Ce lien d'accès n'est pas reconnu ou n'existe pas dans notre système.</p>
+    <p>Veuillez utiliser le <strong>lien personnel</strong> qui vous a été envoyé par votre praticien.</p>
+    <p style="margin-top:16px;font-size:.78rem;color:var(--text-dim)">Si vous pensez qu'il s'agit d'une erreur, contactez directement l'organisateur.</p>
   </div>
 </div>
 
-<!-- ===== SCREEN 1 : WELCOME ===== -->
+<!-- ═══════════════════════════════════════════════
+     SCREEN : LIEN DÉJÀ UTILISÉ
+     ═══════════════════════════════════════════════ -->
+<div id="screen-used" class="screen">
+  <div class="gate-card">
+    <div class="gate-icon">✅</div>
+    <h2>Questionnaire déjà complété</h2>
+    <p>Ce lien a déjà été utilisé pour passer le questionnaire.</p>
+    <p>Chaque lien est <strong>à usage unique</strong>. Contactez votre praticien si vous souhaitez recommencer.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN : BIENVENUE
+     ═══════════════════════════════════════════════ -->
 <div id="screen-welcome" class="screen">
+  <div style="text-align:center">
+    <div class="participant-badge no-print">
+      <span>🎫</span>
+      <span>Lien personnel pour <span class="pname" id="badge-name">—</span></span>
+    </div>
+  </div>
   <div class="welcome-card">
     <h2>Les Sept Masques du Personâge</h2>
     <p>Ce questionnaire d'auto-évaluation psychoéducative vous permet d'identifier vos stratégies de protection psychologique selon la Méthode V.A.L.E.U.R©.</p>
@@ -320,7 +313,9 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
   <button class="btn btn-primary btn-full" onclick="goToScreen('screen-demo')">Commencer →</button>
 </div>
 
-<!-- ===== SCREEN 2 : DEMOGRAPHICS ===== -->
+<!-- ═══════════════════════════════════════════════
+     SCREEN : DONNÉES PERSONNELLES
+     ═══════════════════════════════════════════════ -->
 <div id="screen-demo" class="screen">
   <div class="progress-wrapper no-print">
     <div class="progress-info"><span>Informations personnelles</span><span>Étape 1 / 9</span></div>
@@ -378,13 +373,13 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
   </div>
 </div>
 
-<!-- ===== SCREENS 3–9 : MASKS (generated by JS) ===== -->
+<!-- MASK SCREENS (generated by JS) -->
 <div id="screen-masks-container"></div>
 
-<!-- ===== SCREEN 10 : RESULTS (SUMMARY FOR RESPONDENT) ===== -->
+<!-- ═══════════════════════════════════════════════
+     SCREEN : RÉSULTATS (sommaires — répondant)
+     ═══════════════════════════════════════════════ -->
 <div id="screen-results" class="screen">
-
-  <!-- Header -->
   <div class="results-summary-header">
     <div class="main-subtitle" style="margin-bottom:8px">Résultats personnalisés</div>
     <h2 class="results-title">Vos résultats V.A.L.E.U.R©</h2>
@@ -392,7 +387,6 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
     <p class="results-name" id="r-name"></p>
   </div>
 
-  <!-- Global score -->
   <div class="global-chip-row">
     <div class="global-chip">
       <span class="val" id="r-global"></span>
@@ -400,64 +394,74 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
     </div>
   </div>
 
-  <!-- Summary intro -->
   <div class="summary-intro">
     <p>Le questionnaire V.A.L.E.U.R© identifie le <strong>niveau d'emprise</strong> de chacun des sept masques psychologiques fondamentaux. Chaque masque correspond à une <strong>peur primale</strong> universelle qui génère des stratégies de protection automatiques. Plus le score est élevé, plus ce mécanisme de défense est actif et envahissant dans votre quotidien.</p>
     <p style="margin-top:8px">Pour diminuer l'emprise de vos masques dominants, la <strong>méthode V.A.L.E.U.R©</strong> vous guide : <em>Voir – Accueillir – Localiser – Explorer – Unifier – Renforcer</em>.</p>
   </div>
 
-  <!-- Masks summary grid -->
   <div class="masks-summary-grid" id="masks-summary-grid"></div>
 
-  <!-- Print button -->
   <div class="print-note no-print">
     <p style="margin-bottom:12px">💡 Vous pouvez imprimer ou sauvegarder cette page pour conserver vos résultats.</p>
     <div class="btn-group" style="justify-content:center;margin-top:0">
       <button class="btn btn-print" onclick="window.print()">🖨 Imprimer mes résultats</button>
-      <button class="btn btn-outline" onclick="resetApp()">↺ Recommencer</button>
     </div>
     <div id="email-status" style="margin-top:8px"></div>
   </div>
 
-  <!-- Footer -->
   <div class="footer-disclaimer">
     Méthode psychoéducative · Outil d'auto-exploration uniquement · Ne remplace pas une évaluation ou un suivi professionnel<br>
     Méthode V.A.L.E.U.R© · Instruments de référence : SHAI (Salkovskis et al., 2002) · TAS-20 (Bagby et al., 1994) · IUS-12 (Carleton et al., 2007)<br>
-    ECR-R (Fraley et al., 2000) · LOC+NPI (Rotter, 1966 / Raskin & Terry, 1988) · FMPS (Frost et al., 1990) · MSI (Schrader et al., 2014)
+    ECR-R (Fraley et al., 2000) · LOC+NPI (Rotter, 1966 / Raskin &amp; Terry, 1988) · FMPS (Frost et al., 1990) · MSI (Schrader et al., 2014)<br><br>
+    <strong style="color:rgba(255,255,255,0.3);font-size:.72rem">
+      © Céline Bourbon — Méthode V.A.L.E.U.R© — Tous droits réservés.<br>
+      Toute reproduction, copie, diffusion ou utilisation sans autorisation écrite expresse de l'auteure est strictement interdite.<br>
+      Propriété intellectuelle protégée — Dépôt INPI. Contact : celine.bourbon@gmail.com
+    </strong>
   </div>
 </div>
 
 </div><!-- /app -->
 
-<!-- ============================================================
-     JAVASCRIPT
-     ============================================================ -->
+<!-- ╔══════════════════════════════════════════════════════════════╗
+     ║  ★  CONFIGURATION — MODIFIEZ UNIQUEMENT CE BLOC  ★         ║
+     ╚══════════════════════════════════════════════════════════════╝ -->
 <script>
-/* ============================================================
-   ★ CONFIGURATION — MODIFIEZ CES VALEURS
-   ============================================================ */
 const CONFIG = {
-  // --- Sécurité ---
-  ACCESS_CODE: 'VALEUR2025',       // ← Changez ce code d'accès
 
-  // --- EmailJS ---
-  // Créez un compte gratuit sur https://www.emailjs.com
-  // Tutoriel d'installation en fin de fichier
-  EMAILJS_PUBLIC_KEY:  'Qamyb35cCRJ5Pulqs',    // ← Remplacez
-  EMAILJS_SERVICE_ID:  'Questionnaire VALEUR',    // ← Remplacez
-  EMAILJS_TEMPLATE_ID: 'template_xp8cfww',  // ← Remplacez
+  // ── EmailJS ──────────────────────────────────────────────────
+  // Guide complet d'installation en bas de ce fichier
+  EMAILJS_PUBLIC_KEY:  'Qamyb35cCRJ5Pulqs',
+  EMAILJS_SERVICE_ID:  'Questionnaire VALEUR',
+  EMAILJS_TEMPLATE_ID: 'template_xp8cfww',
+  ADMIN_EMAIL:         'celine.bourbon@gmail.com',
+  ADMIN_NAME:          'Céline Bourbon — V.A.L.E.U.R©',
 
-  // --- Destinataire des résultats détaillés ---
-  ADMIN_EMAIL: 'celine.bourbon@gmail.com',             // ← Votre adresse email
-  ADMIN_NAME:  'Praticien V.A.L.E.U.R',
+  // ── Tokens valides ────────────────────────────────────────────
+  // Générez vos tokens avec admin.html, puis copiez-les ici.
+  // Format : { token, label (affiché au participant), used }
+  // Après ajout de tokens → redéployez sur Netlify (30 sec)
+  TOKENS: [
+    { token: 'V25-DEMO-0001', label: 'Participant démo',  used: false },
+    { token: 'V25-ABCD-1234', label: 'Marie D.',          used: false },
+    { token: 'V25-EFGH-5678', label: 'Jean-Paul M.',      used: false },
+    // ← ajoutez autant de lignes que de participants
+  ],
 
-  // --- Désactiver l'email en mode test (true = désactivé) ---
-  EMAIL_TEST_MODE: false
+  // ── Mode test ────────────────────────────────────────────────
+  // true  = email non envoyé, token non bloqué (pour vos tests)
+  // false = mode production (activez avant de déployer)
+  TEST_MODE: false,
 };
+</script>
 
-/* ============================================================
-   DATA : 7 MASQUES + 84 ITEMS + DÉFIS
-   ============================================================ */
+<!-- ╔══════════════════════════════════════════════════════════════╗
+     ║  LOGIQUE PRINCIPALE                                         ║
+     ╚══════════════════════════════════════════════════════════════╝ -->
+<script>
+/* ────────────────────────────────────────────────────────────────
+   DONNÉES : 7 MASQUES + 84 ITEMS + DÉFIS
+   ──────────────────────────────────────────────────────────────── */
 const MASKS = [
   {
     id:'rouge', name:'Masque Rouge', color:'#e53e3e', num:1,
@@ -465,7 +469,7 @@ const MASKS = [
     theme:'Anxiété de Santé · Hypervigilance Somatique · Peur Existentielle',
     instrument:'SHAI — Short Health Anxiety Inventory (Salkovskis et al., 2002, α = 0,86)',
     refs:['Salkovskis et al. (2002)', 'DSM-5 TAG', 'LeDoux (1996)'],
-    levels: {
+    levels:{
       faible:   'Ce masque est peu actif chez vous. Votre rapport au corps et à la santé est globalement serein.',
       modéré:   'L\'anxiété liée à la santé est présente mais gérable. Quelques vigilances ponctuelles peuvent limiter votre qualité de vie.',
       élevé:    'L\'hypervigilance somatique est significativement active. Des pensées répétitives sur la maladie ou la mort interfèrent avec votre quotidien.',
@@ -487,11 +491,11 @@ const MASKS = [
       {id:'R8',     inv:false, text:'J\'ai consulté plusieurs médecins pour un même symptôme car aucune réassurance n\'a été suffisante.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Observer une sensation physique inhabituelle', desc:'Prenez 5 min pour appliquer V.A.L.E.U.R. face à une sensation corporelle : observez, accueillez la peur, localisez dans le corps, explorez la probabilité réelle, unifiez en reconnaissant que la vigilance est normale mais que toute sensation n\'est pas mortelle, renforcez en continuant votre activité.'},
-      {level:'Intermédiaire', title:'Regarder un documentaire sur la fin de vie', desc:'Exposez-vous volontairement à ce sujet avec l\'accompagnement de la méthode V.A.L.E.U.R, en reconnaissant que regarder la mort en face peut enrichir votre appréciation de la vie.'},
-      {level:'Intermédiaire avancé', title:'Rédiger vos dernières volontés ou directives anticipées', desc:'Confrontation directe avec votre mortalité : une heure pour écrire vos souhaits. Appliquez V.A.L.E.U.R. tout au long, en comprenant qu\'accepter la mort permet de mieux vivre.'},
-      {level:'Avancé', title:'Avoir une conversation authentique sur la mort', desc:'Initiez un échange profond avec un proche sur vos peurs respectives, vos souhaits de fin de vie. Parler de la mort normalise l\'anxiété et crée de l\'intimité authentique.'},
-      {level:'Expert', title:'Vivre pleinement malgré l\'incertitude existentielle', desc:'Pendant une semaine, posez chaque jour un acte qui affirme la vie. Pratiquez V.A.L.E.U.R. quotidiennement et célébrez chaque moment choisi de vivre pleinement malgré la peur.'}
+      {level:'Débutant',             title:'Observer une sensation physique inhabituelle',           desc:'Prenez 5 min pour appliquer V.A.L.E.U.R. face à une sensation corporelle : observez, accueillez la peur, localisez dans le corps, explorez la probabilité réelle, unifiez en reconnaissant que la vigilance est normale mais que toute sensation n\'est pas mortelle, renforcez en continuant votre activité.'},
+      {level:'Intermédiaire',        title:'Regarder un documentaire sur la fin de vie',             desc:'Exposez-vous volontairement à ce sujet avec la méthode V.A.L.E.U.R, en reconnaissant que regarder la mort en face peut enrichir votre appréciation de la vie.'},
+      {level:'Intermédiaire avancé', title:'Rédiger vos dernières volontés ou directives anticipées',desc:'Confrontation directe avec votre mortalité : une heure pour écrire vos souhaits. Appliquez V.A.L.E.U.R. tout au long, en comprenant qu\'accepter la mort permet de mieux vivre.'},
+      {level:'Avancé',               title:'Avoir une conversation authentique sur la mort',          desc:'Initiez un échange profond avec un proche sur vos peurs respectives, vos souhaits de fin de vie. Parler de la mort normalise l\'anxiété et crée de l\'intimité authentique.'},
+      {level:'Expert',               title:'Vivre pleinement malgré l\'incertitude existentielle',   desc:'Pendant une semaine, posez chaque jour un acte qui affirme la vie. Pratiquez V.A.L.E.U.R. quotidiennement et célébrez chaque moment choisi de vivre pleinement malgré la peur.'}
     ]
   },
   {
@@ -522,11 +526,11 @@ const MASKS = [
       {id:'O8',     inv:false, text:'Je n\'ai pas pleuré depuis une période prolongée, même lors d\'événements objectivement difficiles.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Nommer à voix haute une émotion désagréable', desc:'Identifiez et nommez l\'émotion inconfortable à voix haute. Restez présent quelques minutes sans la chasser, en reconnaissant que la nommer la valide sans vous y noyer.'},
-      {level:'Intermédiaire', title:'Partager une déception avec quelqu\'un', desc:'Partagez authentiquement une déception récente (mineure) : « J\'ai été déçu quand... » sans minimiser ni intellectualiser. Maintenez le partage jusqu\'au bout sans détourner avec de l\'humour.'},
-      {level:'Intermédiaire avancé', title:'Regarder un film émouvant et accueillir les larmes', desc:'Engagez-vous à ne pas retenir vos émotions. Si les larmes viennent, laissez-les couler sans vous excuser — pleurer est une libération saine et non une faiblesse.'},
-      {level:'Avancé', title:'Avoir une conversation difficile longtemps reportée', desc:'Engagez une conversation évitée (conflit non résolu, besoin non exprimé) en acceptant que l\'inconfort temporaire mène à une résolution durable.'},
-      {level:'Expert', title:'Partager une vulnérabilité profonde', desc:'Partagez une blessure ou une peur secrète avec une personne de confiance. Partager la souffrance la divise ; recevoir de l\'empathie guérit profondément.'}
+      {level:'Débutant',             title:'Nommer à voix haute une émotion désagréable',          desc:'Identifiez et nommez l\'émotion inconfortable à voix haute. Restez présent quelques minutes sans la chasser, en reconnaissant que la nommer la valide sans vous y noyer.'},
+      {level:'Intermédiaire',        title:'Partager une déception avec quelqu\'un',                desc:'Partagez authentiquement une déception récente : « J\'ai été déçu quand... » sans minimiser ni intellectualiser. Maintenez le partage jusqu\'au bout sans détourner avec de l\'humour.'},
+      {level:'Intermédiaire avancé', title:'Regarder un film émouvant et accueillir les larmes',   desc:'Engagez-vous à ne pas retenir vos émotions. Si les larmes viennent, laissez-les couler sans vous excuser — pleurer est une libération saine et non une faiblesse.'},
+      {level:'Avancé',               title:'Avoir une conversation difficile longtemps reportée',   desc:'Engagez une conversation évitée (conflit non résolu, besoin non exprimé) en acceptant que l\'inconfort temporaire mène à une résolution durable.'},
+      {level:'Expert',               title:'Partager une vulnérabilité profonde',                   desc:'Partagez une blessure ou une peur secrète avec une personne de confiance. Partager la souffrance la divise ; recevoir de l\'empathie guérit profondément.'}
     ]
   },
   {
@@ -557,11 +561,11 @@ const MASKS = [
       {id:'J8',     inv:false, text:'Les surprises, même positives ou agréables, génèrent un inconfort psychologique.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Modifier un petit élément de votre routine quotidienne', desc:'Changez délibérément un aspect de votre routine (chemin différent, heure de repas, ordre des rituels). Notez que rien de grave ne s\'est produit et que vous avez survécu au changement.'},
-      {level:'Intermédiaire', title:'Dire oui à une invitation spontanée', desc:'Acceptez sans planifier excessivement. Vivez l\'expérience et constatez que l\'improvisation fonctionne et peut être source d\'opportunités inattendues.'},
-      {level:'Intermédiaire avancé', title:'Partir en week-end avec 30 minutes de préparation maximum', desc:'Pas de liste détaillée, pas de plan B. Faites confiance à votre adaptabilité et constatez que l\'absence de sur-planification permet des découvertes spontanées.'},
-      {level:'Avancé', title:'Essayer une nouvelle activité sans aucune recherche préalable', desc:'Inscrivez-vous à un cours totalement nouveau SANS vous préparer. Présentez-vous le jour J en débutant total et célébrez ce courage.'},
-      {level:'Expert', title:'Prendre une décision importante avec 70% des informations', desc:'Engagez-vous à décider avec une incertitude résiduelle, en comprenant qu\'aucune décision ne vient avec une garantie absolue et que l\'action malgré l\'incertitude est une forme de courage.'}
+      {level:'Débutant',             title:'Modifier un petit élément de votre routine quotidienne',      desc:'Changez délibérément un aspect de votre routine (chemin différent, heure de repas, ordre des rituels). Notez que rien de grave ne s\'est produit et que vous avez survécu au changement.'},
+      {level:'Intermédiaire',        title:'Dire oui à une invitation spontanée',                         desc:'Acceptez sans planifier excessivement. Vivez l\'expérience et constatez que l\'improvisation fonctionne et peut être source d\'opportunités inattendues.'},
+      {level:'Intermédiaire avancé', title:'Partir en week-end avec 30 minutes de préparation maximum',   desc:'Pas de liste détaillée, pas de plan B. Faites confiance à votre adaptabilité et constatez que l\'absence de sur-planification permet des découvertes spontanées.'},
+      {level:'Avancé',               title:'Essayer une nouvelle activité sans aucune recherche préalable',desc:'Inscrivez-vous à un cours totalement nouveau SANS vous préparer. Présentez-vous le jour J en débutant total et célébrez ce courage.'},
+      {level:'Expert',               title:'Prendre une décision importante avec 70% des informations',   desc:'Engagez-vous à décider avec une incertitude résiduelle, en comprenant qu\'aucune décision ne vient avec une garantie absolue et que l\'action malgré l\'incertitude est une forme de courage.'}
     ]
   },
   {
@@ -592,11 +596,11 @@ const MASKS = [
       {id:'V8',     inv:false, text:'La solitude représente une terreur profonde et je déploie tous les moyens pour l\'éviter.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Exprimer une préférence différente du groupe', desc:'Dans un groupe, exprimez clairement votre préférence même si elle diffère. L\'authenticité crée des liens plus solides que la conformité.'},
-      {level:'Intermédiaire', title:'Dire non à une demande sans justification excessive', desc:'Dites simplement « non » ou « ce n\'est pas possible pour moi » sans longue explication. Poser des limites est sain et respectueux.'},
-      {level:'Intermédiaire avancé', title:'Partager une opinion impopulaire qui vous tient à cœur', desc:'Exprimez-la avec authenticité et respect. Le désaccord n\'équivaut pas au rejet — on peut être aimé sans penser pareil.'},
-      {level:'Avancé', title:'Demander directement ce dont vous avez besoin', desc:'Formulez clairement : « J\'ai besoin de... » sans attendre qu\'on le devine. Exprimer ses besoins est un acte d\'amour envers soi ET l\'autre.'},
-      {level:'Expert', title:'Être pleinement vous-même pendant une journée entière', desc:'Dites ce que vous pensez vraiment, exprimez vos émotions, affirmez vos limites dans toutes vos interactions. Constatez que vos relations authentiques s\'approfondissent.'}
+      {level:'Débutant',             title:'Exprimer une préférence différente du groupe',            desc:'Dans un groupe, exprimez clairement votre préférence même si elle diffère. L\'authenticité crée des liens plus solides que la conformité.'},
+      {level:'Intermédiaire',        title:'Dire non à une demande sans justification excessive',      desc:'Dites simplement « non » ou « ce n\'est pas possible pour moi » sans longue explication. Poser des limites est sain et respectueux.'},
+      {level:'Intermédiaire avancé', title:'Partager une opinion impopulaire qui vous tient à cœur',  desc:'Exprimez-la avec authenticité et respect. Le désaccord n\'équivaut pas au rejet — on peut être aimé sans penser pareil.'},
+      {level:'Avancé',               title:'Demander directement ce dont vous avez besoin',            desc:'Formulez clairement : « J\'ai besoin de... » sans attendre qu\'on le devine. Exprimer ses besoins est un acte d\'amour envers soi ET l\'autre.'},
+      {level:'Expert',               title:'Être pleinement vous-même pendant une journée entière',    desc:'Dites ce que vous pensez vraiment, exprimez vos émotions, affirmez vos limites dans toutes vos interactions. Constatez que vos relations authentiques s\'approfondissent.'}
     ]
   },
   {
@@ -627,11 +631,11 @@ const MASKS = [
       {id:'B8',     inv:false, text:'Je tends à diriger, organiser et prendre les décisions pour les autres, même sans sollicitation.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Déléguer une petite tâche sans superviser le processus', desc:'Confiez une tâche et engagez-vous à n\'en vérifier que le résultat final. Les autres sont capables et différentes méthodes mènent au même résultat.'},
-      {level:'Intermédiaire', title:'Accepter qu\'une chose soit faite différemment de votre méthode', desc:'Résistez à l\'envie de critiquer ou de refaire. Exprimez de l\'appréciation pour le travail accompli — la diversité d\'approches enrichit.'},
-      {level:'Intermédiaire avancé', title:'Laisser quelqu\'un d\'autre prendre une décision vous concernant', desc:'Dans une situation habituelle de décision, laissez quelqu\'un choisir pour vous sans donner votre avis préalable. Céder le contrôle occasionnellement allège et renforce les liens.'},
-      {level:'Avancé', title:'Admettre "je ne sais pas" et demander de l\'aide', desc:'Admettez ouvertement votre non-maîtrise d\'un sujet et demandez l\'aide de quelqu\'un d\'autre. L\'humilité authentique renforce l\'autorité — demander de l\'aide crée de la connexion.'},
-      {level:'Expert', title:'Vivre une journée en lâchant prise sur tous les contrôles', desc:'Acceptez pendant une journée complète les changements de plans, les imprévus, les décisions des autres. Constatez votre niveau d\'énergie préservée et les relations apaisées.'}
+      {level:'Débutant',             title:'Déléguer une petite tâche sans superviser le processus',         desc:'Confiez une tâche et engagez-vous à n\'en vérifier que le résultat final. Les autres sont capables et différentes méthodes mènent au même résultat.'},
+      {level:'Intermédiaire',        title:'Accepter qu\'une chose soit faite différemment de votre méthode',desc:'Résistez à l\'envie de critiquer ou de refaire. Exprimez de l\'appréciation pour le travail accompli — la diversité d\'approches enrichit.'},
+      {level:'Intermédiaire avancé', title:'Laisser quelqu\'un d\'autre prendre une décision vous concernant',desc:'Dans une situation habituelle de décision, laissez quelqu\'un choisir pour vous sans donner votre avis préalable. Céder le contrôle occasionnellement allège et renforce les liens.'},
+      {level:'Avancé',               title:'Admettre "je ne sais pas" et demander de l\'aide',              desc:'Admettez ouvertement votre non-maîtrise d\'un sujet et demandez l\'aide de quelqu\'un d\'autre. L\'humilité authentique renforce l\'autorité — demander de l\'aide crée de la connexion.'},
+      {level:'Expert',               title:'Vivre une journée en lâchant prise sur tous les contrôles',     desc:'Acceptez pendant une journée complète les changements de plans, les imprévus, les décisions des autres. Constatez votre niveau d\'énergie préservée et les relations apaisées.'}
     ]
   },
   {
@@ -662,11 +666,11 @@ const MASKS = [
       {id:'I8',     inv:false, text:'J\'ai un besoin constant de validation externe pour me sentir compétent(e) et légitime.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Partager un travail en cours, encore imparfait', desc:'Partagez un projet AVANT qu\'il soit parfait, en précisant que c\'est un brouillon. Le processus créatif est itératif et les retours précoces sont précieux.'},
-      {level:'Intermédiaire', title:'Essayer quelque chose de nouveau où vous serez débutant', desc:'Inscrivez-vous à une activité sans compétence préalable. Célébrez chaque petite progression sans vous comparer aux autres — l\'apprentissage exige d\'accepter d\'être débutant.'},
-      {level:'Intermédiaire avancé', title:'Fixer une deadline ferme et s\'y tenir', desc:'Livrez le jour J quel que soit l\'état du projet. « Fait est mieux que parfait » — le résultat imparfait remplit souvent sa fonction.'},
-      {level:'Avancé', title:'Raconter un échec passé sans le minimiser', desc:'Partagez ouvertement un échec significatif sans excuses, en reconnaissant ce que vous en avez appris. Partager ses échecs humanise et inspire.'},
-      {level:'Expert', title:'Se lancer dans un projet ambitieux sans garantie de succès', desc:'Faites le premier pas vers un rêve longtemps repoussé par peur d\'échouer. Ne pas essayer est l\'échec garanti — tenter avec passion est déjà une victoire.'}
+      {level:'Débutant',             title:'Partager un travail en cours, encore imparfait',               desc:'Partagez un projet AVANT qu\'il soit parfait, en précisant que c\'est un brouillon. Le processus créatif est itératif et les retours précoces sont précieux.'},
+      {level:'Intermédiaire',        title:'Essayer quelque chose de nouveau où vous serez débutant',       desc:'Inscrivez-vous à une activité sans compétence préalable. Célébrez chaque petite progression sans vous comparer aux autres — l\'apprentissage exige d\'accepter d\'être débutant.'},
+      {level:'Intermédiaire avancé', title:'Fixer une deadline ferme et s\'y tenir',                       desc:'Livrez le jour J quel que soit l\'état du projet. « Fait est mieux que parfait » — le résultat imparfait remplit souvent sa fonction.'},
+      {level:'Avancé',               title:'Raconter un échec passé sans le minimiser',                    desc:'Partagez ouvertement un échec significatif sans excuses, en reconnaissant ce que vous en avez appris. Partager ses échecs humanise et inspire.'},
+      {level:'Expert',               title:'Se lancer dans un projet ambitieux sans garantie de succès',   desc:'Faites le premier pas vers un rêve longtemps repoussé par peur d\'échouer. Ne pas essayer est l\'échec garanti — tenter avec passion est déjà une victoire.'}
     ]
   },
   {
@@ -697,66 +701,78 @@ const MASKS = [
       {id:'Vi8',     inv:false, text:'Je m\'accroche rigidement à mes habitudes et routines même si elles ne génèrent pas de bien-être.'},
     ],
     challenges:[
-      {level:'Débutant', title:'Modifier une habitude ancrée depuis longtemps', desc:'Changez délibérément une habitude quotidienne pendant une semaine. Votre essence demeure intacte malgré le changement — vous êtes plus vaste que vos routines.'},
-      {level:'Intermédiaire', title:'Essayer un style ou look différent pendant une journée', desc:'Adoptez un look différent de votre image habituelle. Votre essence est indépendante de votre apparence — vous êtes toujours vous-même.'},
-      {level:'Intermédiaire avancé', title:'Explorer une activité qui ne vous ressemble pas', desc:'Engagez-vous dans une activité que vous n\'auriez jamais envisagée. Vous contenez des multitudes — chaque nouvelle facette enrichit plutôt qu\'elle ne dilue.'},
-      {level:'Avancé', title:'Remettre en question une croyance fondamentale sur vous-même', desc:'Agissez délibérément à l\'encontre d\'une croyance sur vous-même pendant une semaine. Votre identité peut évoluer sans que vous vous perdiez.'},
-      {level:'Expert', title:'S\'autoriser à évoluer dans une direction inattendue', desc:'Prenez une décision concrète vers une évolution longtemps résistée. Évoluer ne signifie pas se perdre — c\'est se retrouver. L\'évolution est la nature même de la vie.'}
+      {level:'Débutant',             title:'Modifier une habitude ancrée depuis longtemps',            desc:'Changez délibérément une habitude quotidienne pendant une semaine. Votre essence demeure intacte malgré le changement — vous êtes plus vaste que vos routines.'},
+      {level:'Intermédiaire',        title:'Essayer un style ou look différent pendant une journée',   desc:'Adoptez un look différent de votre image habituelle. Votre essence est indépendante de votre apparence — vous êtes toujours vous-même.'},
+      {level:'Intermédiaire avancé', title:'Explorer une activité qui ne vous ressemble pas',          desc:'Engagez-vous dans une activité que vous n\'auriez jamais envisagée. Vous contenez des multitudes — chaque nouvelle facette enrichit plutôt qu\'elle ne dilue.'},
+      {level:'Avancé',               title:'Remettre en question une croyance fondamentale sur vous-même',desc:'Agissez délibérément à l\'encontre d\'une croyance sur vous-même pendant une semaine. Votre identité peut évoluer sans que vous vous perdiez.'},
+      {level:'Expert',               title:'S\'autoriser à évoluer dans une direction inattendue',     desc:'Prenez une décision concrète vers une évolution longtemps résistée. Évoluer ne signifie pas se perdre — c\'est se retrouver. L\'évolution est la nature même de la vie.'}
     ]
   }
 ];
 
-/* ============================================================
+/* ────────────────────────────────────────────────────────────────
    STATE
-   ============================================================ */
-let responses = {};
+   ──────────────────────────────────────────────────────────────── */
+let TOKEN_OBJ    = null;
+let responses    = {};
 let demographics = {};
-let scores = {};
-let sendEmailResult = null;
+let scores       = {};
+let emailResult  = null;
 
-/* ============================================================
+/* ────────────────────────────────────────────────────────────────
    INIT
-   ============================================================ */
+   ──────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   if (CONFIG.EMAILJS_PUBLIC_KEY !== 'VOTRE_PUBLIC_KEY') {
     emailjs.init({ publicKey: CONFIG.EMAILJS_PUBLIC_KEY });
   }
   buildMaskScreens();
+  checkToken();
 });
 
-/* ============================================================
-   ACCESS GATE
-   ============================================================ */
-function checkAccess() {
-  const input = document.getElementById('access-input');
-  const errEl = document.getElementById('access-error');
-  const val = input.value.trim();
-  if (val.toUpperCase() === CONFIG.ACCESS_CODE.toUpperCase()) {
-    goToScreen('screen-welcome');
-    errEl.textContent = '';
-  } else {
-    input.classList.add('error');
-    errEl.textContent = '❌ Code incorrect. Veuillez réessayer.';
-    setTimeout(() => input.classList.remove('error'), 400);
-    input.value = '';
-    input.focus();
+/* ────────────────────────────────────────────────────────────────
+   TOKEN VALIDATION
+   Token attendu dans l'URL : ?token=V25-ABCD-1234
+   ──────────────────────────────────────────────────────────────── */
+function checkToken() {
+  const params = new URLSearchParams(window.location.search);
+  const t = params.get('token');
+
+  if (!t) { goToScreen('screen-invalid'); return; }
+
+  const entry = CONFIG.TOKENS.find(x => x.token === t);
+  if (!entry) { goToScreen('screen-invalid'); return; }
+
+  // Vérification usage (localStorage = côté navigateur du participant)
+  const usedKey = `valeur_used_${t}`;
+  if (!CONFIG.TEST_MODE && (entry.used || localStorage.getItem(usedKey))) {
+    goToScreen('screen-used'); return;
   }
+
+  // Token valide : afficher le badge nom
+  TOKEN_OBJ = entry;
+  const el = document.getElementById('badge-name');
+  if (el) el.textContent = entry.label;
+  goToScreen('screen-welcome');
 }
 
-function togglePw() {
-  const inp = document.getElementById('access-input');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
+function markTokenUsed() {
+  if (!TOKEN_OBJ || CONFIG.TEST_MODE) return;
+  localStorage.setItem(`valeur_used_${TOKEN_OBJ.token}`, '1');
 }
 
-/* ============================================================
+/* ────────────────────────────────────────────────────────────────
    NAVIGATION
-   ============================================================ */
+   ──────────────────────────────────────────────────────────────── */
 function goToScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
-  if (el) { el.classList.add('active'); window.scrollTo({top:0, behavior:'smooth'}); }
+  if (el) { el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 }
 
+/* ────────────────────────────────────────────────────────────────
+   DEMOGRAPHICS
+   ──────────────────────────────────────────────────────────────── */
 function startQuestionnaire() {
   const prenom = document.getElementById('d-prenom').value.trim();
   const age    = document.getElementById('d-age').value.trim();
@@ -767,17 +783,19 @@ function startQuestionnaire() {
   }
   demographics = {
     prenom, age,
-    genre:       document.getElementById('d-genre').value || 'Non précisé',
-    situation:   document.getElementById('d-pro').value || 'Non précisé',
-    attachement: document.getElementById('d-attach').value || 'Incertain',
-    email
+    genre:       document.getElementById('d-genre').value   || 'Non précisé',
+    situation:   document.getElementById('d-pro').value     || 'Non précisé',
+    attachement: document.getElementById('d-attach').value  || 'Incertain',
+    email,
+    token:       TOKEN_OBJ ? TOKEN_OBJ.token : '–',
+    label:       TOKEN_OBJ ? TOKEN_OBJ.label : '–',
   };
   goToScreen('screen-mask-0');
 }
 
-/* ============================================================
+/* ────────────────────────────────────────────────────────────────
    BUILD MASK SCREENS
-   ============================================================ */
+   ──────────────────────────────────────────────────────────────── */
 function buildMaskScreens() {
   const container = document.getElementById('screen-masks-container');
   MASKS.forEach((mask, idx) => {
@@ -862,31 +880,43 @@ function prevMask(idx) {
   idx === 0 ? goToScreen('screen-demo') : goToScreen(`screen-mask-${idx-1}`);
 }
 
+/* ────────────────────────────────────────────────────────────────
+   NEXT MASK — action finale : double déclenchement simultané
+   1) Calcul des scores
+   2) Marquage du token comme utilisé
+   3) Envoi de l'email détaillé au praticien
+   4) Affichage des résultats sommaires au répondant
+   ──────────────────────────────────────────────────────────────── */
 async function nextMask(idx) {
   const mask = MASKS[idx];
   const allOk = mask.items.every(it => responses[it.id] !== undefined);
   const warn = document.getElementById(`warn-${idx}`);
+
   if (!allOk) {
     warn.classList.remove('hidden');
     const first = mask.items.find(it => responses[it.id] === undefined);
-    document.getElementById(`card-${first.id}`)?.scrollIntoView({behavior:'smooth',block:'center'});
+    document.getElementById(`card-${first.id}`)?.scrollIntoView({ behavior:'smooth', block:'center' });
     return;
   }
   warn.classList.add('hidden');
+
   if (idx < 6) { goToScreen(`screen-mask-${idx+1}`); return; }
 
-  // LAST MASK → compute + send + show
+  // ── DERNIER MASQUE : actions simultanées ──
   scores = computeScores();
-  showOverlay(true);
-  await sendDetailedEmail();
+  markTokenUsed();                    // bloque le token côté navigateur
+
+  showOverlay(true, 'Analyse de vos résultats…');
+  await sendDetailedEmail();          // envoie le rapport au praticien
   showOverlay(false);
-  buildSummaryResults();
+
+  buildSummaryResults();              // construit les résultats pour le répondant
   goToScreen('screen-results');
 }
 
-/* ============================================================
+/* ────────────────────────────────────────────────────────────────
    SCORING
-   ============================================================ */
+   ──────────────────────────────────────────────────────────────── */
 function adj(id, raw) { return id.includes('_inv') ? (4 - raw) : raw; }
 
 function computeScores() {
@@ -902,16 +932,16 @@ function getLevel(score) {
   if (score <= 12) return { label:'Faible',   key:'faible',   color:'#48bb78' };
   if (score <= 24) return { label:'Modéré',   key:'modéré',   color:'#ecc94b' };
   if (score <= 36) return { label:'Élevé',    key:'élevé',    color:'#ed8936' };
-  return              { label:'Dominant', key:'dominant', color:'#e53e3e' };
+  return               { label:'Dominant', key:'dominant', color:'#e53e3e' };
 }
 
-/* ============================================================
-   BUILD SUMMARY RESULTS (répondant)
-   ============================================================ */
+/* ────────────────────────────────────────────────────────────────
+   RÉSULTATS SOMMAIRES (répondant)
+   ──────────────────────────────────────────────────────────────── */
 function buildSummaryResults() {
   const now = new Date();
   document.getElementById('r-date').textContent =
-    now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    now.toLocaleDateString('fr-FR',{ weekday:'long', year:'numeric', month:'long', day:'numeric' });
   document.getElementById('r-name').textContent =
     `${demographics.prenom} · ${demographics.age} ans · ${demographics.genre}`;
   document.getElementById('r-global').textContent = `${scores.total} / 336`;
@@ -919,10 +949,9 @@ function buildSummaryResults() {
   const grid = document.getElementById('masks-summary-grid');
   grid.innerHTML = '';
   MASKS.forEach(mask => {
-    const s = scores[mask.id];
-    const lv = getLevel(s);
-    const pct = (s/48*100).toFixed(0);
-    const desc = mask.levels[lv.key] || '';
+    const s   = scores[mask.id];
+    const lv  = getLevel(s);
+    const pct = (s / 48 * 100).toFixed(0);
     const refsHTML = mask.refs.map(r => `<span class="ref-tag">${r}</span>`).join('');
     grid.innerHTML += `
       <div class="mask-summary-card" style="border-left-color:${mask.color}">
@@ -933,203 +962,197 @@ function buildSummaryResults() {
           </div>
           <div style="display:flex;align-items:center;gap:10px">
             <span class="mask-summary-score" style="color:${mask.color}">${s}/48</span>
-            <span class="level-pill lv-${lv.key}" style="color:${lv.color};border-color:${lv.color}55">${lv.label}</span>
+            <span class="level-pill" style="color:${lv.color};border-color:${lv.color}55">${lv.label}</span>
           </div>
         </div>
         <div class="mask-score-bar">
           <div class="mask-score-bar-fill" style="width:${pct}%;background:${mask.color}"></div>
         </div>
         <div class="mask-summary-peur" style="color:${mask.color}">Peur primale : ${mask.peur}</div>
-        <div class="mask-summary-desc">${desc}</div>
+        <div class="mask-summary-desc">${mask.levels[lv.key] || ''}</div>
         <div class="ref-tags">${refsHTML}</div>
       </div>`;
   });
 
-  // Email status
+  // Statut de l'email
   const st = document.getElementById('email-status');
-  if (sendEmailResult === 'ok') {
-    st.innerHTML = '<div class="status-success">✅ Vos résultats ont bien été transmis.</div>';
-  } else if (sendEmailResult === 'error') {
-    st.innerHTML = '<div class="status-error">⚠ Transmission des résultats indisponible momentanément. Vous pouvez imprimer cette page.</div>';
-  }
+  if (emailResult === 'ok')
+    st.innerHTML = '<div class="status-success">✅ Vos résultats ont été transmis à votre praticien.</div>';
+  else if (emailResult === 'error')
+    st.innerHTML = '<div class="status-error">⚠ La transmission automatique a rencontré un problème. Vous pouvez imprimer cette page et la transmettre à votre praticien.</div>';
 }
 
-/* ============================================================
-   SEND DETAILED EMAIL (admin)
-   ============================================================ */
+/* ────────────────────────────────────────────────────────────────
+   ENVOI EMAIL DÉTAILLÉ (praticien)
+   ──────────────────────────────────────────────────────────────── */
 async function sendDetailedEmail() {
-  if (CONFIG.EMAIL_TEST_MODE || CONFIG.EMAILJS_PUBLIC_KEY === 'VOTRE_PUBLIC_KEY') {
-    console.log('[TEST MODE] Email non envoyé. Configurez EmailJS dans CONFIG.');
-    sendEmailResult = 'test';
-    return;
+  if (CONFIG.TEST_MODE || CONFIG.EMAILJS_PUBLIC_KEY === 'VOTRE_PUBLIC_KEY') {
+    console.log('[TEST MODE] Email simulé — résultats :', scores);
+    emailResult = 'test'; return;
   }
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const dateStr = new Date().toLocaleDateString('fr-FR', {
+    weekday:'long', year:'numeric', month:'long', day:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
 
-  // Build scores section
-  let scoresSummary = MASKS.map(m => {
-    const s = scores[m.id];
+  // ── Score global en pourcentage ──
+  const globalPct = Math.round(scores.total / 336 * 100);
+
+  // ── Variables par masque (pour barres visuelles dans le template) ──
+  const maskVars = {};
+  MASKS.forEach(m => {
+    const s  = scores[m.id];
     const lv = getLevel(s);
-    return `${m.name}: ${s}/48 (${lv.label})`;
-  }).join('\n');
+    const pct = Math.round(s / 48 * 100);
+    const rem = 100 - pct;
+    maskVars[`score_${m.id}`]  = `${s}`;
+    maskVars[`pct_${m.id}`]    = `${pct}`;
+    maskVars[`rem_${m.id}`]    = `${rem}`;
+    maskVars[`level_${m.id}`]  = lv.label;
+  });
 
-  // Build critical items
-  let criticalSection = '';
+  // ── Items critiques (score ajusté ≥ 3) ──
+  let criticalRows = '';
   MASKS.forEach(mask => {
     const crits = mask.items
-      .map(it => ({...it, a: adj(it.id, responses[it.id]??0)}))
-      .filter(it => it.a >= 3)
-      .sort((a,b) => b.a - a.a);
-    if (crits.length > 0) {
-      criticalSection += `\n--- ${mask.name} (${scores[mask.id]}/48) ---\n`;
-      crits.forEach(it => { criticalSection += `  [${it.id}] Score ${it.a}/4 : ${it.text}\n`; });
+      .map(it => ({ ...it, a: adj(it.id, responses[it.id] ?? 0) }))
+      .filter(it => it.a >= 3).sort((a, b) => b.a - a.a);
+    if (crits.length) {
+      criticalRows += `${mask.name.toUpperCase()} (${scores[mask.id]}/48 — ${getLevel(scores[mask.id]).label})\n`;
+      crits.forEach(it => {
+        const stars = '★'.repeat(it.a) + '☆'.repeat(4 - it.a);
+        criticalRows += `  ${stars} [${it.id}] ${it.text}\n`;
+      });
+      criticalRows += '\n';
     }
   });
 
-  // Build challenges for dominant/high masks
-  let challengesSection = '';
+  // ── Défis personnalisés ──
+  let challengesText = '';
   MASKS.filter(m => scores[m.id] > 12).forEach(mask => {
     const lv = getLevel(scores[mask.id]);
-    challengesSection += `\n=== ${mask.name} — ${lv.label} (${scores[mask.id]}/48) ===\n`;
-    const topItem = mask.items
-      .map(it => ({...it, a: adj(it.id, responses[it.id]??0)}))
-      .sort((a,b) => b.a - a.a)[0];
-    if (topItem) challengesSection += `Question prioritaire : "${topItem.text}" (score ${topItem.a}/4)\n`;
-    mask.challenges.forEach((c,i) => {
-      challengesSection += `${i+1}. [${c.level}] ${c.title}\n   ${c.desc}\n`;
+    challengesText += `━━ ${mask.name} — ${lv.label} (${scores[mask.id]}/48) ━━\n`;
+    mask.challenges.forEach((c, i) => {
+      const priority = i === 0 ? '▶ PRIORITÉ 1' : i === 1 ? '▷ PRIORITÉ 2' : `   Niveau ${i+1}`;
+      challengesText += `${priority} [${c.level}] ${c.title}\n   ${c.desc}\n\n`;
     });
   });
 
-  // Build all responses
+  // ── Toutes les réponses ──
   let allResponses = '';
   MASKS.forEach(mask => {
-    allResponses += `\n[${mask.name}]\n`;
+    allResponses += `\n▌ ${mask.name}\n`;
     mask.items.forEach(it => {
       const raw = responses[it.id] ?? '–';
-      const adjScore = adj(it.id, responses[it.id] ?? 0);
-      allResponses += `  ${it.id}${it.inv?' (inv)':''} | brut:${raw} | ajusté:${adjScore} | ${it.text}\n`;
+      const a   = adj(it.id, responses[it.id] ?? 0);
+      const bar = '█'.repeat(a) + '░'.repeat(4 - a);
+      allResponses += `  ${bar} ${it.inv ? '↺ ' : '  '}[${it.id}] brut:${raw} ajusté:${a} — ${it.text}\n`;
     });
   });
 
-  const templateParams = {
-    // Destinataire admin
-    to_email:        CONFIG.ADMIN_EMAIL,
-    to_name:         CONFIG.ADMIN_NAME,
-    // Répondant
-    prenom:          demographics.prenom,
-    age:             demographics.age,
-    genre:           demographics.genre,
-    situation:       demographics.situation,
-    attachement:     demographics.attachement,
-    email_repondant: demographics.email,
-    date_passation:  dateStr,
-    // Scores
-    score_global:    `${scores.total}/336`,
-    scores_masques:  scoresSummary,
-    // Masques dominants
+  const params = {
+    to_email:          CONFIG.ADMIN_EMAIL,
+    to_name:           CONFIG.ADMIN_NAME,
+    // Participant
+    prenom:            demographics.prenom,
+    age:               demographics.age,
+    genre:             demographics.genre,
+    situation:         demographics.situation,
+    attachement:       demographics.attachement,
+    email_repondant:   demographics.email,
+    token_utilise:     demographics.token,
+    label_token:       demographics.label,
+    date_passation:    dateStr,
+    // Scores globaux
+    score_global:      `${scores.total}`,
+    score_global_pct:  `${globalPct}`,
+    score_global_rem:  `${100 - globalPct}`,
+    // Masques synthèse
     masques_dominants: MASKS.filter(m => scores[m.id] >= 37).map(m => m.name).join(', ') || 'Aucun',
     masques_eleves:    MASKS.filter(m => scores[m.id] >= 25 && scores[m.id] < 37).map(m => m.name).join(', ') || 'Aucun',
+    masques_moderes:   MASKS.filter(m => scores[m.id] >= 13 && scores[m.id] < 25).map(m => m.name).join(', ') || 'Aucun',
     // Détails
-    items_critiques:   criticalSection || 'Aucun item critique (score ≥ 3)',
-    defis_proposes:    challengesSection || 'Aucun masque modéré ou supérieur',
+    items_critiques:   criticalRows    || 'Aucun item avec score ajusté ≥ 3',
+    defis_proposes:    challengesText  || 'Tous les masques sont au niveau Faible',
     toutes_reponses:   allResponses,
+    // Variables par masque (score, %, niveau)
+    ...maskVars,
   };
 
   try {
-    await emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, templateParams);
-    sendEmailResult = 'ok';
+    await emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, params);
+    emailResult = 'ok';
   } catch (err) {
     console.error('EmailJS error:', err);
-    sendEmailResult = 'error';
+    emailResult = 'error';
   }
 }
 
-/* ============================================================
+/* ────────────────────────────────────────────────────────────────
    OVERLAY
-   ============================================================ */
-function showOverlay(show) {
+   ──────────────────────────────────────────────────────────────── */
+function showOverlay(show, txt) {
   document.getElementById('sending-overlay').classList.toggle('hidden', !show);
+  if (txt) document.getElementById('overlay-text').textContent = txt;
 }
-
-/* ============================================================
-   RESET
-   ============================================================ */
-function resetApp() {
-  if (!confirm('Recommencer le questionnaire ? Toutes vos réponses seront effacées.')) return;
-  responses = {}; scores = {}; demographics = {}; sendEmailResult = null;
-  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-  document.querySelectorAll('.item-card').forEach(c => c.classList.remove('answered'));
-  goToScreen('screen-access');
-}
-
-/* ============================================================
-   UTIL
-   ============================================================ */
-function $(id) { return document.getElementById(id); }
 </script>
 
 <!--
-=================================================================
-  GUIDE D'INSTALLATION EMAILJS (3 étapes, 10 minutes)
-=================================================================
-
-1. CRÉER UN COMPTE
-   → https://www.emailjs.com  (gratuit jusqu'à 200 emails/mois)
-   → Inscrivez-vous avec votre adresse email admin
-
-2. CONFIGURER UN SERVICE
-   → Dashboard → Email Services → Add New Service
-   → Choisissez Gmail, Outlook, ou autre
-   → Connectez votre boîte mail → Notez le "Service ID"
-
-3. CRÉER UN TEMPLATE
-   → Dashboard → Email Templates → Create New Template
-   → Nommez-le "VALEUR_results_detail"
-   → Collez ce contenu dans le corps :
-
-   ==========================================
-   NOUVEAUX RÉSULTATS V.A.L.E.U.R© — {{date_passation}}
-
-   RÉPONDANT : {{prenom}} · {{age}} ans · {{genre}} · {{situation}}
-   Email : {{email_repondant}} · Attachement : {{attachement}}
-
-   ==========================================
-   SCORES GLOBAUX
-   Score total : {{score_global}}
-   {{scores_masques}}
-
-   Masques dominants (≥37/48) : {{masques_dominants}}
-   Masques élevés (25-36/48)  : {{masques_eleves}}
-
-   ==========================================
-   ITEMS CRITIQUES (score ajusté ≥ 3)
-   {{items_critiques}}
-
-   ==========================================
-   DÉFIS V.A.L.E.U.R PROPOSÉS
-   {{defis_proposes}}
-
-   ==========================================
-   TOUTES LES RÉPONSES DÉTAILLÉES
-   {{toutes_reponses}}
-   ==========================================
-   Outil psychoéducatif V.A.L.E.U.R© — Ne remplace pas une évaluation professionnelle
-   ==========================================
-
-4. RÉCUPÉRER LES CLÉS
-   → Dashboard → Account → General → Public Key
-   → Notez : Service ID, Template ID, Public Key
-
-5. RENSEIGNER DANS CONFIG (en haut du script) :
-   EMAILJS_PUBLIC_KEY:  'votre_public_key'
-   EMAILJS_SERVICE_ID:  'service_xxxxxxx'
-   EMAILJS_TEMPLATE_ID: 'template_xxxxxxx'
-   ADMIN_EMAIL:         'votre@email.com'
-   ACCESS_CODE:         'VOTRECODESECRET'
-   EMAIL_TEST_MODE: false    ← mettre false pour activer
-
-=================================================================
+╔══════════════════════════════════════════════════════════════════════╗
+║  GUIDE D'INSTALLATION EMAILJS — 10 minutes, gratuit jusqu'à         ║
+║  200 emails/mois                                                     ║
+╠══════════════════════════════════════════════════════════════════════╣
+║                                                                      ║
+║  1. Créez votre compte sur https://www.emailjs.com                   ║
+║                                                                      ║
+║  2. Connectez votre boîte mail                                       ║
+║     Dashboard → Email Services → Add New Service                    ║
+║     (Gmail, Outlook…) → notez le SERVICE ID                         ║
+║                                                                      ║
+║  3. Créez un template email                                          ║
+║     Dashboard → Email Templates → Create New Template               ║
+║     Sujet : [V.A.L.E.U.R©] Résultats — {{prenom}} — {{date_passation}}
+║                                                                      ║
+║     Corps du template (copiez exactement) :                          ║
+║  ─────────────────────────────────────────────────────────────────── ║
+║  RÉSULTATS DÉTAILLÉS V.A.L.E.U.R© — USAGE CONFIDENTIEL PRATICIEN   ║
+║  Date        : {{date_passation}}                                    ║
+║  Token       : {{token_utilise}} ({{label_token}})                  ║
+║                                                                      ║
+║  RÉPONDANT                                                           ║
+║  Prénom      : {{prenom}}   Âge : {{age}} ans   Genre : {{genre}}   ║
+║  Situation   : {{situation}}   Attachement : {{attachement}}         ║
+║  Email       : {{email_repondant}}                                   ║
+║                                                                      ║
+║  SCORES                                                              ║
+║  Score total : {{score_global}}                                      ║
+║  {{scores_masques}}                                                  ║
+║  Dominants (≥37) : {{masques_dominants}}                             ║
+║  Élevés (25-36)  : {{masques_eleves}}                                ║
+║                                                                      ║
+║  ITEMS CRITIQUES (score ajusté ≥ 3)                                  ║
+║  {{items_critiques}}                                                 ║
+║                                                                      ║
+║  DÉFIS V.A.L.E.U.R© PERSONNALISÉS                                   ║
+║  {{defis_proposes}}                                                  ║
+║                                                                      ║
+║  TOUTES LES RÉPONSES                                                 ║
+║  {{toutes_reponses}}                                                 ║
+║  ─────────────────────────────────────────────────────────────────── ║
+║     → notez le TEMPLATE ID                                           ║
+║                                                                      ║
+║  4. Récupérez votre PUBLIC KEY                                       ║
+║     Dashboard → Account → General → Public Key                      ║
+║                                                                      ║
+║  5. Renseignez dans CONFIG (ci-dessus) :                             ║
+║     EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID     ║
+║     ADMIN_EMAIL, puis TEST_MODE: false                               ║
+║                                                                      ║
+║  6. Générez vos tokens avec admin.html, collez-les dans TOKENS[ ],  ║
+║     redéployez sur Netlify (glisser-déposer, ~30 secondes)          ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
 -->
 
 </body>
