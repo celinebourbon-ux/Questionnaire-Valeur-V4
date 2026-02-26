@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionnaire V.A.L.E.U.R© – Les Sept Masques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style>
+/* ============================================================
+   CONFIGURATION VISIBLE — modifiez ces valeurs
+   ============================================================ */
+:root {
+  --navy: #0d1117;
+  --navy-mid: #161b24;
+  --navy-light: #1f2836;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8eaf0;
+  --text-muted: #8b92a5;
+  --text-dim: #4a5568;
+  --rouge: #e53e3e;
+  --orange: #ed8936;
+  --jaune: #ecc94b;
+  --vert: #48bb78;
+  --bleu: #4299e1;
+  --indigo: #667eea;
+  --violet: #9f7aea;
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--text); min-height: 100vh; line-height: 1.6; }
+.app { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* HEADER */
+.main-header { padding: 48px 0 32px; text-align: center; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+.mask-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.mask-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; }
+.mask-dot:nth-child(1){background:var(--rouge);animation-delay:0s}
+.mask-dot:nth-child(2){background:var(--orange);animation-delay:.2s}
+.mask-dot:nth-child(3){background:var(--jaune);animation-delay:.4s}
+.mask-dot:nth-child(4){background:var(--vert);animation-delay:.6s}
+.mask-dot:nth-child(5){background:var(--bleu);animation-delay:.8s}
+.mask-dot:nth-child(6){background:var(--indigo);animation-delay:1s}
+.mask-dot:nth-child(7){background:var(--violet);animation-delay:1.2s}
+@keyframes pulse { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+.main-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.2rem); font-weight: 300; background: linear-gradient(135deg,#e8eaf0,#a0aec0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.main-subtitle { font-size: .85rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text-muted); margin-top: 8px; }
+
+/* ======================== ACCESS GATE ======================== */
+.access-card {
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  text-align: center;
+  max-width: 440px;
+  margin: 0 auto;
+}
+.access-card h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; margin-bottom:12px; }
+.access-card p { color:var(--text-muted); font-size:.9rem; margin-bottom:28px; }
+.access-input-wrap { position:relative; margin-bottom:16px; }
+.access-input {
+  width:100%; background:var(--navy-light); border:1px solid var(--border);
+  border-radius: var(--radius); padding:16px 48px 16px 20px;
+  color:var(--text); font-family:'Jost',sans-serif; font-size:1.1rem;
+  letter-spacing:.25em; text-align:center;
+  transition: border-color .2s;
+}
+.access-input:focus { outline:none; border-color:rgba(102,126,234,.5); }
+.access-input.error { border-color:var(--rouge)!important; animation: shake .3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.access-error { color:#fc8181; font-size:.82rem; margin-top:6px; min-height:18px; }
+.toggle-pw { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.1rem; padding:4px; }
+.access-hint { font-size:.75rem; color:var(--text-dim); margin-top:16px; }
+
+/* ======================== CARDS / FORMS ======================== */
+.welcome-card, .form-card {
+  background:var(--navy-mid); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:40px; margin-bottom:24px;
+}
+.welcome-card h2, .form-card h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; margin-bottom:16px; }
+.welcome-card p, .form-card p { color:var(--text-muted); margin-bottom:12px; font-size:.95rem; }
+.info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin:24px 0; }
+.info-chip { background:var(--navy-light); border:1px solid var(--border); border-radius:var(--radius); padding:16px; text-align:center; }
+.info-chip .value { font-size:1.4rem; font-weight:600; }
+.info-chip .label { font-size:.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.1em; }
+.warning-box { background:rgba(237,137,54,.08); border:1px solid rgba(237,137,54,.25); border-radius:var(--radius); padding:16px 20px; font-size:.85rem; color:#f6ad55; margin-top:16px; }
+.warning-box strong { display:block; margin-bottom:4px; }
+
+/* BUTTONS */
+.btn { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:var(--radius); border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:.9rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,#4a6cf7,#6c47ff); color:white; box-shadow:0 4px 20px rgba(108,71,255,.35); }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(108,71,255,.45); }
+.btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.btn-secondary { background:var(--navy-light); color:var(--text-muted); border:1px solid var(--border); }
+.btn-secondary:hover { color:var(--text); border-color:rgba(255,255,255,.15); }
+.btn-outline { background:transparent; color:var(--text); border:1px solid var(--border); }
+.btn-outline:hover { border-color:rgba(255,255,255,.25); background:var(--navy-light); }
+.btn-group { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+.btn-full { width:100%; justify-content:center; }
+.btn-print { background:linear-gradient(135deg,#48bb78,#2f855a); color:white; }
+.btn-print:hover { transform:translateY(-2px); }
+
+/* PROGRESS */
+.progress-wrapper { position:sticky; top:0; z-index:50; background:rgba(13,17,23,.95); backdrop-filter:blur(12px); padding:16px 0; border-bottom:1px solid var(--border); margin-bottom:32px; }
+.progress-info { display:flex; justify-content:space-between; margin-bottom:8px; font-size:.8rem; color:var(--text-muted); }
+.progress-bar { height:3px; background:var(--navy-light); border-radius:99px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:99px; transition:width .5s ease; }
+.step-dots { display:flex; justify-content:center; gap:8px; margin-top:10px; }
+.step-dot { width:8px; height:8px; border-radius:50%; background:var(--navy-light); border:1px solid var(--border); transition:all .3s; }
+.step-dot.active { transform:scale(1.4); border-color:white; background:white; }
+.step-dot.done { background:var(--vert); border-color:var(--vert); }
+
+/* FORM FIELDS */
+.form-section { margin-bottom:32px; }
+.form-section h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:400; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:12px; }
+.form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+.form-field { display:flex; flex-direction:column; gap:6px; }
+.form-field label { font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); }
+.form-field input,.form-field select { background:var(--navy-light); border:1px solid var(--border); border-radius:8px; padding:12px 16px; color:var(--text); font-family:'Jost',sans-serif; font-size:.9rem; transition:border-color .2s; }
+.form-field input:focus,.form-field select:focus { outline:none; border-color:rgba(102,126,234,.6); box-shadow:0 0 0 3px rgba(102,126,234,.1); }
+.form-field select option { background:var(--navy-mid); }
+.required-star { color:var(--rouge); margin-left:2px; }
+.field-hint { font-size:.72rem; color:var(--text-dim); }
+
+/* MASK SECTIONS */
+.mask-header { padding:32px 0 24px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+.mask-badge { display:inline-flex; align-items:center; gap:10px; padding:6px 16px; border-radius:99px; font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; margin-bottom:12px; border:1px solid currentColor; }
+.mask-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,4vw,2.4rem); font-weight:300; line-height:1.2; margin-bottom:8px; }
+.mask-desc { font-size:.85rem; color:var(--text-muted); font-style:italic; }
+.items-container { display:flex; flex-direction:column; gap:16px; }
+.item-card { background:var(--navy-mid); border:1px solid var(--border); border-radius:var(--radius); padding:20px 24px; transition:border-color .2s,transform .2s; }
+.item-card:hover { border-color:rgba(255,255,255,.14); transform:translateX(2px); }
+.item-card.answered { border-color:rgba(72,187,120,.25); }
+.item-card.inv-item { border-left:3px solid rgba(160,174,192,.3); }
+.item-header { display:flex; gap:12px; margin-bottom:16px; align-items:flex-start; }
+.item-id { flex-shrink:0; font-size:.7rem; color:var(--text-dim); letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; background:var(--navy-light); border-radius:4px; margin-top:2px; }
+.item-text { font-size:.95rem; line-height:1.5; }
+.likert { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.likert-option { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.likert-option input[type="radio"] { display:none; }
+.likert-btn { width:40px; height:40px; border-radius:50%; border:2px solid var(--border); background:var(--navy-light); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:600; color:var(--text-muted); transition:all .2s; user-select:none; }
+.likert-btn:hover { border-color:rgba(255,255,255,.3); color:var(--text); transform:scale(1.05); }
+.likert-option input:checked + .likert-btn { border-color:currentColor; color:var(--navy); background:currentColor; transform:scale(1.1); }
+.likert-label { font-size:.65rem; text-align:center; color:var(--text-dim); max-width:56px; line-height:1.2; }
+.unanswered-msg { background:rgba(229,62,62,.1); border:1px solid rgba(229,62,62,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:#fc8181; margin-top:16px; }
+.hidden { display:none!important; }
+
+/* ======================== SENDING OVERLAY ======================== */
+.sending-overlay {
+  position:fixed; inset:0; z-index:1000;
+  background:rgba(13,17,23,.92); backdrop-filter:blur(8px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:20px;
+}
+.sending-spinner {
+  width:56px; height:56px; border-radius:50%;
+  border:3px solid var(--navy-light);
+  border-top-color:var(--indigo);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+.sending-text { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--text-muted); }
+
+/* ======================== RESULTS — SUMMARY (répondant) ======================== */
+.results-summary-header {
+  background:var(--navy-mid); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:36px 40px;
+  margin-bottom:28px; text-align:center;
+}
+.results-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:300; margin-bottom:8px; }
+.results-date { font-size:.85rem; color:var(--text-muted); }
+.results-name { font-size:1rem; color:var(--text-muted); margin-top:4px; }
+
+.summary-intro {
+  background:linear-gradient(135deg,rgba(102,126,234,.08),rgba(159,122,234,.08));
+  border:1px solid rgba(102,126,234,.2);
+  border-radius:var(--radius-lg); padding:24px 28px; margin-bottom:28px;
+}
+.summary-intro p { font-size:.92rem; color:var(--text-muted); line-height:1.7; }
+
+.masks-summary-grid { display:flex; flex-direction:column; gap:16px; margin-bottom:28px; }
+.mask-summary-card {
+  background:var(--navy-mid); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:24px 28px;
+  border-left:4px solid;
+  transition: transform .2s;
+}
+.mask-summary-card:hover { transform:translateX(3px); }
+.mask-summary-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:12px; }
+.mask-summary-name { font-weight:600; font-size:1.05rem; display:flex; align-items:center; gap:8px; }
+.mask-summary-score { font-size:.85rem; color:var(--text-muted); }
+.level-pill { padding:4px 14px; border-radius:99px; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; border:1px solid currentColor; }
+.mask-summary-peur { font-size:.85rem; font-weight:500; margin-bottom:6px; }
+.mask-summary-desc { font-size:.88rem; color:var(--text-muted); line-height:1.65; }
+.mask-score-bar { height:5px; background:var(--navy-light); border-radius:99px; overflow:hidden; margin:10px 0; }
+.mask-score-bar-fill { height:100%; border-radius:99px; transition:width 1.2s ease; }
+.ref-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+.ref-tag { font-size:.68rem; background:var(--navy-light); border:1px solid var(--border); border-radius:4px; padding:2px 8px; color:var(--text-dim); }
+
+.global-chip-row { text-align:center; margin-bottom:28px; }
+.global-chip { display:inline-flex; align-items:center; gap:12px; background:var(--navy-light); border:1px solid var(--border); border-radius:99px; padding:14px 28px; }
+.global-chip .val { font-size:1.6rem; font-weight:600; }
+.global-chip .lbl { font-size:.82rem; color:var(--text-muted); }
+
+.print-note {
+  background:var(--navy-mid); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px 24px;
+  font-size:.85rem; color:var(--text-muted);
+  margin-bottom:28px; text-align:center;
+}
+.footer-disclaimer {
+  text-align:center; padding:24px 0;
+  border-top:1px solid var(--border);
+  font-size:.75rem; color:var(--text-dim); letter-spacing:.04em;
+  line-height:1.8;
+}
+
+/* LEVEL COLORS */
+.lv-faible   { color:var(--vert);  }
+.lv-modéré  { color:var(--jaune); }
+.lv-élevé   { color:var(--orange);}
+.lv-dominant { color:var(--rouge); }
+
+/* ======================== PRINT STYLES ======================== */
+@media print {
+  body { background:white; color:#111; }
+  .app { max-width:100%; padding:0; }
+  .no-print { display:none!important; }
+  .mask-summary-card { border-left:3px solid #ddd; background:white; border:1px solid #ddd; break-inside:avoid; }
+  .results-summary-header { background:white; border:1px solid #ddd; }
+  .summary-intro { background:#f8f9fa; }
+  .main-header { display:none; }
+  .footer-disclaimer { color:#666; border-top:1px solid #ddd; }
+  .mask-score-bar { background:#eee; }
+  .ref-tag { background:#f0f0f0; border:1px solid #ddd; color:#666; }
+  .level-pill { border:1px solid #999; }
+}
+
+/* STATUS MESSAGES */
+.status-success { background:rgba(72,187,120,.1); border:1px solid rgba(72,187,120,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:var(--vert); margin-top:12px; }
+.status-error   { background:rgba(229,62,62,.1); border:1px solid rgba(229,62,62,.3); border-radius:8px; padding:12px 16px; font-size:.85rem; color:#fc8181; margin-top:12px; }
+
+@media(max-width:600px){
+  .likert{gap:4px}.likert-btn{width:34px;height:34px;font-size:.8rem}.likert-label{display:none}
+  .welcome-card,.form-card,.results-summary-header{padding:24px}
+  .mask-summary-card{padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== SENDING OVERLAY ===== -->
+<div class="sending-overlay hidden" id="sending-overlay">
+  <div class="sending-spinner"></div>
+  <div class="sending-text">Envoi de vos résultats en cours…</div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="main-header no-print">
+  <div class="mask-dots">
+    <span class="mask-dot"></span><span class="mask-dot"></span><span class="mask-dot"></span>
+    <span class="mask-dot"></span><span class="mask-dot"></span><span class="mask-dot"></span>
+    <span class="mask-dot"></span>
+  </div>
+  <h1 class="main-title">Méthode V.A.L.E.U.R©</h1>
+  <p class="main-subtitle">Questionnaire d'identification des masques psychologiques</p>
+</header>
+
+<!-- ===== SCREEN 0 : ACCESS GATE ===== -->
+<div id="screen-access" class="screen active">
+  <div class="access-card">
+    <h2>Accès sécurisé</h2>
+    <p>Ce questionnaire est réservé aux participants autorisés. Saisissez le code d'accès qui vous a été communiqué.</p>
+    <div class="access-input-wrap">
+      <input type="password" id="access-input" class="access-input"
+             placeholder="• • • • • •" maxlength="20"
+             onkeydown="if(event.key==='Enter') checkAccess()">
+      <button class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">👁</button>
+    </div>
+    <div class="access-error" id="access-error"></div>
+    <button class="btn btn-primary btn-full" onclick="checkAccess()">Accéder →</button>
+    <p class="access-hint">Vous n'avez pas reçu de code ? Contactez l'organisateur.</p>
+  </div>
+</div>
+
+<!-- ===== SCREEN 1 : WELCOME ===== -->
+<div id="screen-welcome" class="screen">
+  <div class="welcome-card">
+    <h2>Les Sept Masques du Personâge</h2>
+    <p>Ce questionnaire d'auto-évaluation psychoéducative vous permet d'identifier vos stratégies de protection psychologique selon la Méthode V.A.L.E.U.R©.</p>
+    <div class="info-grid">
+      <div class="info-chip"><div class="value">84</div><div class="label">Questions</div></div>
+      <div class="info-chip"><div class="value">7</div><div class="label">Masques</div></div>
+      <div class="info-chip"><div class="value">35–50 min</div><div class="label">Durée estimée</div></div>
+    </div>
+    <div class="warning-box">
+      <strong>⚠ Avertissement important</strong>
+      Cet outil est conçu pour l'auto-exploration et la psychoéducation. Il n'a pas été empiriquement validé en tant qu'instrument diagnostique autonome et ne doit pas être utilisé comme tel.
+    </div>
+  </div>
+  <div class="welcome-card">
+    <h2>Consignes</h2>
+    <p>• Choisissez un lieu calme, sans interruptions<br>• Répondez avec authenticité, sans chercher à vous présenter sous un jour favorable<br>• Privilégiez votre ressenti intuitif plutôt que l'analyse intellectuelle</p>
+    <p style="margin-top:12px"><strong>Échelle :</strong> 0 = Jamais · 1 = Rarement · 2 = Parfois · 3 = Souvent · 4 = Très souvent</p>
+  </div>
+  <button class="btn btn-primary btn-full" onclick="goToScreen('screen-demo')">Commencer →</button>
+</div>
+
+<!-- ===== SCREEN 2 : DEMOGRAPHICS ===== -->
+<div id="screen-demo" class="screen">
+  <div class="progress-wrapper no-print">
+    <div class="progress-info"><span>Informations personnelles</span><span>Étape 1 / 9</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:11%;background:linear-gradient(90deg,#4a6cf7,#6c47ff)"></div></div>
+  </div>
+  <div class="form-card">
+    <h2>Vos informations</h2>
+    <p style="color:#fc8181;font-size:.82rem">★ Les champs marqués d'un astérisque sont obligatoires pour personnaliser vos résultats.</p>
+    <div class="form-section" style="margin-top:20px">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Prénom / Initiales <span class="required-star">*</span></label>
+          <input type="text" id="d-prenom" placeholder="ex. Marie D.">
+          <span class="field-hint">Utilisé pour personnaliser votre rapport</span>
+        </div>
+        <div class="form-field">
+          <label>Âge <span class="required-star">*</span></label>
+          <input type="number" id="d-age" placeholder="ex. 34" min="16" max="99">
+        </div>
+        <div class="form-field">
+          <label>Genre</label>
+          <select id="d-genre">
+            <option value="">– Sélectionner –</option>
+            <option>Féminin</option><option>Masculin</option>
+            <option>Autre</option><option>Préfère ne pas préciser</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Situation professionnelle</label>
+          <select id="d-pro">
+            <option value="">– Sélectionner –</option>
+            <option>Salarié(e)</option><option>Indépendant(e)</option>
+            <option>Sans emploi</option><option>Étudiant(e)</option><option>Retraité(e)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Style d'attachement présumé</label>
+          <select id="d-attach">
+            <option value="">– Incertain –</option>
+            <option>Sécure</option><option>Anxieux-ambivalent</option>
+            <option>Évitant</option><option>Désorganisé</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Email <span class="required-star">*</span></label>
+          <input type="email" id="d-email" placeholder="votre@email.com">
+          <span class="field-hint">Pour recevoir éventuellement un suivi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goToScreen('screen-welcome')">← Retour</button>
+    <button class="btn btn-primary" onclick="startQuestionnaire()">Démarrer le questionnaire →</button>
+  </div>
+</div>
+
+<!-- ===== SCREENS 3–9 : MASKS (generated by JS) ===== -->
+<div id="screen-masks-container"></div>
+
+<!-- ===== SCREEN 10 : RESULTS (SUMMARY FOR RESPONDENT) ===== -->
+<div id="screen-results" class="screen">
+
+  <!-- Header -->
+  <div class="results-summary-header">
+    <div class="main-subtitle" style="margin-bottom:8px">Résultats personnalisés</div>
+    <h2 class="results-title">Vos résultats V.A.L.E.U.R©</h2>
+    <p class="results-date" id="r-date"></p>
+    <p class="results-name" id="r-name"></p>
+  </div>
+
+  <!-- Global score -->
+  <div class="global-chip-row">
+    <div class="global-chip">
+      <span class="val" id="r-global"></span>
+      <span class="lbl">Score global / 336</span>
+    </div>
+  </div>
+
+  <!-- Summary intro -->
+  <div class="summary-intro">
+    <p>Le questionnaire V.A.L.E.U.R© identifie le <strong>niveau d'emprise</strong> de chacun des sept masques psychologiques fondamentaux. Chaque masque correspond à une <strong>peur primale</strong> universelle qui génère des stratégies de protection automatiques. Plus le score est élevé, plus ce mécanisme de défense est actif et envahissant dans votre quotidien.</p>
+    <p style="margin-top:8px">Pour diminuer l'emprise de vos masques dominants, la <strong>méthode V.A.L.E.U.R©</strong> vous guide : <em>Voir – Accueillir – Localiser – Explorer – Unifier – Renforcer</em>.</p>
+  </div>
+
+  <!-- Masks summary grid -->
+  <div class="masks-summary-grid" id="masks-summary-grid"></div>
+
+  <!-- Print button -->
+  <div class="print-note no-print">
+    <p style="margin-bottom:12px">💡 Vous pouvez imprimer ou sauvegarder cette page pour conserver vos résultats.</p>
+    <div class="btn-group" style="justify-content:center;margin-top:0">
+      <button class="btn btn-print" onclick="window.print()">🖨 Imprimer mes résultats</button>
+      <button class="btn btn-outline" onclick="resetApp()">↺ Recommencer</button>
+    </div>
+    <div id="email-status" style="margin-top:8px"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-disclaimer">
+    Méthode psychoéducative · Outil d'auto-exploration uniquement · Ne remplace pas une évaluation ou un suivi professionnel<br>
+    Méthode V.A.L.E.U.R© · Instruments de référence : SHAI (Salkovskis et al., 2002) · TAS-20 (Bagby et al., 1994) · IUS-12 (Carleton et al., 2007)<br>
+    ECR-R (Fraley et al., 2000) · LOC+NPI (Rotter, 1966 / Raskin & Terry, 1988) · FMPS (Frost et al., 1990) · MSI (Schrader et al., 2014)
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* ============================================================
+   ★ CONFIGURATION — MODIFIEZ CES VALEURS
+   ============================================================ */
+const CONFIG = {
+  // --- Sécurité ---
+  ACCESS_CODE: 'VALEUR2025',       // ← Changez ce code d'accès
+
+  // --- EmailJS ---
+  // Créez un compte gratuit sur https://www.emailjs.com
+  // Tutoriel d'installation en fin de fichier
+  EMAILJS_PUBLIC_KEY:  'VOTRE_PUBLIC_KEY',    // ← Remplacez
+  EMAILJS_SERVICE_ID:  'VOTRE_SERVICE_ID',    // ← Remplacez
+  EMAILJS_TEMPLATE_ID: 'VOTRE_TEMPLATE_ID',  // ← Remplacez
+
+  // --- Destinataire des résultats détaillés ---
+  ADMIN_EMAIL: 'votre@email.com',             // ← Votre adresse email
+  ADMIN_NAME:  'Praticien V.A.L.E.U.R',
+
+  // --- Désactiver l'email en mode test (true = désactivé) ---
+  EMAIL_TEST_MODE: false
+};
+
+/* ============================================================
+   DATA : 7 MASQUES + 84 ITEMS + DÉFIS
+   ============================================================ */
+const MASKS = [
+  {
+    id:'rouge', name:'Masque Rouge', color:'#e53e3e', num:1,
+    peur:'La mort et la maladie', peurShort:'Peur existentielle',
+    theme:'Anxiété de Santé · Hypervigilance Somatique · Peur Existentielle',
+    instrument:'SHAI — Short Health Anxiety Inventory (Salkovskis et al., 2002, α = 0,86)',
+    refs:['Salkovskis et al. (2002)', 'DSM-5 TAG', 'LeDoux (1996)'],
+    levels: {
+      faible:   'Ce masque est peu actif chez vous. Votre rapport au corps et à la santé est globalement serein.',
+      modéré:   'L\'anxiété liée à la santé est présente mais gérable. Quelques vigilances ponctuelles peuvent limiter votre qualité de vie.',
+      élevé:    'L\'hypervigilance somatique est significativement active. Des pensées répétitives sur la maladie ou la mort interfèrent avec votre quotidien.',
+      dominant: 'Ce masque est très envahissant. L\'anxiété de santé est omniprésente et génère une souffrance importante. Un accompagnement est fortement recommandé.'
+    },
+    manifestations:'Hypervigilance corporelle · Interprétation catastrophique des symptômes · Besoin de réassurance médicale · Vérifications répétées',
+    items:[
+      {id:'R1',     inv:false, text:'Je surveille constamment mes battements cardiaques, ma respiration ou ma température corporelle.'},
+      {id:'R_inv1', inv:true,  text:'Je fais confiance à mon corps et à sa capacité auto-régulative de maintien de la santé.'},
+      {id:'R2',     inv:false, text:'Lorsque je ressens une sensation corporelle inhabituelle, j\'anticipe immédiatement le pire diagnostic.'},
+      {id:'R_inv2', inv:true,  text:'Lorsque je ressens une sensation physique mineure, j\'évalue qu\'elle est probablement bénigne.'},
+      {id:'R3',     inv:false, text:'Je recherche mes symptômes en ligne ou consulte des sources médicales pour auto-diagnostiquer mes maux.'},
+      {id:'R_inv3', inv:true,  text:'Je peux pratiquer une activité physique sans préoccupation excessive concernant ma santé.'},
+      {id:'R4',     inv:false, text:'J\'évite certaines activités physiques (escaliers, sport, transports) par appréhension qu\'un événement grave survienne.'},
+      {id:'R_inv4', inv:true,  text:'Je suis rarement préoccupé(e) par ma santé ou par l\'émergence potentielle de pathologies.'},
+      {id:'R5',     inv:false, text:'Je me réveille la nuit avec une angoisse concernant ma santé ou mon intégrité physique.'},
+      {id:'R6',     inv:false, text:'J\'ai besoin d\'une réassurance répétée de professionnels médicaux ou de mes proches concernant ma santé.'},
+      {id:'R7',     inv:false, text:'La moindre douleur corporelle déclenche immédiatement des pensées de maladie grave (cancer, infarctus, AVC).'},
+      {id:'R8',     inv:false, text:'J\'ai consulté plusieurs médecins pour un même symptôme car aucune réassurance n\'a été suffisante.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Observer une sensation physique inhabituelle', desc:'Prenez 5 min pour appliquer V.A.L.E.U.R. face à une sensation corporelle : observez, accueillez la peur, localisez dans le corps, explorez la probabilité réelle, unifiez en reconnaissant que la vigilance est normale mais que toute sensation n\'est pas mortelle, renforcez en continuant votre activité.'},
+      {level:'Intermédiaire', title:'Regarder un documentaire sur la fin de vie', desc:'Exposez-vous volontairement à ce sujet avec l\'accompagnement de la méthode V.A.L.E.U.R, en reconnaissant que regarder la mort en face peut enrichir votre appréciation de la vie.'},
+      {level:'Intermédiaire avancé', title:'Rédiger vos dernières volontés ou directives anticipées', desc:'Confrontation directe avec votre mortalité : une heure pour écrire vos souhaits. Appliquez V.A.L.E.U.R. tout au long, en comprenant qu\'accepter la mort permet de mieux vivre.'},
+      {level:'Avancé', title:'Avoir une conversation authentique sur la mort', desc:'Initiez un échange profond avec un proche sur vos peurs respectives, vos souhaits de fin de vie. Parler de la mort normalise l\'anxiété et crée de l\'intimité authentique.'},
+      {level:'Expert', title:'Vivre pleinement malgré l\'incertitude existentielle', desc:'Pendant une semaine, posez chaque jour un acte qui affirme la vie. Pratiquez V.A.L.E.U.R. quotidiennement et célébrez chaque moment choisi de vivre pleinement malgré la peur.'}
+    ]
+  },
+  {
+    id:'orange', name:'Masque Orange', color:'#ed8936', num:2,
+    peur:'La souffrance et la douleur psychique', peurShort:'Évitement émotionnel',
+    theme:'Alexithymie · Évitement Émotionnel · Dissociation Affective',
+    instrument:'TAS-20 — Toronto Alexithymia Scale (Bagby, Parker, Taylor, 1994, α = 0,81)',
+    refs:['Bagby et al. (1994)', 'Hayes (1996) — Évitement expérientiel', 'Eisenberger (2003)'],
+    levels:{
+      faible:   'Votre capacité à ressentir et exprimer vos émotions est globalement préservée.',
+      modéré:   'Certaines émotions sont difficiles à identifier ou exprimer. Un évitement ponctuel peut limiter vos connexions profondes.',
+      élevé:    'L\'évitement émotionnel est significatif. Vous tendez à vous couper de vos ressentis, ce qui peut affecter vos relations et votre bien-être.',
+      dominant: 'L\'anesthésie émotionnelle est très prononcée. Ce masque génère un vide affectif important. Un accompagnement thérapeutique est fortement recommandé.'
+    },
+    manifestations:'Fuite émotionnelle · Anesthésie affective · Surinvestissement activité · Humour défensif · Dissociation',
+    items:[
+      {id:'O1',     inv:false, text:'Je change de sujet ou me retire lorsqu\'une conversation devient trop chargée émotionnellement.'},
+      {id:'O_inv1', inv:true,  text:'Je ressens et identifie clairement mes différents états émotionnels.'},
+      {id:'O2',     inv:false, text:'Je ressens un malaise significatif lorsqu\'autrui pleure ou exprime des émotions intenses en ma présence.'},
+      {id:'O_inv2', inv:true,  text:'L\'intimité émotionnelle avec autrui me semble naturelle et confortable.'},
+      {id:'O3',     inv:false, text:'J\'éprouve des difficultés à identifier et nommer précisément ce que je ressens (peur, colère, tristesse, joie).'},
+      {id:'O_inv3', inv:true,  text:'J\'ai pleuré récemment et ai pu exprimer authentiquement ce que je ressentais.'},
+      {id:'O4',     inv:false, text:'Je maintiens un niveau d\'activité constant pour éviter de me retrouver seul(e) avec mes émotions.'},
+      {id:'O_inv4', inv:true,  text:'Mon corps me semble vivant, habité et connecté à mes émotions.'},
+      {id:'O5',     inv:false, text:'J\'utilise l\'humour ou la dérision comme mécanisme d\'évitement face aux situations émotionnellement difficiles.'},
+      {id:'O6',     inv:false, text:'Je me sens émotionnellement engourdi(e), comme si j\'observais ma propre vie de l\'extérieur.'},
+      {id:'O7',     inv:false, text:'J\'évite délibérément les films, lectures ou situations susceptibles de m\'émouvoir intensément.'},
+      {id:'O8',     inv:false, text:'Je n\'ai pas pleuré depuis une période prolongée, même lors d\'événements objectivement difficiles.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Nommer à voix haute une émotion désagréable', desc:'Identifiez et nommez l\'émotion inconfortable à voix haute. Restez présent quelques minutes sans la chasser, en reconnaissant que la nommer la valide sans vous y noyer.'},
+      {level:'Intermédiaire', title:'Partager une déception avec quelqu\'un', desc:'Partagez authentiquement une déception récente (mineure) : « J\'ai été déçu quand... » sans minimiser ni intellectualiser. Maintenez le partage jusqu\'au bout sans détourner avec de l\'humour.'},
+      {level:'Intermédiaire avancé', title:'Regarder un film émouvant et accueillir les larmes', desc:'Engagez-vous à ne pas retenir vos émotions. Si les larmes viennent, laissez-les couler sans vous excuser — pleurer est une libération saine et non une faiblesse.'},
+      {level:'Avancé', title:'Avoir une conversation difficile longtemps reportée', desc:'Engagez une conversation évitée (conflit non résolu, besoin non exprimé) en acceptant que l\'inconfort temporaire mène à une résolution durable.'},
+      {level:'Expert', title:'Partager une vulnérabilité profonde', desc:'Partagez une blessure ou une peur secrète avec une personne de confiance. Partager la souffrance la divise ; recevoir de l\'empathie guérit profondément.'}
+    ]
+  },
+  {
+    id:'jaune', name:'Masque Jaune', color:'#ecc94b', num:3,
+    peur:'L\'inconnu et l\'incertitude', peurShort:'Obsession de contrôle',
+    theme:'Intolérance à l\'Incertitude · Besoin de Contrôle · Rigidité Cognitive',
+    instrument:'IUS-12 — Intolerance of Uncertainty Scale (Carleton et al., 2007, α = 0,84)',
+    refs:['Carleton et al. (2007)', 'Dugas (1998) — Modèle TAG', 'Hofmann (2012)'],
+    levels:{
+      faible:   'Vous tolérez bien l\'incertitude et vous adaptez avec souplesse aux imprévus.',
+      modéré:   'Certains imprévus génèrent de l\'anxiété. La planification est parfois excessive mais reste gérable.',
+      élevé:    'L\'intolérance à l\'incertitude est significative. Ruminations, routines rigides et besoin de contrôle limitent votre liberté.',
+      dominant: 'L\'obsession de contrôle est envahissante. Toute imprévisibilité génère une anxiété intense et paralysante. Un accompagnement est fortement recommandé.'
+    },
+    manifestations:'Planification excessive · Ruminations · Rigidité comportementale · Vérifications compulsives · Anxiété face aux changements',
+    items:[
+      {id:'J1',     inv:false, text:'Je planifie excessivement chaque aspect de mon existence pour anticiper et prévenir les imprévus.'},
+      {id:'J_inv1', inv:true,  text:'J\'apprécie l\'imprévu et les surprises, même lorsqu\'elles sont inattendues.'},
+      {id:'J2',     inv:false, text:'L\'incertitude ou l\'absence d\'information sur ce qui va advenir génère une anxiété considérable.'},
+      {id:'J_inv2', inv:true,  text:'Je peux prendre des décisions sans disposer de toutes les informations.'},
+      {id:'J3',     inv:false, text:'Je vérifie de manière répétée mes actions (fermetures, appareils, communications) pour m\'assurer de leur exactitude.'},
+      {id:'J_inv3', inv:true,  text:'Je suis flexible et peux aisément adapter mes plans face aux circonstances.'},
+      {id:'J4',     inv:false, text:'Les modifications de planification ou d\'horaire, même mineures, déclenchent un stress significatif.'},
+      {id:'J_inv4', inv:true,  text:'L\'incertitude ne constitue pas une source d\'anxiété significative pour moi.'},
+      {id:'J5',     inv:false, text:'J\'ai développé des routines rigides et leur modification me perturbe profondément.'},
+      {id:'J6',     inv:false, text:'Je rumine constamment sur l\'ensemble des scénarios possibles et leurs conséquences potentielles.'},
+      {id:'J7',     inv:false, text:'J\'ai besoin d\'une quantité importante d\'informations avant de prendre même une décision mineure.'},
+      {id:'J8',     inv:false, text:'Les surprises, même positives ou agréables, génèrent un inconfort psychologique.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Modifier un petit élément de votre routine quotidienne', desc:'Changez délibérément un aspect de votre routine (chemin différent, heure de repas, ordre des rituels). Notez que rien de grave ne s\'est produit et que vous avez survécu au changement.'},
+      {level:'Intermédiaire', title:'Dire oui à une invitation spontanée', desc:'Acceptez sans planifier excessivement. Vivez l\'expérience et constatez que l\'improvisation fonctionne et peut être source d\'opportunités inattendues.'},
+      {level:'Intermédiaire avancé', title:'Partir en week-end avec 30 minutes de préparation maximum', desc:'Pas de liste détaillée, pas de plan B. Faites confiance à votre adaptabilité et constatez que l\'absence de sur-planification permet des découvertes spontanées.'},
+      {level:'Avancé', title:'Essayer une nouvelle activité sans aucune recherche préalable', desc:'Inscrivez-vous à un cours totalement nouveau SANS vous préparer. Présentez-vous le jour J en débutant total et célébrez ce courage.'},
+      {level:'Expert', title:'Prendre une décision importante avec 70% des informations', desc:'Engagez-vous à décider avec une incertitude résiduelle, en comprenant qu\'aucune décision ne vient avec une garantie absolue et que l\'action malgré l\'incertitude est une forme de courage.'}
+    ]
+  },
+  {
+    id:'vert', name:'Masque Vert', color:'#48bb78', num:4,
+    peur:'Le rejet et l\'abandon', peurShort:'Insécurité relationnelle',
+    theme:'Anxiété de Séparation · Dépendance Affective · Peur de l\'Abandon',
+    instrument:'ECR-R — Experiences in Close Relationships (Fraley et al., 2000, α = 0,88)',
+    refs:['Fraley et al. (2000)', 'Bowlby (1969) — Théorie attachement', 'Eisenberger (2003)'],
+    levels:{
+      faible:   'Votre sécurité affective est bien établie. Vous pouvez vous affirmer et tolérer la solitude sereinement.',
+      modéré:   'Certaines situations relationnelles génèrent de l\'anxiété. Le besoin de validation est présent mais pas envahissant.',
+      élevé:    'La peur du rejet est significativement active. Sur-adaptation, effacement de soi et besoin de validation constante affectent vos relations.',
+      dominant: 'La dépendance affective est très prononcée. La peur de l\'abandon structure vos comportements au détriment de votre authenticité. Un accompagnement est fortement recommandé.'
+    },
+    manifestations:'Sur-adaptation · Effacement de soi · Besoin de validation · Peur de déplaire · Maintien de relations délétères',
+    items:[
+      {id:'V1',     inv:false, text:'J\'acquiesce à la majorité des demandes, même lorsque je n\'en ai authentiquement pas l\'envie.'},
+      {id:'V_inv1', inv:true,  text:'Je peux affirmer mes besoins authentiques sans crainte excessive du rejet.'},
+      {id:'V2',     inv:false, text:'Un message sans réponse rapide déclenche une anxiété et une rumination importantes.'},
+      {id:'V_inv2', inv:true,  text:'Je suis à l\'aise et serein(e) dans la solitude.'},
+      {id:'V3',     inv:false, text:'J\'adapte ma personnalité, mes opinions et mes préférences en fonction de mon interlocuteur.'},
+      {id:'V_inv3', inv:true,  text:'Je sais poser des limites et dire « non » lorsque quelque chose ne me convient pas.'},
+      {id:'V4',     inv:false, text:'Je suis incapable d\'affirmer mes besoins ou désirs authentiques par crainte de générer un conflit.'},
+      {id:'V_inv4', inv:true,  text:'Je me sens aimé(e) et accepté(e) pour qui je suis authentiquement.'},
+      {id:'V5',     inv:false, text:'J\'ai besoin d\'une réassurance constante concernant l\'affection et l\'acceptation d\'autrui à mon égard.'},
+      {id:'V6',     inv:false, text:'Je maintiens des relations insatisfaisantes ou délétères par peur de me retrouver seul(e).'},
+      {id:'V7',     inv:false, text:'Je me surcharge de responsabilités pour me rendre indispensable et garantir ma place.'},
+      {id:'V8',     inv:false, text:'La solitude représente une terreur profonde et je déploie tous les moyens pour l\'éviter.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Exprimer une préférence différente du groupe', desc:'Dans un groupe, exprimez clairement votre préférence même si elle diffère. L\'authenticité crée des liens plus solides que la conformité.'},
+      {level:'Intermédiaire', title:'Dire non à une demande sans justification excessive', desc:'Dites simplement « non » ou « ce n\'est pas possible pour moi » sans longue explication. Poser des limites est sain et respectueux.'},
+      {level:'Intermédiaire avancé', title:'Partager une opinion impopulaire qui vous tient à cœur', desc:'Exprimez-la avec authenticité et respect. Le désaccord n\'équivaut pas au rejet — on peut être aimé sans penser pareil.'},
+      {level:'Avancé', title:'Demander directement ce dont vous avez besoin', desc:'Formulez clairement : « J\'ai besoin de... » sans attendre qu\'on le devine. Exprimer ses besoins est un acte d\'amour envers soi ET l\'autre.'},
+      {level:'Expert', title:'Être pleinement vous-même pendant une journée entière', desc:'Dites ce que vous pensez vraiment, exprimez vos émotions, affirmez vos limites dans toutes vos interactions. Constatez que vos relations authentiques s\'approfondissent.'}
+    ]
+  },
+  {
+    id:'bleu', name:'Masque Bleu', color:'#4299e1', num:5,
+    peur:'L\'impuissance et la perte de contrôle', peurShort:'Hypercontrôle relationnel',
+    theme:'Hypercontrôle · Besoin de Domination · Intolérance à la Dépendance',
+    instrument:'LOC (Rotter, 1966, α = 0,82) + NPI (Raskin & Terry, 1988, α = 0,87)',
+    refs:['Rotter (1966) — Locus of Control', 'Raskin & Terry (1988)', 'Shapiro (1965)'],
+    levels:{
+      faible:   'Vous déléguez et faites confiance aux autres avec relative aisance. Le lâcher-prise vous est accessible.',
+      modéré:   'Le besoin de contrôle est présent sans être envahissant. Certaines situations de dépendance génèrent de l\'inconfort.',
+      élevé:    'L\'hypercontrôle est significatif. La difficulté à déléguer, les réactions de colère et le besoin de domination affectent vos relations.',
+      dominant: 'Le besoin de maîtrise est très envahissant et épuisant. Il affecte profondément vos relations. Un accompagnement est fortement recommandé.'
+    },
+    manifestations:'Difficulté à déléguer · Colère face à l\'impuissance · Besoin de reconnaissance · Comportements directifs non sollicités',
+    items:[
+      {id:'B1',     inv:false, text:'Je reprends immédiatement le contrôle ou corrige autrui lorsque les choses sont réalisées différemment.'},
+      {id:'B_inv1', inv:true,  text:'Je peux facilement déléguer et faire confiance aux compétences d\'autrui.'},
+      {id:'B2',     inv:false, text:'Déléguer m\'est extrêmement difficile car je suis convaincu(e) qu\'autrui ne fera pas aussi bien.'},
+      {id:'B_inv2', inv:true,  text:'Lorsque les événements m\'échappent, je maintiens ma sérénité intérieure.'},
+      {id:'B3',     inv:false, text:'Je ressens une irritation viscérale et profonde lorsque les événements m\'échappent.'},
+      {id:'B_inv3', inv:true,  text:'J\'accueille les critiques et les perspectives divergentes avec ouverture.'},
+      {id:'B4',     inv:false, text:'J\'ai des réactions de colère disproportionnées face à la perte de contrôle d\'une situation.'},
+      {id:'B_inv4', inv:true,  text:'Je n\'ai pas besoin d\'être en position dominante ou de contrôle pour me sentir en sécurité.'},
+      {id:'B5',     inv:false, text:'Je suis très susceptible et réagis intensément à toute forme de critique, même constructive.'},
+      {id:'B6',     inv:false, text:'J\'ai un besoin significatif d\'être reconnu(e), admiré(e) ou d\'occuper une position d\'influence.'},
+      {id:'B7',     inv:false, text:'Je ressens une anxiété majeure ou un sentiment d\'impuissance lorsque je dois dépendre d\'autrui.'},
+      {id:'B8',     inv:false, text:'Je tends à diriger, organiser et prendre les décisions pour les autres, même sans sollicitation.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Déléguer une petite tâche sans superviser le processus', desc:'Confiez une tâche et engagez-vous à n\'en vérifier que le résultat final. Les autres sont capables et différentes méthodes mènent au même résultat.'},
+      {level:'Intermédiaire', title:'Accepter qu\'une chose soit faite différemment de votre méthode', desc:'Résistez à l\'envie de critiquer ou de refaire. Exprimez de l\'appréciation pour le travail accompli — la diversité d\'approches enrichit.'},
+      {level:'Intermédiaire avancé', title:'Laisser quelqu\'un d\'autre prendre une décision vous concernant', desc:'Dans une situation habituelle de décision, laissez quelqu\'un choisir pour vous sans donner votre avis préalable. Céder le contrôle occasionnellement allège et renforce les liens.'},
+      {level:'Avancé', title:'Admettre "je ne sais pas" et demander de l\'aide', desc:'Admettez ouvertement votre non-maîtrise d\'un sujet et demandez l\'aide de quelqu\'un d\'autre. L\'humilité authentique renforce l\'autorité — demander de l\'aide crée de la connexion.'},
+      {level:'Expert', title:'Vivre une journée en lâchant prise sur tous les contrôles', desc:'Acceptez pendant une journée complète les changements de plans, les imprévus, les décisions des autres. Constatez votre niveau d\'énergie préservée et les relations apaisées.'}
+    ]
+  },
+  {
+    id:'indigo', name:'Masque Indigo', color:'#667eea', num:6,
+    peur:'L\'échec et l\'inadéquation', peurShort:'Anxiété de performance',
+    theme:'Perfectionnisme · Syndrome de l\'Imposteur · Peur de l\'Inadéquation',
+    instrument:'FMPS — Frost Multidimensional Perfectionism Scale (Frost et al., 1990, α = 0,90)',
+    refs:['Frost et al. (1990)', 'Clance & Imes (1978) — Syndrome imposteur', 'Blatt (2004)'],
+    levels:{
+      faible:   'Votre rapport à la performance est sain. Vous assumez vos erreurs sans vous remettre globalement en question.',
+      modéré:   'Le perfectionnisme est présent dans certains domaines. La peur du jugement peut limiter ponctuellement votre prise d\'initiative.',
+      élevé:    'L\'anxiété de performance est significative. Procrastination, autosabotage et syndrome de l\'imposteur affectent votre vie professionnelle et personnelle.',
+      dominant: 'Le perfectionnisme paralysant est envahissant. La peur de l\'échec vous empêche d\'agir et génère une souffrance importante. Un accompagnement est fortement recommandé.'
+    },
+    manifestations:'Perfectionnisme paralysant · Procrastination · Syndrome de l\'imposteur · Auto-critique sévère · Autosabotage',
+    items:[
+      {id:'I1',     inv:false, text:'Je procrastine ou diffère mes actions par crainte que mon travail ne soit pas suffisamment parfait.'},
+      {id:'I_inv1', inv:true,  text:'Je reconnais et valorise mes accomplissements avec fierté.'},
+      {id:'I2',     inv:false, text:'Je minimise systématiquement mes accomplissements et mes succès.'},
+      {id:'I_inv2', inv:true,  text:'Je peux entreprendre de nouvelles activités même sans garantie de perfection.'},
+      {id:'I3',     inv:false, text:'J\'éprouve le sentiment profond d\'être un(e) imposteur(e) qui a bénéficié de chance jusqu\'à présent.'},
+      {id:'I_inv3', inv:true,  text:'Je me sens compétent(e) et légitime dans mes domaines d\'expertise.'},
+      {id:'I4',     inv:false, text:'Je me compare constamment à autrui et me perçois toujours comme inférieur(e) ou insuffisant(e).'},
+      {id:'I_inv4', inv:true,  text:'Une erreur représente pour moi une opportunité d\'apprentissage, non une remise en cause de ma valeur.'},
+      {id:'I5',     inv:false, text:'Je retravaille excessivement mes productions car elles ne sont jamais assez abouties pour être partagées.'},
+      {id:'I6',     inv:false, text:'J\'évite de relever des défis, de prendre des initiatives ou d\'expérimenter de nouvelles compétences.'},
+      {id:'I7',     inv:false, text:'Une erreur mineure me fait intensément douter de ma compétence globale et de ma valeur.'},
+      {id:'I8',     inv:false, text:'J\'ai un besoin constant de validation externe pour me sentir compétent(e) et légitime.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Partager un travail en cours, encore imparfait', desc:'Partagez un projet AVANT qu\'il soit parfait, en précisant que c\'est un brouillon. Le processus créatif est itératif et les retours précoces sont précieux.'},
+      {level:'Intermédiaire', title:'Essayer quelque chose de nouveau où vous serez débutant', desc:'Inscrivez-vous à une activité sans compétence préalable. Célébrez chaque petite progression sans vous comparer aux autres — l\'apprentissage exige d\'accepter d\'être débutant.'},
+      {level:'Intermédiaire avancé', title:'Fixer une deadline ferme et s\'y tenir', desc:'Livrez le jour J quel que soit l\'état du projet. « Fait est mieux que parfait » — le résultat imparfait remplit souvent sa fonction.'},
+      {level:'Avancé', title:'Raconter un échec passé sans le minimiser', desc:'Partagez ouvertement un échec significatif sans excuses, en reconnaissant ce que vous en avez appris. Partager ses échecs humanise et inspire.'},
+      {level:'Expert', title:'Se lancer dans un projet ambitieux sans garantie de succès', desc:'Faites le premier pas vers un rêve longtemps repoussé par peur d\'échouer. Ne pas essayer est l\'échec garanti — tenter avec passion est déjà une victoire.'}
+    ]
+  },
+  {
+    id:'violet', name:'Masque Violet', color:'#9f7aea', num:7,
+    peur:'La perte d\'identité et la dissolution de l\'ego', peurShort:'Angoisse existentielle',
+    theme:'Aliénation Identitaire · Faux-Self · Crise Existentielle',
+    instrument:'MSI — Multidimensional Self-Identity Scale (Schrader et al., 2014, α = 0,79)',
+    refs:['Schrader et al. (2014)', 'Winnicott (1960) — Vrai/Faux Self', 'Yalom (1980) — Existentiel'],
+    levels:{
+      faible:   'Votre sens de l\'identité est stable et ancré. Vous évoluez avec fluidité sans vous perdre.',
+      modéré:   'Certaines transitions de vie génèrent une anxiété identitaire. La résistance au changement est présente sans être paralysante.',
+      élevé:    'L\'aliénation identitaire est significative. Le sentiment de vide, le faux-self et la résistance au changement affectent profondément votre bien-être.',
+      dominant: 'Ce masque est le plus complexe : il cristallise l\'ensemble des autres mécanismes de défense. Une reconstruction identitaire profonde est recommandée en thérapie.'
+    },
+    manifestations:'Perte du sens de soi · Vide existentiel · Résistance au changement · Faux-self cristallisé · Aliénation à l\'existence',
+    items:[
+      {id:'Vi1',     inv:false, text:'Je ne sais plus véritablement qui je suis en dehors des rôles sociaux que j\'incarne.'},
+      {id:'Vi_inv1', inv:true,  text:'Je sais clairement qui je suis indépendamment des rôles que je joue socialement.'},
+      {id:'Vi2',     inv:false, text:'Lorsque je suis seul(e) et silencieux(se), j\'éprouve un vide, une absence ou un manque de sens.'},
+      {id:'Vi_inv2', inv:true,  text:'Je me sens vivant(e), présent(e) et pleinement impliqué(e) dans ma propre vie.'},
+      {id:'Vi3',     inv:false, text:'J\'ai renoncé à mes passions, aspirations et intérêts authentiques pour correspondre aux attentes externes.'},
+      {id:'Vi_inv3', inv:true,  text:'J\'explore librement de nouvelles facettes de ma personnalité avec curiosité.'},
+      {id:'Vi4',     inv:false, text:'Si je changeais profondément, je serais dans l\'incapacité d\'anticiper qui je deviendrais.'},
+      {id:'Vi_inv4', inv:true,  text:'Mon existence me semble authentique, cohérente et véritablement MIENNE.'},
+      {id:'Vi5',     inv:false, text:'J\'éprouve une nostalgie douloureuse de qui j\'étais antérieurement, plus spontané(e) et authentique.'},
+      {id:'Vi6',     inv:false, text:'Je me sens étranger(ère) à ma propre existence, comme si je l\'observais de l\'extérieur.'},
+      {id:'Vi7',     inv:false, text:'J\'ai porté tant de masques que l\'idée d\'être authentiquement moi-même semble terrifiante.'},
+      {id:'Vi8',     inv:false, text:'Je m\'accroche rigidement à mes habitudes et routines même si elles ne génèrent pas de bien-être.'},
+    ],
+    challenges:[
+      {level:'Débutant', title:'Modifier une habitude ancrée depuis longtemps', desc:'Changez délibérément une habitude quotidienne pendant une semaine. Votre essence demeure intacte malgré le changement — vous êtes plus vaste que vos routines.'},
+      {level:'Intermédiaire', title:'Essayer un style ou look différent pendant une journée', desc:'Adoptez un look différent de votre image habituelle. Votre essence est indépendante de votre apparence — vous êtes toujours vous-même.'},
+      {level:'Intermédiaire avancé', title:'Explorer une activité qui ne vous ressemble pas', desc:'Engagez-vous dans une activité que vous n\'auriez jamais envisagée. Vous contenez des multitudes — chaque nouvelle facette enrichit plutôt qu\'elle ne dilue.'},
+      {level:'Avancé', title:'Remettre en question une croyance fondamentale sur vous-même', desc:'Agissez délibérément à l\'encontre d\'une croyance sur vous-même pendant une semaine. Votre identité peut évoluer sans que vous vous perdiez.'},
+      {level:'Expert', title:'S\'autoriser à évoluer dans une direction inattendue', desc:'Prenez une décision concrète vers une évolution longtemps résistée. Évoluer ne signifie pas se perdre — c\'est se retrouver. L\'évolution est la nature même de la vie.'}
+    ]
+  }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let responses = {};
+let demographics = {};
+let scores = {};
+let sendEmailResult = null;
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  if (CONFIG.EMAILJS_PUBLIC_KEY !== 'VOTRE_PUBLIC_KEY') {
+    emailjs.init({ publicKey: CONFIG.EMAILJS_PUBLIC_KEY });
+  }
+  buildMaskScreens();
+});
+
+/* ============================================================
+   ACCESS GATE
+   ============================================================ */
+function checkAccess() {
+  const input = document.getElementById('access-input');
+  const errEl = document.getElementById('access-error');
+  const val = input.value.trim();
+  if (val.toUpperCase() === CONFIG.ACCESS_CODE.toUpperCase()) {
+    goToScreen('screen-welcome');
+    errEl.textContent = '';
+  } else {
+    input.classList.add('error');
+    errEl.textContent = '❌ Code incorrect. Veuillez réessayer.';
+    setTimeout(() => input.classList.remove('error'), 400);
+    input.value = '';
+    input.focus();
+  }
+}
+
+function togglePw() {
+  const inp = document.getElementById('access-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); window.scrollTo({top:0, behavior:'smooth'}); }
+}
+
+function startQuestionnaire() {
+  const prenom = document.getElementById('d-prenom').value.trim();
+  const age    = document.getElementById('d-age').value.trim();
+  const email  = document.getElementById('d-email').value.trim();
+  if (!prenom || !age || !email) {
+    alert('Merci de remplir les champs obligatoires (Prénom, Âge, Email).');
+    return;
+  }
+  demographics = {
+    prenom, age,
+    genre:       document.getElementById('d-genre').value || 'Non précisé',
+    situation:   document.getElementById('d-pro').value || 'Non précisé',
+    attachement: document.getElementById('d-attach').value || 'Incertain',
+    email
+  };
+  goToScreen('screen-mask-0');
+}
+
+/* ============================================================
+   BUILD MASK SCREENS
+   ============================================================ */
+function buildMaskScreens() {
+  const container = document.getElementById('screen-masks-container');
+  MASKS.forEach((mask, idx) => {
+    const div = document.createElement('div');
+    div.id = `screen-mask-${idx}`;
+    div.className = 'screen';
+    div.innerHTML = buildMaskHTML(mask, idx);
+    container.appendChild(div);
+  });
+}
+
+function buildMaskHTML(mask, idx) {
+  const itemsHTML = mask.items.map(item => `
+    <div class="item-card ${item.inv ? 'inv-item' : ''}" id="card-${item.id}">
+      <div class="item-header">
+        <span class="item-id">${item.id}${item.inv ? ' ↺' : ''}</span>
+        <span class="item-text">${item.text}</span>
+      </div>
+      <div class="likert">
+        ${[0,1,2,3,4].map(v => `
+          <label class="likert-option">
+            <input type="radio" name="item_${item.id}" value="${v}"
+                   onchange="onAnswer('${item.id}', ${v}, ${idx})"
+                   style="display:none">
+            <div class="likert-btn" style="color:${mask.color}">${v}</div>
+            <span class="likert-label">${['Jamais','Rarement','Parfois','Souvent','Très souvent'][v]}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>`).join('');
+
+  return `
+    <div class="progress-wrapper no-print">
+      <div class="progress-info">
+        <span>${mask.name} – Section ${idx+1}/7</span>
+        <span id="pc-${idx}">0 / 12</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${(idx+2)/9*100}%;background:${mask.color}"></div>
+      </div>
+      <div class="step-dots">
+        ${Array.from({length:9},(_,i) => `<span class="step-dot ${i===idx+1?'active':i<=idx?'done':''}"
+          style="${i>0&&i<=idx?`background:${mask.color};border-color:${mask.color}`:''}"></span>`).join('')}
+      </div>
+    </div>
+    <div class="mask-header">
+      <div class="mask-badge" style="color:${mask.color}; border-color:${mask.color}33">
+        <span style="width:8px;height:8px;border-radius:50%;background:${mask.color};display:inline-block"></span>
+        Section ${idx+1} / 7 · ${mask.peurShort}
+      </div>
+      <h2 class="mask-title" style="color:${mask.color}">${mask.name}</h2>
+      <p class="mask-desc">${mask.theme}</p>
+    </div>
+    <div class="items-container">${itemsHTML}</div>
+    <div id="warn-${idx}" class="unanswered-msg hidden">
+      ⚠ Veuillez répondre à toutes les 12 questions avant de continuer.
+    </div>
+    <div class="btn-group no-print" style="margin-top:32px">
+      <button class="btn btn-secondary" onclick="prevMask(${idx})">← Précédent</button>
+      <button class="btn btn-primary" onclick="nextMask(${idx})"
+              style="background:linear-gradient(135deg,${mask.color},${darken(mask.color)})">
+        ${idx < 6 ? 'Section suivante →' : '✔ Voir mes résultats →'}
+      </button>
+    </div>`;
+}
+
+function darken(hex) {
+  const n = parseInt(hex.replace('#',''),16);
+  const r = Math.max(0,(n>>16)-35), g = Math.max(0,((n>>8)&0xff)-35), b = Math.max(0,(n&0xff)-35);
+  return `#${((r<<16)|(g<<8)|b).toString(16).padStart(6,'0')}`;
+}
+
+function onAnswer(id, val, idx) {
+  responses[id] = parseInt(val);
+  document.getElementById(`card-${id}`)?.classList.add('answered');
+  const ans = MASKS[idx].items.filter(it => responses[it.id] !== undefined).length;
+  const el = document.getElementById(`pc-${idx}`);
+  if (el) el.textContent = `${ans} / 12`;
+}
+
+function prevMask(idx) {
+  idx === 0 ? goToScreen('screen-demo') : goToScreen(`screen-mask-${idx-1}`);
+}
+
+async function nextMask(idx) {
+  const mask = MASKS[idx];
+  const allOk = mask.items.every(it => responses[it.id] !== undefined);
+  const warn = document.getElementById(`warn-${idx}`);
+  if (!allOk) {
+    warn.classList.remove('hidden');
+    const first = mask.items.find(it => responses[it.id] === undefined);
+    document.getElementById(`card-${first.id}`)?.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  warn.classList.add('hidden');
+  if (idx < 6) { goToScreen(`screen-mask-${idx+1}`); return; }
+
+  // LAST MASK → compute + send + show
+  scores = computeScores();
+  showOverlay(true);
+  await sendDetailedEmail();
+  showOverlay(false);
+  buildSummaryResults();
+  goToScreen('screen-results');
+}
+
+/* ============================================================
+   SCORING
+   ============================================================ */
+function adj(id, raw) { return id.includes('_inv') ? (4 - raw) : raw; }
+
+function computeScores() {
+  const result = {};
+  MASKS.forEach(m => {
+    result[m.id] = m.items.reduce((s, it) => s + adj(it.id, responses[it.id] ?? 0), 0);
+  });
+  result.total = MASKS.reduce((s, m) => s + result[m.id], 0);
+  return result;
+}
+
+function getLevel(score) {
+  if (score <= 12) return { label:'Faible',   key:'faible',   color:'#48bb78' };
+  if (score <= 24) return { label:'Modéré',   key:'modéré',   color:'#ecc94b' };
+  if (score <= 36) return { label:'Élevé',    key:'élevé',    color:'#ed8936' };
+  return              { label:'Dominant', key:'dominant', color:'#e53e3e' };
+}
+
+/* ============================================================
+   BUILD SUMMARY RESULTS (répondant)
+   ============================================================ */
+function buildSummaryResults() {
+  const now = new Date();
+  document.getElementById('r-date').textContent =
+    now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('r-name').textContent =
+    `${demographics.prenom} · ${demographics.age} ans · ${demographics.genre}`;
+  document.getElementById('r-global').textContent = `${scores.total} / 336`;
+
+  const grid = document.getElementById('masks-summary-grid');
+  grid.innerHTML = '';
+  MASKS.forEach(mask => {
+    const s = scores[mask.id];
+    const lv = getLevel(s);
+    const pct = (s/48*100).toFixed(0);
+    const desc = mask.levels[lv.key] || '';
+    const refsHTML = mask.refs.map(r => `<span class="ref-tag">${r}</span>`).join('');
+    grid.innerHTML += `
+      <div class="mask-summary-card" style="border-left-color:${mask.color}">
+        <div class="mask-summary-top">
+          <div class="mask-summary-name">
+            <span style="width:12px;height:12px;border-radius:50%;background:${mask.color};display:inline-block;flex-shrink:0"></span>
+            ${mask.name}
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="mask-summary-score" style="color:${mask.color}">${s}/48</span>
+            <span class="level-pill lv-${lv.key}" style="color:${lv.color};border-color:${lv.color}55">${lv.label}</span>
+          </div>
+        </div>
+        <div class="mask-score-bar">
+          <div class="mask-score-bar-fill" style="width:${pct}%;background:${mask.color}"></div>
+        </div>
+        <div class="mask-summary-peur" style="color:${mask.color}">Peur primale : ${mask.peur}</div>
+        <div class="mask-summary-desc">${desc}</div>
+        <div class="ref-tags">${refsHTML}</div>
+      </div>`;
+  });
+
+  // Email status
+  const st = document.getElementById('email-status');
+  if (sendEmailResult === 'ok') {
+    st.innerHTML = '<div class="status-success">✅ Vos résultats ont bien été transmis.</div>';
+  } else if (sendEmailResult === 'error') {
+    st.innerHTML = '<div class="status-error">⚠ Transmission des résultats indisponible momentanément. Vous pouvez imprimer cette page.</div>';
+  }
+}
+
+/* ============================================================
+   SEND DETAILED EMAIL (admin)
+   ============================================================ */
+async function sendDetailedEmail() {
+  if (CONFIG.EMAIL_TEST_MODE || CONFIG.EMAILJS_PUBLIC_KEY === 'VOTRE_PUBLIC_KEY') {
+    console.log('[TEST MODE] Email non envoyé. Configurez EmailJS dans CONFIG.');
+    sendEmailResult = 'test';
+    return;
+  }
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  // Build scores section
+  let scoresSummary = MASKS.map(m => {
+    const s = scores[m.id];
+    const lv = getLevel(s);
+    return `${m.name}: ${s}/48 (${lv.label})`;
+  }).join('\n');
+
+  // Build critical items
+  let criticalSection = '';
+  MASKS.forEach(mask => {
+    const crits = mask.items
+      .map(it => ({...it, a: adj(it.id, responses[it.id]??0)}))
+      .filter(it => it.a >= 3)
+      .sort((a,b) => b.a - a.a);
+    if (crits.length > 0) {
+      criticalSection += `\n--- ${mask.name} (${scores[mask.id]}/48) ---\n`;
+      crits.forEach(it => { criticalSection += `  [${it.id}] Score ${it.a}/4 : ${it.text}\n`; });
+    }
+  });
+
+  // Build challenges for dominant/high masks
+  let challengesSection = '';
+  MASKS.filter(m => scores[m.id] > 12).forEach(mask => {
+    const lv = getLevel(scores[mask.id]);
+    challengesSection += `\n=== ${mask.name} — ${lv.label} (${scores[mask.id]}/48) ===\n`;
+    const topItem = mask.items
+      .map(it => ({...it, a: adj(it.id, responses[it.id]??0)}))
+      .sort((a,b) => b.a - a.a)[0];
+    if (topItem) challengesSection += `Question prioritaire : "${topItem.text}" (score ${topItem.a}/4)\n`;
+    mask.challenges.forEach((c,i) => {
+      challengesSection += `${i+1}. [${c.level}] ${c.title}\n   ${c.desc}\n`;
+    });
+  });
+
+  // Build all responses
+  let allResponses = '';
+  MASKS.forEach(mask => {
+    allResponses += `\n[${mask.name}]\n`;
+    mask.items.forEach(it => {
+      const raw = responses[it.id] ?? '–';
+      const adjScore = adj(it.id, responses[it.id] ?? 0);
+      allResponses += `  ${it.id}${it.inv?' (inv)':''} | brut:${raw} | ajusté:${adjScore} | ${it.text}\n`;
+    });
+  });
+
+  const templateParams = {
+    // Destinataire admin
+    to_email:        CONFIG.ADMIN_EMAIL,
+    to_name:         CONFIG.ADMIN_NAME,
+    // Répondant
+    prenom:          demographics.prenom,
+    age:             demographics.age,
+    genre:           demographics.genre,
+    situation:       demographics.situation,
+    attachement:     demographics.attachement,
+    email_repondant: demographics.email,
+    date_passation:  dateStr,
+    // Scores
+    score_global:    `${scores.total}/336`,
+    scores_masques:  scoresSummary,
+    // Masques dominants
+    masques_dominants: MASKS.filter(m => scores[m.id] >= 37).map(m => m.name).join(', ') || 'Aucun',
+    masques_eleves:    MASKS.filter(m => scores[m.id] >= 25 && scores[m.id] < 37).map(m => m.name).join(', ') || 'Aucun',
+    // Détails
+    items_critiques:   criticalSection || 'Aucun item critique (score ≥ 3)',
+    defis_proposes:    challengesSection || 'Aucun masque modéré ou supérieur',
+    toutes_reponses:   allResponses,
+  };
+
+  try {
+    await emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, templateParams);
+    sendEmailResult = 'ok';
+  } catch (err) {
+    console.error('EmailJS error:', err);
+    sendEmailResult = 'error';
+  }
+}
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+function showOverlay(show) {
+  document.getElementById('sending-overlay').classList.toggle('hidden', !show);
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+function resetApp() {
+  if (!confirm('Recommencer le questionnaire ? Toutes vos réponses seront effacées.')) return;
+  responses = {}; scores = {}; demographics = {}; sendEmailResult = null;
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.item-card').forEach(c => c.classList.remove('answered'));
+  goToScreen('screen-access');
+}
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+function $(id) { return document.getElementById(id); }
+</script>
+
+<!--
+=================================================================
+  GUIDE D'INSTALLATION EMAILJS (3 étapes, 10 minutes)
+=================================================================
+
+1. CRÉER UN COMPTE
+   → https://www.emailjs.com  (gratuit jusqu'à 200 emails/mois)
+   → Inscrivez-vous avec votre adresse email admin
+
+2. CONFIGURER UN SERVICE
+   → Dashboard → Email Services → Add New Service
+   → Choisissez Gmail, Outlook, ou autre
+   → Connectez votre boîte mail → Notez le "Service ID"
+
+3. CRÉER UN TEMPLATE
+   → Dashboard → Email Templates → Create New Template
+   → Nommez-le "VALEUR_results_detail"
+   → Collez ce contenu dans le corps :
+
+   ==========================================
+   NOUVEAUX RÉSULTATS V.A.L.E.U.R© — {{date_passation}}
+
+   RÉPONDANT : {{prenom}} · {{age}} ans · {{genre}} · {{situation}}
+   Email : {{email_repondant}} · Attachement : {{attachement}}
+
+   ==========================================
+   SCORES GLOBAUX
+   Score total : {{score_global}}
+   {{scores_masques}}
+
+   Masques dominants (≥37/48) : {{masques_dominants}}
+   Masques élevés (25-36/48)  : {{masques_eleves}}
+
+   ==========================================
+   ITEMS CRITIQUES (score ajusté ≥ 3)
+   {{items_critiques}}
+
+   ==========================================
+   DÉFIS V.A.L.E.U.R PROPOSÉS
+   {{defis_proposes}}
+
+   ==========================================
+   TOUTES LES RÉPONSES DÉTAILLÉES
+   {{toutes_reponses}}
+   ==========================================
+   Outil psychoéducatif V.A.L.E.U.R© — Ne remplace pas une évaluation professionnelle
+   ==========================================
+
+4. RÉCUPÉRER LES CLÉS
+   → Dashboard → Account → General → Public Key
+   → Notez : Service ID, Template ID, Public Key
+
+5. RENSEIGNER DANS CONFIG (en haut du script) :
+   EMAILJS_PUBLIC_KEY:  'votre_public_key'
+   EMAILJS_SERVICE_ID:  'service_xxxxxxx'
+   EMAILJS_TEMPLATE_ID: 'template_xxxxxxx'
+   ADMIN_EMAIL:         'votre@email.com'
+   ACCESS_CODE:         'VOTRECODESECRET'
+   EMAIL_TEST_MODE: false    ← mettre false pour activer
+
+=================================================================
+-->
+
+</body>
+</html>
