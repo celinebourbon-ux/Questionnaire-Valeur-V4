@@ -9,21 +9,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<!-- ══════════════════════════════════════════════════════
-     PROTECTION ANTI-COPIE — Méthode V.A.L.E.U.R©
-     ══════════════════════════════════════════════════════ -->
 <script>
+/* ── PROTECTION COPYRIGHT — Méthode V.A.L.E.U.R© Céline Bourbon ── */
 (function(){
-  // Désactive le clic droit
   document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
-
-  // Désactive Ctrl+S (sauvegarder), Ctrl+U (voir source), F12 (outils dev)
   document.addEventListener('keydown', function(e) {
-    const k = e.key.toLowerCase();
-    const ctrl = e.ctrlKey || e.metaKey;
-    if (ctrl && ['s','u'].includes(k)) { e.preventDefault(); return false; }
-    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey||e.metaKey) && ['s','u'].includes(e.key.toLowerCase())) { e.preventDefault(); return false; }
+    if (e.key==='F12') { e.preventDefault(); return false; }
   });
 })();
 </script>
@@ -218,10 +210,33 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
   .level-pill { border:1px solid #999; }
 }
 
+/* ── ACCESS GATE ── */
+.access-card {
+  background:var(--navy-mid); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:48px 40px;
+  text-align:center; max-width:440px; margin:60px auto 0;
+}
+.access-card h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; margin-bottom:12px; }
+.access-card p { color:var(--text-muted); font-size:.9rem; margin-bottom:20px; }
+.access-input-wrap { position:relative; margin-bottom:12px; }
+.access-input {
+  width:100%; background:var(--navy-light); border:1px solid var(--border);
+  border-radius:var(--radius); padding:16px 48px 16px 20px;
+  color:var(--text); font-family:'Jost',sans-serif; font-size:1.1rem;
+  letter-spacing:.25em; text-align:center; transition:border-color .2s;
+}
+.access-input:focus { outline:none; border-color:rgba(102,126,234,.5); }
+.access-input.error { border-color:var(--rouge)!important; animation:shake .3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.access-error { color:#fc8181; font-size:.82rem; margin-top:4px; min-height:18px; }
+.toggle-pw { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.1rem; padding:4px; }
+.access-hint { font-size:.75rem; color:var(--text-dim); margin-top:14px; }
+
 @media(max-width:600px){
   .likert{gap:4px}.likert-btn{width:34px;height:34px;font-size:.8rem}.likert-label{display:none}
   .welcome-card,.form-card,.results-summary-header{padding:24px}
   .mask-summary-card{padding:18px}
+  .access-card{padding:32px 24px}
 }
 </style>
 </head>
@@ -246,27 +261,22 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 </header>
 
 <!-- ═══════════════════════════════════════════════
-     SCREEN : LIEN INVALIDE
+     SCREEN : CODE D'ACCÈS
      ═══════════════════════════════════════════════ -->
-<div id="screen-invalid" class="screen">
-  <div class="gate-card">
-    <div class="gate-icon">🔒</div>
-    <h2>Lien invalide</h2>
-    <p>Ce lien d'accès n'est pas reconnu ou n'existe pas dans notre système.</p>
-    <p>Veuillez utiliser le <strong>lien personnel</strong> qui vous a été envoyé par votre praticien.</p>
-    <p style="margin-top:16px;font-size:.78rem;color:var(--text-dim)">Si vous pensez qu'il s'agit d'une erreur, contactez directement l'organisateur.</p>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     SCREEN : LIEN DÉJÀ UTILISÉ
-     ═══════════════════════════════════════════════ -->
-<div id="screen-used" class="screen">
-  <div class="gate-card">
-    <div class="gate-icon">✅</div>
-    <h2>Questionnaire déjà complété</h2>
-    <p>Ce lien a déjà été utilisé pour passer le questionnaire.</p>
-    <p>Chaque lien est <strong>à usage unique</strong>. Contactez votre praticien si vous souhaitez recommencer.</p>
+<div id="screen-access" class="screen active">
+  <div class="access-card">
+    <div style="font-size:2rem;margin-bottom:12px">🔐</div>
+    <h2>Accès sécurisé</h2>
+    <p>Ce questionnaire est réservé aux participants autorisés.<br>Saisissez le code d'accès qui vous a été communiqué.</p>
+    <div class="access-input-wrap">
+      <input type="password" id="access-input" class="access-input"
+             placeholder="• • • • • •" maxlength="20"
+             onkeydown="if(event.key==='Enter') checkAccess()">
+      <button class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">👁</button>
+    </div>
+    <div class="access-error" id="access-error"></div>
+    <button class="btn btn-primary btn-full" onclick="checkAccess()" style="margin-top:8px">Accéder →</button>
+    <p class="access-hint">Vous n'avez pas reçu de code ? Contactez l'organisateur.</p>
   </div>
 </div>
 
@@ -274,12 +284,6 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
      SCREEN : BIENVENUE
      ═══════════════════════════════════════════════ -->
 <div id="screen-welcome" class="screen">
-  <div style="text-align:center">
-    <div class="participant-badge no-print">
-      <span>🎫</span>
-      <span>Lien personnel pour <span class="pname" id="badge-name">—</span></span>
-    </div>
-  </div>
   <div class="welcome-card">
     <h2>Les Sept Masques du Personâge</h2>
     <p>Ce questionnaire d'auto-évaluation psychoéducative vous permet d'identifier vos stratégies de protection psychologique selon la Méthode V.A.L.E.U.R©.</p>
@@ -399,13 +403,11 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 
   <div class="footer-disclaimer">
     Méthode psychoéducative · Outil d'auto-exploration uniquement · Ne remplace pas une évaluation ou un suivi professionnel<br>
-    Méthode V.A.L.E.U.R© · Instruments de référence : SHAI (Salkovskis et al., 2002) · TAS-20 (Bagby et al., 1994) · IUS-12 (Carleton et al., 2007)<br>
-    ECR-R (Fraley et al., 2000) · LOC+NPI (Rotter, 1966 / Raskin &amp; Terry, 1988) · FMPS (Frost et al., 1990) · MSI (Schrader et al., 2014)<br><br>
-    <strong style="color:rgba(255,255,255,0.3);font-size:.72rem">
-      © Céline Bourbon — Méthode V.A.L.E.U.R© — Tous droits réservés.<br>
-      Toute reproduction, copie, diffusion ou utilisation sans autorisation écrite expresse de l'auteure est strictement interdite.<br>
-      Propriété intellectuelle protégée — Dépôt INPI. Contact : celine.bourbon@gmail.com
-    </strong>
+    Méthode V.A.L.E.U.R© · SHAI · TAS-20 · IUS-12 · ECR-R · LOC+NPI · FMPS · MSI<br><br>
+    <span style="color:rgba(255,255,255,0.2);font-size:.7rem">
+      © Céline Bourbon — Méthode V.A.L.E.U.R© — Tous droits réservés<br>
+      Toute reproduction ou diffusion sans autorisation écrite est interdite · celine.bourbon@gmail.com
+    </span>
   </div>
 </div>
 
@@ -417,36 +419,18 @@ body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--te
 <script>
 const CONFIG = {
 
+  // ── Code d'accès ─────────────────────────────────────────────
+  ACCESS_CODE: 'VALEUR2025',          // ← changez ce code si besoin
+
   // ── EmailJS ──────────────────────────────────────────────────
-  // Guide complet d'installation en bas de ce fichier
   EMAILJS_PUBLIC_KEY:  'Qamyb35cCRJ5Pulqs',
   EMAILJS_SERVICE_ID:  'Questionnaire VALEUR',
   EMAILJS_TEMPLATE_ID: 'template_xp8cfww',
   ADMIN_EMAIL:         'celine.bourbon@gmail.com',
   ADMIN_NAME:          'Céline Bourbon — V.A.L.E.U.R©',
 
-  // ── Tokens valides ────────────────────────────────────────────
-  // Générez vos tokens avec admin.html, puis copiez-les ici.
-  // Format : { token, label (affiché au participant), used }
-  // Après ajout de tokens → redéployez sur Netlify (30 sec)
-  TOKENS: [
-   
-       { token: 'VALEUR-CELINE', label: 'Céline Bourbon', used: false },
-```
-
-**7.** Faites défiler tout en bas → dans **"Commit changes"** tapez `Ajout token Céline` → cliquez **"Commit changes"**
-
-**8.** Attendez 30 secondes → testez votre lien :
-```
-https://questionnaire-valeur-psyh.netlify.app/?token=VALEUR-CELINE { token: 'V25-DEMO-0001', label: 'Participant démo',  used: false },
-    { token: 'V25-ABCD-1234', label: 'Marie D.',          used: false },
-    { token: 'V25-EFGH-5678', label: 'Jean-Paul M.',      used: false },
-    // ← ajoutez autant de lignes que de participants
-  ],
-
   // ── Mode test ────────────────────────────────────────────────
-  // true  = email non envoyé, token non bloqué (pour vos tests)
-  // false = mode production (activez avant de déployer)
+  // true = email non envoyé (pour vos tests) / false = production
   TEST_MODE: false,
 };
 </script>
@@ -709,7 +693,6 @@ const MASKS = [
 /* ────────────────────────────────────────────────────────────────
    STATE
    ──────────────────────────────────────────────────────────────── */
-let TOKEN_OBJ    = null;
 let responses    = {};
 let demographics = {};
 let scores       = {};
@@ -723,38 +706,29 @@ document.addEventListener('DOMContentLoaded', () => {
     emailjs.init({ publicKey: CONFIG.EMAILJS_PUBLIC_KEY });
   }
   buildMaskScreens();
-  checkToken();
 });
 
 /* ────────────────────────────────────────────────────────────────
-   TOKEN VALIDATION
-   Token attendu dans l'URL : ?token=V25-ABCD-1234
+   CODE D'ACCÈS
    ──────────────────────────────────────────────────────────────── */
-function checkToken() {
-  const params = new URLSearchParams(window.location.search);
-  const t = params.get('token');
-
-  if (!t) { goToScreen('screen-invalid'); return; }
-
-  const entry = CONFIG.TOKENS.find(x => x.token === t);
-  if (!entry) { goToScreen('screen-invalid'); return; }
-
-  // Vérification usage (localStorage = côté navigateur du participant)
-  const usedKey = `valeur_used_${t}`;
-  if (!CONFIG.TEST_MODE && (entry.used || localStorage.getItem(usedKey))) {
-    goToScreen('screen-used'); return;
+function checkAccess() {
+  const input = document.getElementById('access-input');
+  const errEl = document.getElementById('access-error');
+  if (input.value.trim().toUpperCase() === CONFIG.ACCESS_CODE.toUpperCase()) {
+    goToScreen('screen-welcome');
+    errEl.textContent = '';
+  } else {
+    input.classList.add('error');
+    errEl.textContent = '❌ Code incorrect. Veuillez réessayer.';
+    setTimeout(() => input.classList.remove('error'), 400);
+    input.value = '';
+    input.focus();
   }
-
-  // Token valide : afficher le badge nom
-  TOKEN_OBJ = entry;
-  const el = document.getElementById('badge-name');
-  if (el) el.textContent = entry.label;
-  goToScreen('screen-welcome');
 }
 
-function markTokenUsed() {
-  if (!TOKEN_OBJ || CONFIG.TEST_MODE) return;
-  localStorage.setItem(`valeur_used_${TOKEN_OBJ.token}`, '1');
+function togglePw() {
+  const inp = document.getElementById('access-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -783,8 +757,6 @@ function startQuestionnaire() {
     situation:   document.getElementById('d-pro').value     || 'Non précisé',
     attachement: document.getElementById('d-attach').value  || 'Incertain',
     email,
-    token:       TOKEN_OBJ ? TOKEN_OBJ.token : '–',
-    label:       TOKEN_OBJ ? TOKEN_OBJ.label : '–',
   };
   goToScreen('screen-mask-0');
 }
@@ -900,13 +872,12 @@ async function nextMask(idx) {
 
   // ── DERNIER MASQUE : actions simultanées ──
   scores = computeScores();
-  markTokenUsed();                    // bloque le token côté navigateur
 
   showOverlay(true, 'Analyse de vos résultats…');
-  await sendDetailedEmail();          // envoie le rapport au praticien
+  await sendDetailedEmail();
   showOverlay(false);
 
-  buildSummaryResults();              // construit les résultats pour le répondant
+  buildSummaryResults();
   goToScreen('screen-results');
 }
 
@@ -992,87 +963,80 @@ async function sendDetailedEmail() {
     hour:'2-digit', minute:'2-digit'
   });
 
-  // ── Score global en pourcentage ──
-  const globalPct = Math.round(scores.total / 336 * 100);
-
-  // ── Variables par masque (pour barres visuelles dans le template) ──
-  const maskVars = {};
-  MASKS.forEach(m => {
-    const s  = scores[m.id];
-    const lv = getLevel(s);
-    const pct = Math.round(s / 48 * 100);
-    const rem = 100 - pct;
-    maskVars[`score_${m.id}`]  = `${s}`;
-    maskVars[`pct_${m.id}`]    = `${pct}`;
-    maskVars[`rem_${m.id}`]    = `${rem}`;
-    maskVars[`level_${m.id}`]  = lv.label;
-  });
+  // ── Scores résumé ──
+  const scoresSummary = MASKS.map(m => {
+    const lv = getLevel(scores[m.id]);
+    return `${m.name}: ${scores[m.id]}/48 (${lv.label})`;
+  }).join('\n');
 
   // ── Items critiques (score ajusté ≥ 3) ──
-  let criticalRows = '';
+  let criticalSection = '';
   MASKS.forEach(mask => {
     const crits = mask.items
       .map(it => ({ ...it, a: adj(it.id, responses[it.id] ?? 0) }))
       .filter(it => it.a >= 3).sort((a, b) => b.a - a.a);
     if (crits.length) {
-      criticalRows += `${mask.name.toUpperCase()} (${scores[mask.id]}/48 — ${getLevel(scores[mask.id]).label})\n`;
-      crits.forEach(it => {
-        const stars = '★'.repeat(it.a) + '☆'.repeat(4 - it.a);
-        criticalRows += `  ${stars} [${it.id}] ${it.text}\n`;
-      });
-      criticalRows += '\n';
+      criticalSection += `\n--- ${mask.name} (${scores[mask.id]}/48 — ${getLevel(scores[mask.id]).label}) ---\n`;
+      crits.forEach(it => { criticalSection += `  [${it.id}] Intensité ${it.a}/4 : ${it.text}\n`; });
     }
   });
 
-  // ── Défis personnalisés ──
-  let challengesText = '';
+  // ── Défis personnalisés (masques > modéré) ──
+  let challengesSection = '';
   MASKS.filter(m => scores[m.id] > 12).forEach(mask => {
     const lv = getLevel(scores[mask.id]);
-    challengesText += `━━ ${mask.name} — ${lv.label} (${scores[mask.id]}/48) ━━\n`;
+    const topItem = mask.items
+      .map(it => ({ ...it, a: adj(it.id, responses[it.id] ?? 0) }))
+      .sort((a, b) => b.a - a.a)[0];
+    challengesSection += `\n=== ${mask.name} — ${lv.label} (${scores[mask.id]}/48) ===\n`;
+    if (topItem)
+      challengesSection += `► Question prioritaire [${topItem.id}] score ${topItem.a}/4 :\n  "${topItem.text}"\n\n`;
     mask.challenges.forEach((c, i) => {
-      const priority = i === 0 ? '▶ PRIORITÉ 1' : i === 1 ? '▷ PRIORITÉ 2' : `   Niveau ${i+1}`;
-      challengesText += `${priority} [${c.level}] ${c.title}\n   ${c.desc}\n\n`;
+      challengesSection += `${i+1}. [${c.level}] ${c.title}\n   ${c.desc}\n\n`;
     });
   });
 
   // ── Toutes les réponses ──
   let allResponses = '';
   MASKS.forEach(mask => {
-    allResponses += `\n▌ ${mask.name}\n`;
+    allResponses += `\n[${mask.name}]\n`;
     mask.items.forEach(it => {
       const raw = responses[it.id] ?? '–';
       const a   = adj(it.id, responses[it.id] ?? 0);
-      const bar = '█'.repeat(a) + '░'.repeat(4 - a);
-      allResponses += `  ${bar} ${it.inv ? '↺ ' : '  '}[${it.id}] brut:${raw} ajusté:${a} — ${it.text}\n`;
+      const bar = '█'.repeat(a) + '░'.repeat(4-a);
+      allResponses += `  ${bar} ${it.inv?'↺ ':'  '}[${it.id}] brut:${raw} ajusté:${a} — ${it.text}\n`;
     });
+  });
+
+  // Variables par masque pour les barres visuelles
+  const globalPct = Math.round(scores.total / 336 * 100);
+  const maskVars = {};
+  MASKS.forEach(m => {
+    const pct = Math.round(scores[m.id] / 48 * 100);
+    maskVars[`score_${m.id}`] = `${scores[m.id]}`;
+    maskVars[`pct_${m.id}`]   = `${pct}`;
+    maskVars[`rem_${m.id}`]   = `${100 - pct}`;
+    maskVars[`level_${m.id}`] = getLevel(scores[m.id]).label;
   });
 
   const params = {
     to_email:          CONFIG.ADMIN_EMAIL,
     to_name:           CONFIG.ADMIN_NAME,
-    // Participant
     prenom:            demographics.prenom,
     age:               demographics.age,
     genre:             demographics.genre,
     situation:         demographics.situation,
     attachement:       demographics.attachement,
     email_repondant:   demographics.email,
-    token_utilise:     demographics.token,
-    label_token:       demographics.label,
     date_passation:    dateStr,
-    // Scores globaux
     score_global:      `${scores.total}`,
     score_global_pct:  `${globalPct}`,
     score_global_rem:  `${100 - globalPct}`,
-    // Masques synthèse
     masques_dominants: MASKS.filter(m => scores[m.id] >= 37).map(m => m.name).join(', ') || 'Aucun',
     masques_eleves:    MASKS.filter(m => scores[m.id] >= 25 && scores[m.id] < 37).map(m => m.name).join(', ') || 'Aucun',
-    masques_moderes:   MASKS.filter(m => scores[m.id] >= 13 && scores[m.id] < 25).map(m => m.name).join(', ') || 'Aucun',
-    // Détails
-    items_critiques:   criticalRows    || 'Aucun item avec score ajusté ≥ 3',
-    defis_proposes:    challengesText  || 'Tous les masques sont au niveau Faible',
+    items_critiques:   criticalSection  || 'Aucun item avec score ajusté ≥ 3',
+    defis_proposes:    challengesSection || 'Aucun masque modéré ou supérieur',
     toutes_reponses:   allResponses,
-    // Variables par masque (score, %, niveau)
     ...maskVars,
   };
 
