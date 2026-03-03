@@ -300,23 +300,25 @@ body{font-family:'Jost',sans-serif;background:var(--navy);color:var(--text);min-
     </div>
   </div>
   <div class="summary-intro">
-    <p>Le questionnaire V.A.L.E.U.R© identifie le <strong>niveau d'emprise</strong> de chacun des sept masques psychologiques fondamentaux. Chaque masque correspond à une <strong>peur primale</strong> universelle qui génère des stratégies de protection automatiques. Plus le score est élevé, plus ce mécanisme de défense est actif dans votre quotidien.</p>
+    <p>Le questionnaire V.A.L.E.U.R© identifie le <strong>niveau d'emprise</strong> de chacun des sept masques psychologiques fondamentaux. Chaque masque correspond à une <strong>réponse de protection automatique</strong> face à une peur universelle. Plus le score est élevé, plus ce mécanisme de défense est actif dans votre quotidien.</p>
     <p style="margin-top:8px">Pour diminuer l'emprise de vos masques dominants, la <strong>méthode V.A.L.E.U.R©</strong> vous guide : <em>Voir – Accueillir – Localiser – Explorer – Unifier – Renforcer</em>.</p>
     <p style="margin-top:8px;font-size:.82rem;color:rgba(139,146,165,.7)">Échelle par masque : Faible (0-16) · Modéré (17-32) · Élevé (33-48) · Dominant (49-64)</p>
   </div>
   <div class="masks-summary-grid" id="masks-summary-grid"></div>
 
-  <!-- INTERPRÉTATIONS DÉTAILLÉES -->
+  <!-- SYNTHÈSE PATIENT — score + niveau + phrase clé uniquement -->
   <div id="interpretations-section" style="margin-bottom:28px">
     <div style="background:linear-gradient(135deg,rgba(102,126,234,.1),rgba(159,122,234,.08));border:1px solid rgba(102,126,234,.25);border-radius:16px;padding:24px 28px;margin-bottom:20px">
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:8px">🌿 Comprendre vos résultats</h3>
-      <p style="font-size:.88rem;color:var(--text-muted);line-height:1.7">Les peurs que mesurent ces masques sont <strong>universelles</strong>. Chaque masque a d'abord été une solution, une stratégie créée pour vous protéger. L'emprise indique simplement le degré de rigidité de cette stratégie aujourd'hui.<br><br><em>Ce qu'on peut voir, on peut le changer.</em></p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:8px">🌿 Ce que ces résultats vous disent</h3>
+      <p style="font-size:.88rem;color:var(--text-muted);line-height:1.7">Ces résultats ont été transmis à votre praticienne. Lors de votre prochain échange, elle les utilisera pour adapter votre accompagnement.<br><br>
+      Les peurs que mesurent ces masques sont <strong>universelles</strong>. Chaque masque a d'abord été une solution créée pour vous protéger. L'emprise indique simplement le degré d'automatisme de cette stratégie aujourd'hui.<br><br>
+      <em style="color:var(--gold,#c9a84c)">Ce qu'on peut voir, on peut le changer.</em></p>
     </div>
-    <div id="detailed-interpretations"></div>
+    <div id="patient-scores-summary"></div>
   </div>
 
   <div class="print-note no-print">
-    <p style="margin-bottom:12px">💡 Vous pouvez imprimer ou sauvegarder cette page pour conserver vos résultats.</p>
+    <p style="margin-bottom:12px">💡 Vous pouvez imprimer ou sauvegarder cette page pour conserver vos scores.</p>
     <div class="btn-group" style="justify-content:center;margin-top:0">
       <button class="btn btn-print" onclick="window.print()">🖨 Imprimer mes résultats</button>
     </div>
@@ -355,8 +357,8 @@ const CONFIG = {
 const MASKS = [
   {
     id:'rouge', name:'Masque Rouge', color:'#e53e3e', num:1,
-    peur:'La mort et la maladie', peurShort:'Anxiété de santé',
-    theme:'Anxiété de Santé · Hypervigilance Somatique · Peur Existentielle',
+    peur:'Relation au Corps et à la Santé (peur de la mort / maladie)', peurShort:'Relation au Corps et à la Santé',
+    theme:'Stratégies de protection liées au corps et à la santé',
     instrument:'SHAI — Short Health Anxiety Inventory (Salkovskis et al., 2002, α = 0,86)',
     refs:['Salkovskis et al. (2002)', 'DSM-5 TAG', 'LeDoux (1996)'],
     levels:{
@@ -394,8 +396,8 @@ const MASKS = [
   },
   {
     id:'orange', name:'Masque Orange', color:'#ed8936', num:2,
-    peur:'La souffrance et la douleur psychique', peurShort:'Évitement émotionnel',
-    theme:'Alexithymie · Évitement Émotionnel · Dissociation Affective',
+    peur:'Relation aux Émotions (peur de la souffrance)', peurShort:'Relation aux Émotions',
+    theme:'Stratégies de protection liées aux émotions',
     instrument:'TAS-20 — Toronto Alexithymia Scale (Bagby, Parker, Taylor, 1994, α = 0,81)',
     refs:['Bagby et al. (1994)', 'Hayes (1996) — Évitement expérientiel', 'Eisenberger (2003)'],
     levels:{
@@ -404,7 +406,7 @@ const MASKS = [
       élevé:    'Il devient difficile d\'identifier clairement ce que vous ressentez. Vous pouvez vous sentir "à distance" de vous-même. Ce masque s\'est probablement construit pour éviter une douleur jugée trop intense à un moment de votre vie. L\'engourdissement émotionnel protège… mais il coupe aussi de la joie, de la spontanéité, de la vraie connexion aux autres. Ce qu\'on peut voir, on peut le changer.',
       dominant: 'Un sentiment de vide, de déconnexion ou d\'anesthésie peut être présent. Ce n\'est pas une absence d\'émotion, mais une stratégie ancienne pour ne pas être submergé(e). Le corps et le cœur se sont mis en retrait pour survivre. Cette coupure massive témoigne probablement d\'expériences émotionnelles trop intenses. Un accompagnement professionnel est indispensable — réapprendre à ressentir sans être submergé(e) est possible.'
     },
-    manifestations:'Fuite émotionnelle · Anesthésie affective · Surinvestissement activité · Humour défensif · Dissociation · Détachement',
+    manifestations:'Fuite émotionnelle · Anesthésie affective · Surinvestissement par l\'activité · Humour défensif · Déconnexion émotionnelle · Détachement affectif',
     items:[
       {id:'O1',     inv:false, text:'Je préfère éviter les conversations qui deviennent trop intenses émotionnellement.'},
       {id:'O_inv1', inv:true,  text:'Je ressens et j\'identifie clairement mes différents états émotionnels.'},
@@ -433,8 +435,8 @@ const MASKS = [
   },
   {
     id:'jaune', name:'Masque Jaune', color:'#ecc94b', num:3,
-    peur:'L\'inconnu et l\'incertitude', peurShort:'Obsession de contrôle',
-    theme:'Intolérance à l\'Incertitude · Besoin de Contrôle · Rigidité Cognitive',
+    peur:'Relation à l\'Incertitude et à l\'Imprévu (peur de l\'inconnu)', peurShort:'Relation à l\'Incertitude',
+    theme:'Stratégies de protection liées à l\'incertitude et à l\'imprévu',
     instrument:'IUS-12 — Intolerance of Uncertainty Scale (Carleton et al., 2007, α = 0,84)',
     refs:['Carleton et al. (2007)', 'Dugas (1998) — Modèle TAG', 'Hofmann (2012)'],
     levels:{
@@ -472,8 +474,8 @@ const MASKS = [
   },
   {
     id:'vert', name:'Masque Vert', color:'#48bb78', num:4,
-    peur:'Le rejet et l\'abandon', peurShort:'Insécurité relationnelle',
-    theme:'Anxiété de Séparation · Dépendance Affective · Peur de l\'Abandon',
+    peur:'Relation aux Autres et à la Séparation (peur du rejet / abandon)', peurShort:'Relation aux Autres',
+    theme:'Stratégies de protection liées aux relations et à la séparation',
     instrument:'ECR-R — Experiences in Close Relationships (Fraley et al., 2000, α = 0,88)',
     refs:['Fraley et al. (2000)', 'Bowlby (1969) — Théorie attachement', 'Eisenberger (2003)'],
     levels:{
@@ -511,8 +513,8 @@ const MASKS = [
   },
   {
     id:'bleu', name:'Masque Bleu', color:'#4299e1', num:5,
-    peur:'L\'impuissance et la perte de contrôle', peurShort:'Hypercontrôle relationnel',
-    theme:'Hypercontrôle · Besoin de Domination · Intolérance à la Dépendance',
+    peur:'Relation au Contrôle et à l\'Autonomie (peur de l\'impuissance)', peurShort:'Relation au Contrôle',
+    theme:'Stratégies de protection liées au contrôle et à l\'autonomie',
     instrument:'LOC (Rotter, 1966, α = 0,82) + NPI (Raskin & Terry, 1988, α = 0,87)',
     refs:['Rotter (1966) — Locus of Control', 'Raskin & Terry (1988)', 'Shapiro (1965)'],
     levels:{
@@ -550,8 +552,8 @@ const MASKS = [
   },
   {
     id:'indigo', name:'Masque Indigo', color:'#667eea', num:6,
-    peur:'L\'échec et l\'inadéquation', peurShort:'Anxiété de performance',
-    theme:'Perfectionnisme · Syndrome de l\'Imposteur · Peur de l\'Inadéquation',
+    peur:'Relation à la Performance et à l\'Évaluation (peur de l\'échec / inadéquation)', peurShort:'Relation à la Performance',
+    theme:'Stratégies de protection liées à la performance et à l\'évaluation',
     instrument:'FMPS — Frost Multidimensional Perfectionism Scale (Frost et al., 1990, α = 0,90)',
     refs:['Frost et al. (1990)', 'Clance & Imes (1978) — Syndrome imposteur', 'Blatt (2004)'],
     levels:{
@@ -560,7 +562,7 @@ const MASKS = [
       élevé:    'L\'erreur remet en question votre valeur. L\'anxiété de performance est significative — procrastination, autosabotage et syndrome de l\'imposteur affectent régulièrement votre vie. L\'autocritique est sévère et disproportionnée. Ce qu\'on peut voir, on peut le changer. Vous méritez de vous permettre d\'être imparfait(e).',
       dominant: 'Le doute chronique et l\'autocritique structurent votre identité. Ce masque protège d\'une peur profonde d\'être insuffisant(e) — il pousse à faire toujours plus, sans jamais se sentir assez. La peur de l\'échec vous empêche d\'agir, de créer, de vous montrer. Un accompagnement est fortement recommandé — la libération de ce masque est possible.'
     },
-    manifestations:'Perfectionnisme paralysant · Procrastination · Syndrome de l\'imposteur · Autocritique sévère · Autosabotage · Besoin de validation',
+    manifestations:'Perfectionnisme paralysant · Procrastination défensive · Doute sur sa légitimité · Autocritique sévère · Autosabotage · Besoin de validation externe',
     items:[
       {id:'I1',     inv:false, text:'Je repousse parfois mes actions par crainte que mon travail ne soit pas suffisamment parfait.'},
       {id:'I_inv1', inv:true,  text:'Je reconnais et valorise mes accomplissements avec fierté.'},
@@ -589,8 +591,8 @@ const MASKS = [
   },
   {
     id:'violet', name:'Masque Violet', color:'#9f7aea', num:7,
-    peur:'La perte d\'identité et la dissolution de l\'ego', peurShort:'Angoisse existentielle',
-    theme:'Aliénation Identitaire · Faux-Self · Crise Existentielle',
+    peur:'Relation à Soi et à Son Identité (peur de la dissolution identitaire)', peurShort:'Relation à Soi et à Son Identité',
+    theme:'Stratégies de protection liées à l\'identité et au sens de soi',
     instrument:'MSI — Multidimensional Self-Identity Scale (Schrader et al., 2014, α = 0,79)',
     refs:['Schrader et al. (2014)', 'Winnicott (1960) — Vrai/Faux Self', 'Yalom (1980) — Existentiel'],
     levels:{
@@ -599,7 +601,7 @@ const MASKS = [
       élevé:    'Vous pouvez vous sentir étranger(ère) à vous-même. Vous vous êtes peut-être longtemps adapté(e) aux attentes externes — le vrai self a été mis en retrait. Vide intérieur, faux-self et résistance au changement affectent profondément votre bien-être. Ce qu\'on peut voir, on peut le changer — la redécouverte de soi est possible.',
       dominant: 'Un sentiment de vide ou de perte d\'identité peut prédominer. Ce masque n\'est pas un "manque", mais une stratégie d\'adaptation poussée à l\'extrême : vous avez appris à être ce que l\'on attendait. C\'est le plus complexe — il cristallise et intensifie l\'ensemble des autres masques. Un accompagnement thérapeutique est fortement recommandé — retrouver qui vous êtes vraiment est possible et libérateur.'
     },
-    manifestations:'Perte du sens de soi · Vide existentiel · Résistance au changement · Faux-self cristallisé · Mode automatique · Aliénation à soi',
+    manifestations:'Perte du sens de soi · Vide existentiel · Résistance au changement · Adaptation excessive aux attentes · Mode automatique · Déconnexion de sa nature profonde',
     items:[
       {id:'Vi1',     inv:false, text:'J\'ai du mal à savoir qui je suis vraiment en dehors de mes différents rôles (professionnel, familial…).'},
       {id:'Vi_inv1', inv:true,  text:'Je sais clairement qui je suis indépendamment des rôles que je joue socialement.'},
@@ -868,7 +870,7 @@ function buildSummaryResults() {
         <div class="mask-score-bar">
           <div class="mask-score-bar-fill" style="width:${pct}%;background:${mask.color}"></div>
         </div>
-        <div class="mask-summary-peur" style="color:${mask.color}">Peur primale : ${mask.peur}</div>
+        <div class="mask-summary-peur" style="color:${mask.color}">${mask.peur}</div>
         <div class="mask-summary-desc">${mask.levels[lv.key] || ''}</div>
         <div style="font-size:.78rem;color:#4a5568;margin-top:8px;font-style:italic">${mask.manifestations}</div>
         <div class="ref-tags">${refsHTML}</div>
@@ -882,6 +884,20 @@ function buildSummaryResults() {
     st.innerHTML = '<div class="status-error">⚠ La transmission automatique a rencontré un problème. Vous pouvez imprimer cette page et la transmettre à votre praticien.</div>';
 
   buildDetailedInterpretations();
+
+  // Bouton page imprimable praticien (masqué à l'impression patient)
+  const printBtn = document.createElement('div');
+  printBtn.className = 'no-print';
+  printBtn.style.cssText = 'text-align:center;margin:20px 0 8px';
+  printBtn.innerHTML = `
+    <button onclick="openPrintPage()"
+      style="background:linear-gradient(135deg,#2d3748,#1a202c);color:#e2e8f0;border:1px solid #4a5568;
+             border-radius:10px;padding:12px 28px;font-size:.9rem;cursor:pointer;
+             display:inline-flex;align-items:center;gap:8px">
+      🖨️ &nbsp;Ouvrir la fiche praticien (imprimable)
+    </button>
+    <div style="font-size:.75rem;color:#4a5568;margin-top:6px">Accès praticien · Usage exclusif Céline Bourbon</div>`;
+  document.getElementById('results-section').appendChild(printBtn);
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -932,13 +948,18 @@ async function sendDetailedEmail() {
   });
 
   let allResponses = '';
+  let itemNum = 0;
   MASKS.forEach(mask => {
-    allResponses += `\n[${mask.name}]\n`;
+    const lv = getLevel(scores[mask.id]);
+    allResponses += `\n━━━ ${mask.name.toUpperCase()} — ${scores[mask.id]}/64 (${lv.label}) ━━━\n`;
     mask.items.forEach(it => {
+      itemNum++;
       const raw = responses[it.id] ?? '–';
       const a   = adj(it.id, responses[it.id] ?? 0);
-      const bar = '█'.repeat(a) + '░'.repeat(4-a);
-      allResponses += `  ${bar} ${it.inv?'↺ ':'  '}[${it.id}] brut:${raw} ajusté:${a} — ${it.text}\n`;
+      const bar = '█'.repeat(a) + '░'.repeat(4 - a);
+      const invTag = it.inv ? ' [INV]' : '      ';
+      const num = String(itemNum).padStart(3, ' ');
+      allResponses += `  ${num}.${invTag} ${bar} brut:${raw} adj:${a}  ${it.text}\n`;
     });
   });
 
@@ -988,134 +1009,352 @@ async function sendDetailedEmail() {
    INTERPRÉTATIONS DÉTAILLÉES — AFFICHAGE PAGE
    ──────────────────────────────────────────────────────────────── */
 function buildDetailedInterpretations() {
-  const container = document.getElementById('detailed-interpretations');
+  // Version patient : score + niveau + 1 phrase clé — sans détail clinique
+  const container = document.getElementById('patient-scores-summary');
   if (!container) return;
   container.innerHTML = '';
 
-  // Trier par score décroissant pour montrer les plus actifs en premier
   const sorted = [...MASKS].sort((a, b) => scores[b.id] - scores[a.id]);
+  const levelIcons = { faible:'🟢', modéré:'🟡', élevé:'🟠', dominant:'🔴' };
+
+  // Phrases clés courtes par niveau (non cliniques)
+  const shortPhrases = {
+    faible:   'Ce masque est peu actif en ce moment — votre système de protection est au repos sur cette dimension.',
+    modéré:   'Ce masque est parfois actif. Vous pouvez en percevoir les effets dans certaines situations.',
+    élevé:    'Ce masque mobilise une énergie significative au quotidien. C\'est une piste de travail importante.',
+    dominant: 'Ce masque structure fortement vos réactions. Votre praticienne l\'a reçu et l\'intégrera dans votre suivi.'
+  };
 
   sorted.forEach(mask => {
     const s   = scores[mask.id];
     const lv  = getLevel(s);
     const pct = (s / 64 * 100).toFixed(0);
-
-    // Icône selon niveau
-    const levelIcons = { faible: '🟢', modéré: '🟡', élevé: '🟠', dominant: '🔴' };
     const icon = levelIcons[lv.key] || '⬜';
 
-    // Fond subtil selon couleur du masque
     const card = document.createElement('div');
     card.style.cssText = `
       background:var(--navy-mid);
       border:1px solid var(--border);
       border-left:4px solid ${mask.color};
-      border-radius:14px;
-      margin-bottom:16px;
-      overflow:hidden;
+      border-radius:12px;
+      margin-bottom:10px;
+      padding:16px 20px;
     `;
-
-    // En-tête cliquable
-    const header = document.createElement('button');
-    header.style.cssText = `
-      width:100%; display:flex; align-items:center; gap:12px;
-      padding:18px 22px; background:none; border:none; cursor:pointer;
-      text-align:left;
-    `;
-    header.innerHTML = `
-      <div style="width:38px;height:38px;border-radius:50%;background:${mask.color}22;border:2px solid ${mask.color};display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">${icon}</div>
-      <div style="flex:1">
-        <div style="color:${mask.color};font-weight:600;font-size:.95rem">${mask.name}</div>
-        <div style="color:var(--text-dim);font-size:.78rem">${mask.peur}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-        <span style="color:${mask.color};font-weight:700;font-size:.9rem">${s}/64</span>
-        <span style="padding:3px 12px;border-radius:99px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${lv.color};border:1px solid ${lv.color}55">${lv.label}</span>
-        <span class="interp-toggle" style="color:var(--text-muted);font-size:1.1rem;transition:transform .3s">▼</span>
-      </div>
-    `;
-
-    // Barre de score
-    const bar = document.createElement('div');
-    bar.style.cssText = `height:3px;background:var(--navy-light);`;
-    bar.innerHTML = `<div style="height:3px;width:${pct}%;background:${mask.color};border-radius:0;transition:width 1.2s ease"></div>`;
-
-    // Corps de l'interprétation
-    const body = document.createElement('div');
-    body.style.cssText = `
-      padding:0 22px;
-      max-height:0;
-      overflow:hidden;
-      transition:max-height .4s ease, padding .4s ease;
-    `;
-    const interpText = mask.levels[lv.key] || '';
-    body.innerHTML = `
-      <div style="padding:16px 0 20px">
-        <p style="color:var(--text-muted);font-size:.9rem;line-height:1.75">${interpText}</p>
-        <div style="margin-top:14px;padding:12px 16px;background:${mask.color}0d;border-left:3px solid ${mask.color}66;border-radius:0 8px 8px 0">
-          <p style="color:var(--text-dim);font-size:.8rem;font-style:italic;margin:0">
-            Ce masque est lié à la peur de : <strong style="color:${mask.color}">${mask.peur}</strong>
-          </p>
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:${mask.color}22;border:2px solid ${mask.color};display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">${icon}</div>
+        <div style="flex:1">
+          <div style="color:${mask.color};font-weight:600;font-size:.92rem">${mask.name}</div>
+          <div style="color:var(--text-dim);font-size:.75rem">${mask.peur}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <span style="color:${mask.color};font-weight:700;font-size:.95rem">${s}<span style="font-size:.7rem;color:var(--text-dim)">/64</span></span>&nbsp;
+          <span style="padding:2px 10px;border-radius:99px;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:${lv.color};border:1px solid ${lv.color}55">${lv.label}</span>
         </div>
       </div>
+      <div style="height:4px;background:var(--navy-light);border-radius:2px;margin-bottom:10px">
+        <div style="height:4px;width:${pct}%;background:${mask.color};border-radius:2px"></div>
+      </div>
+      <p style="color:var(--text-muted);font-size:.82rem;line-height:1.6;margin:0;font-style:italic">${shortPhrases[lv.key]}</p>
     `;
-
-    // Toggle open/close
-    let open = s >= 33; // ouvrir automatiquement les élevés/dominants
-    function updateState() {
-      if (open) {
-        body.style.maxHeight = '600px';
-        body.style.paddingTop = '0';
-        header.querySelector('.interp-toggle').style.transform = 'rotate(180deg)';
-      } else {
-        body.style.maxHeight = '0';
-        header.querySelector('.interp-toggle').style.transform = 'rotate(0deg)';
-      }
-    }
-    header.addEventListener('click', () => { open = !open; updateState(); });
-    updateState();
-
-    card.appendChild(header);
-    card.appendChild(bar);
-    card.appendChild(body);
     container.appendChild(card);
   });
 
-  // Message transversal final
+  // Message final
   const footer = document.createElement('div');
-  footer.style.cssText = `background:linear-gradient(135deg,rgba(72,187,120,.08),rgba(102,126,234,.08));border:1px solid rgba(72,187,120,.2);border-radius:12px;padding:20px 24px;margin-top:8px`;
+  footer.style.cssText = `background:linear-gradient(135deg,rgba(72,187,120,.08),rgba(102,126,234,.08));border:1px solid rgba(72,187,120,.2);border-radius:12px;padding:18px 22px;margin-top:8px`;
   footer.innerHTML = `
-    <p style="color:var(--vert);font-weight:600;font-size:.9rem;margin-bottom:8px">🌿 Message transversal</p>
-    <p style="color:var(--text-muted);font-size:.85rem;line-height:1.7">
-      Quel que soit votre masque ou son niveau d'emprise — il ne s'agit jamais d'un défaut.<br>
-      Chaque masque a d'abord été une <em>solution</em>. Plus l'emprise est forte, plus la peur gouverne automatiquement. Moins elle est forte, plus vous avez la possibilité de choisir.<br><br>
-      <strong style="color:var(--text)">Ce qu'on peut voir, on peut le changer.</strong>
+    <p style="color:var(--vert,#48bb78);font-weight:600;font-size:.88rem;margin-bottom:6px">🌿 Rappel essentiel</p>
+    <p style="color:var(--text-muted);font-size:.83rem;line-height:1.7;margin:0">
+      Quel que soit votre profil — il ne s'agit jamais d'un défaut de votre personnalité.<br>
+      Chaque masque a d'abord été une <em>solution</em>. L'accompagnement V.A.L.E.U.R© vous aide à transformer ces réponses automatiques en choix conscients.
     </p>
-    <p style="color:var(--text-dim);font-size:.75rem;margin-top:12px;font-style:italic">
+    <p style="color:var(--text-dim);font-size:.72rem;margin-top:10px;font-style:italic">
       Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue · <em>De la peur à la joie d'être soi</em> — L'Harmattan
     </p>
   `;
   container.appendChild(footer);
 }
 
+
 /* ────────────────────────────────────────────────────────────────
    INTERPRÉTATIONS COMPLÈTES POUR EMAIL
    ──────────────────────────────────────────────────────────────── */
 function buildInterpretationsText() {
-  const LINE = '─'.repeat(60);
-  let out = `\n${'═'.repeat(60)}\nINTERPRÉTATION DÉTAILLÉE DE VOS RÉSULTATS\nMéthode V.A.L.E.U.R© — Céline Bourbon, Psychologue\n${'═'.repeat(60)}\n\n`;
-  out += `🌿 RAPPEL ESSENTIEL\nLes peurs que mesurent ces masques sont universelles. Vous n'êtes pas anormal(e) ou défaillant(e).\nCe qui varie, c'est le degré auquel ces peurs limitent votre liberté d'être.\nCe qu'on peut voir, on peut le changer.\n\n`;
+  const EQ = '═'.repeat(62);
+  const LN = '─'.repeat(62);
+  const LEVEL_EMOJI = { faible:'🟢', modéré:'🟡', élevé:'🟠', dominant:'🔴' };
+  const MASK_EMOJI  = { rouge:'🔴', orange:'🟠', jaune:'🟡', vert:'🟢', bleu:'🔵', indigo:'🔷', violet:'💜' };
+  const globalPct   = Math.round(scores.total / 448 * 100);
 
+  let out = '';
+
+  // ── EN-TÊTE ────────────────────────────────────────────────────
+  out += `${EQ}\n`;
+  out += `  MÉTHODE V.A.L.E.U.R© — RÉSULTATS DÉTAILLÉS\n`;
+  out += `  Céline Bourbon, Psychologue\n`;
+  out += `  De la peur à la joie d'être soi — Éditions L'Harmattan\n`;
+  out += `${EQ}\n\n`;
+
+  // ── PATIENT ────────────────────────────────────────────────────
+  out += `👤 PATIENT\n`;
+  out += `  Prénom      : ${demographics.prenom || '—'}\n`;
+  out += `  Âge         : ${demographics.age || '—'}\n`;
+  out += `  Genre       : ${demographics.genre || '—'}\n`;
+  out += `  Situation   : ${demographics.situation || '—'}\n`;
+  out += `  Attachement : ${demographics.attachement || '—'}\n`;
+  out += `  Email       : ${demographics.email || '—'}\n\n`;
+
+  // ── SCORE GLOBAL ───────────────────────────────────────────────
+  out += `${LN}\n`;
+  out += `📊 SCORE GLOBAL : ${scores.total} / 448  (${globalPct}%)\n`;
+  out += `${LN}\n\n`;
+
+  // ── TABLEAU SYNTHÈSE ───────────────────────────────────────────
+  out += `🗂  SYNTHÈSE DES 7 MASQUES\n\n`;
+  const dominants = [], eleves = [], moderes = [];
+  MASKS.forEach(mask => {
+    const s  = scores[mask.id];
+    const lv = getLevel(s);
+    const pct = Math.round(s / 64 * 100);
+    const bar = '█'.repeat(Math.round(pct/10)) + '░'.repeat(10-Math.round(pct/10));
+    const emoji = MASK_EMOJI[mask.id] || '⚪';
+    const lvEmoji = LEVEL_EMOJI[lv.key] || '⚪';
+    out += `  ${emoji} ${mask.name.padEnd(16)} ${bar}  ${String(s).padStart(2)}/64  ${lvEmoji} ${lv.label}\n`;
+    if (lv.key === 'dominant') dominants.push(mask.name);
+    else if (lv.key === 'élevé') eleves.push(mask.name);
+    else if (lv.key === 'modéré') moderes.push(mask.name);
+  });
+  out += `\n`;
+
+  // ── ALERTES ────────────────────────────────────────────────────
+  if (dominants.length) out += `  🔴 DOMINANT  : ${dominants.join(' · ')}\n`;
+  if (eleves.length)    out += `  🟠 ÉLEVÉ     : ${eleves.join(' · ')}\n`;
+  if (moderes.length)   out += `  🟡 MODÉRÉ    : ${moderes.join(' · ')}\n`;
+  out += `\n`;
+
+  // ── ITEMS CRITIQUES ────────────────────────────────────────────
+  let hasCrits = false;
+  let critsBlock = '';
+  MASKS.forEach(mask => {
+    const crits = mask.items
+      .map(it => ({ ...it, raw: responses[it.id] ?? 0 }))
+      .filter(it => it.inv ? it.raw === 0 : it.raw === 4);
+    if (crits.length) {
+      const lv = getLevel(scores[mask.id]);
+      hasCrits = true;
+      critsBlock += `  ${MASK_EMOJI[mask.id] || ''} ${mask.name} (${scores[mask.id]}/64 · ${lv.label})\n`;
+      crits.forEach(it => {
+        const tag = it.inv ? '[INV·0]' : '[brut=4]';
+        critsBlock += `    ${tag}  ${it.text}\n`;
+      });
+      critsBlock += `\n`;
+    }
+  });
+  out += `${LN}\n`;
+  out += `⚠  ITEMS AU SCORE EXTRÊME (réponses 4 sur items directs · 0 sur items inversés)\n`;
+  out += `${LN}\n`;
+  out += hasCrits ? critsBlock : '  Aucun item au score extrême.\n';
+  out += `\n`;
+
+  // ── INTERPRÉTATIONS ────────────────────────────────────────────
+  out += `${LN}\n`;
+  out += `📝 INTERPRÉTATIONS PAR MASQUE (Modéré et supérieur uniquement)\n`;
+  out += `${LN}\n\n`;
+  MASKS.forEach(mask => {
+    const s  = scores[mask.id];
+    const lv = getLevel(s);
+    if (lv.key === 'faible') return;
+    const emoji = MASK_EMOJI[mask.id] || '';
+    const lvEmoji = LEVEL_EMOJI[lv.key] || '';
+    out += `${emoji} ${mask.peur}\n`;
+    out += `   Score : ${s}/64  ${lvEmoji} ${lv.label}\n`;
+    out += `   ${(mask.levels[lv.key] || '').replace(/\n/g,' ')}\n\n`;
+  });
+
+  // ── MESSAGE FINAL ──────────────────────────────────────────────
+  out += `${EQ}\n`;
+  out += `🌿 Quel que soit le masque ou son niveau d'emprise :\n`;
+  out += `   Il ne s'agit jamais d'un défaut.\n`;
+  out += `   Chaque masque a d'abord été une solution.\n`;
+  out += `   Ce qu'on peut voir, on peut le changer.\n`;
+  out += `${EQ}\n`;
+  out += `© 2025 Méthode V.A.L.E.U.R© — Céline Bourbon, Psychologue\n`;
+  out += `Tous droits réservés. Reproduction interdite.`;
+  return out;
+}
+
+
+/* ────────────────────────────────────────────────────────────────
+   PAGE IMPRIMABLE PRATICIEN
+   ──────────────────────────────────────────────────────────────── */
+function openPrintPage() {
+  const MASK_COLOR = { rouge:'#e53e3e',orange:'#ed8936',jaune:'#ecc94b',vert:'#48bb78',bleu:'#4299e1',indigo:'#667eea',violet:'#9f7aea' };
+  const MASK_EMOJI = { rouge:'🔴',orange:'🟠',jaune:'🟡',vert:'🟢',bleu:'🔵',indigo:'🔷',violet:'💜' };
+  const LEVEL_COLORS = { faible:'#48bb78',modéré:'#ecc94b',élevé:'#ed8936',dominant:'#e53e3e' };
+  const LEVEL_BG    = { faible:'#f0fff4',modéré:'#fffff0',élevé:'#fffaf0',dominant:'#fff5f5' };
+  const globalPct   = Math.round(scores.total / 448 * 100);
+  const dateStr     = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  // ── Tableau synthèse ──
+  let tableRows = '';
   MASKS.forEach(mask => {
     const s   = scores[mask.id];
     const lv  = getLevel(s);
-    out += `${LINE}\n${mask.name.toUpperCase()} — ${s}/64 (${lv.label})\n${mask.peur}\n${LINE}\n`;
-    out += `${mask.levels[lv.key] || ''}\n\n`;
+    const pct = Math.round(s / 64 * 100);
+    const col = MASK_COLOR[mask.id] || '#888';
+    const lvCol = LEVEL_COLORS[lv.key] || '#888';
+    const lvBg  = LEVEL_BG[lv.key]   || '#fff';
+    tableRows += `
+      <tr>
+        <td style="padding:10px 14px;border-bottom:1px solid #eee;white-space:nowrap">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${col};margin-right:8px;vertical-align:middle"></span>
+          <strong style="color:${col}">${mask.name}</strong>
+        </td>
+        <td style="padding:10px 14px;border-bottom:1px solid #eee;font-size:.78rem;color:#555">${mask.peur}</td>
+        <td style="padding:10px 14px;border-bottom:1px solid #eee;text-align:center;font-weight:700;color:${col};font-size:1rem">${s}<span style="font-weight:400;font-size:.8rem;color:#999">/64</span></td>
+        <td style="padding:10px 14px;border-bottom:1px solid #eee">
+          <div style="background:#f1f1f1;border-radius:6px;height:10px;width:120px">
+            <div style="background:${col};border-radius:6px;height:10px;width:${pct}%"></div>
+          </div>
+        </td>
+        <td style="padding:10px 14px;border-bottom:1px solid #eee;text-align:center">
+          <span style="background:${lvBg};color:${lvCol};border:1px solid ${lvCol}55;border-radius:20px;padding:3px 12px;font-size:.8rem;font-weight:700;white-space:nowrap">${lv.label}</span>
+        </td>
+      </tr>`;
   });
 
-  out += `${'═'.repeat(60)}\nMESSAGE TRANSVERSAL\nQuel que soit le masque ou son niveau d'emprise :\n— Il ne s'agit jamais d'un défaut.\n— Chaque masque a d'abord été une solution.\n— L'emprise indique simplement le degré de rigidité de cette solution.\nPlus l'emprise est forte, plus la peur gouverne automatiquement.\nMoins elle est forte, plus vous avez la possibilité de choisir.\n${'═'.repeat(60)}\n`;
-  out += `\n© 2025 Méthode V.A.L.E.U.R© — Céline Bourbon, Psychologue\nBasé sur "De la peur à la joie d'être soi" — Éditions L'Harmattan\nTous droits réservés. Reproduction interdite.`;
-  return out;
+  // ── Items critiques ──
+  let critsHTML = '';
+  MASKS.forEach(mask => {
+    const crits = mask.items
+      .map(it => ({ ...it, raw: responses[it.id] ?? 0 }))
+      .filter(it => it.inv ? it.raw === 0 : it.raw === 4);
+    if (!crits.length) return;
+    const col = MASK_COLOR[mask.id] || '#888';
+    const lv  = getLevel(scores[mask.id]);
+    critsHTML += `<div style="margin-bottom:14px">
+      <div style="background:${col}18;border-left:3px solid ${col};padding:6px 12px;border-radius:0 6px 6px 0;margin-bottom:6px">
+        <strong style="color:${col}">${mask.name}</strong>
+        <span style="color:#888;font-size:.8rem;margin-left:8px">${scores[mask.id]}/64 · ${lv.label}</span>
+      </div>`;
+    crits.forEach(it => {
+      const tag = it.inv
+        ? `<span style="background:#e2e8f0;color:#4a5568;border-radius:4px;padding:1px 6px;font-size:.72rem;font-family:monospace">INV · 0</span>`
+        : `<span style="background:#fed7d7;color:#c53030;border-radius:4px;padding:1px 6px;font-size:.72rem;font-family:monospace">brut = 4</span>`;
+      critsHTML += `<div style="display:flex;gap:8px;align-items:flex-start;padding:4px 8px;font-size:.83rem;color:#333">
+        ${tag} <span>${it.text}</span></div>`;
+    });
+    critsHTML += `</div>`;
+  });
+  if (!critsHTML) critsHTML = '<p style="color:#aaa;font-style:italic">Aucun item au score extrême.</p>';
+
+  // ── Interprétations ──
+  let interpHTML = '';
+  MASKS.forEach(mask => {
+    const s  = scores[mask.id];
+    const lv = getLevel(s);
+    if (lv.key === 'faible') return;
+    const col   = MASK_COLOR[mask.id] || '#888';
+    const lvCol = LEVEL_COLORS[lv.key] || '#888';
+    const lvBg  = LEVEL_BG[lv.key]    || '#fff';
+    interpHTML += `
+      <div style="border:1px solid ${col}44;border-radius:10px;overflow:hidden;margin-bottom:14px;page-break-inside:avoid">
+        <div style="background:${col}14;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid ${col}22">
+          <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${col};flex-shrink:0"></span>
+          <strong style="color:${col};font-size:.95rem">${mask.peur}</strong>
+          <span style="margin-left:auto;background:${lvBg};color:${lvCol};border:1px solid ${lvCol}55;border-radius:20px;padding:2px 10px;font-size:.78rem;font-weight:700">${lv.label} · ${s}/64</span>
+        </div>
+        <div style="padding:12px 16px;font-size:.85rem;color:#333;line-height:1.75">${mask.levels[lv.key] || ''}</div>
+      </div>`;
+  });
+
+  // ── Assemblage HTML ──
+  const html = `<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8">
+<title>Résultats V.A.L.E.U.R© — ${demographics.prenom || 'Patient'}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Georgia',serif;color:#1a202c;background:#fff;padding:28px 36px;max-width:860px;margin:0 auto;font-size:14px}
+  h2{font-size:1.15rem;color:#2d3748;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse}
+  th{background:#f7fafc;padding:10px 14px;font-size:.8rem;text-align:left;font-weight:600;color:#4a5568;border-bottom:2px solid #e2e8f0;text-transform:uppercase;letter-spacing:.05em}
+  .no-print{display:block}
+  @media print{
+    .no-print{display:none!important}
+    body{padding:12px 20px;font-size:12px}
+    h2{font-size:1rem}
+    @page{margin:1.2cm 1.5cm}
+  }
+  .section{margin-bottom:28px;page-break-inside:avoid}
+  .badge-global{display:inline-block;background:#1a202c;color:#e2e8f0;border-radius:8px;padding:6px 18px;font-size:.85rem;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="no-print" style="text-align:center;margin-bottom:20px">
+  <button onclick="window.print()"
+    style="background:#1a202c;color:#e2e8f0;border:none;border-radius:8px;padding:10px 28px;font-size:.9rem;cursor:pointer">
+    🖨️ &nbsp;Imprimer / Enregistrer en PDF
+  </button>
+</div>
+
+<!-- EN-TÊTE -->
+<div class="section" style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1a202c;padding-bottom:14px">
+  <div>
+    <div style="font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:#718096;margin-bottom:4px">Méthode V.A.L.E.U.R© · Fiche praticien</div>
+    <h1 style="font-size:1.4rem;color:#1a202c">Résultats — ${demographics.prenom || '—'}</h1>
+    <div style="color:#718096;font-size:.83rem;margin-top:4px">
+      ${demographics.age ? demographics.age+' ans · ' : ''}${demographics.genre || ''} · ${dateStr}
+    </div>
+  </div>
+  <div style="text-align:right">
+    <span class="badge-global">Score global : ${scores.total} / 448</span>
+    <div style="color:#718096;font-size:.78rem;margin-top:6px">${globalPct}% d'emprise globale</div>
+  </div>
+</div>
+
+<!-- TABLEAU SYNTHÈSE -->
+<div class="section" style="margin-top:22px">
+  <h2>Synthèse des 7 masques</h2>
+  <table>
+    <thead><tr>
+      <th>Masque</th>
+      <th>Dimension</th>
+      <th style="text-align:center">Score</th>
+      <th>Intensité</th>
+      <th style="text-align:center">Niveau</th>
+    </tr></thead>
+    <tbody>${tableRows}</tbody>
+  </table>
+</div>
+
+<!-- ITEMS CRITIQUES -->
+<div class="section">
+  <h2>Items au score extrême</h2>
+  <div style="font-size:.78rem;color:#718096;margin-bottom:10px;font-style:italic">
+    Réponses brut = 4 sur items directs · Réponses brut = 0 sur items inversés
+  </div>
+  ${critsHTML}
+</div>
+
+<!-- INTERPRÉTATIONS -->
+<div class="section">
+  <h2>Interprétations <span style="font-size:.8rem;font-weight:400;color:#718096">(niveaux Modéré et supérieur)</span></h2>
+  ${interpHTML}
+</div>
+
+<!-- PIED DE PAGE -->
+<div style="border-top:1px solid #e2e8f0;padding-top:12px;font-size:.72rem;color:#a0aec0;display:flex;justify-content:space-between">
+  <span>© 2025 Méthode V.A.L.E.U.R© — Céline Bourbon, Psychologue — Tous droits réservés · Reproduction interdite</span>
+  <span style="font-style:italic">De la peur à la joie d'être soi — Éditions L'Harmattan</span>
+</div>
+
+</body></html>`;
+
+  const w = window.open('','_blank');
+  if (w) { w.document.write(html); w.document.close(); }
 }
 
 /* ────────────────────────────────────────────────────────────────
