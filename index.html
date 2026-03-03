@@ -807,53 +807,104 @@ function buildSummaryResults() {
       </div>`;
   });
 
-  // FIX : injection dans 'praticien-btn-zone' qui existe bien dans le HTML
-  const btnZone = document.getElementById('praticien-btn-zone');
-  if (btnZone) {
-    btnZone.innerHTML = `
-      <button onclick="openPrintPage()"
-        style="background:linear-gradient(135deg,#2d3748,#1a202c);color:#e2e8f0;border:1px solid #4a5568;
-               border-radius:10px;padding:12px 28px;font-size:.9rem;cursor:pointer;
-               display:inline-flex;align-items:center;gap:8px">
-        🖨️ &nbsp;Ouvrir la fiche praticien (imprimable)
-      </button>
-      <div style="font-size:.75rem;color:#4a5568;margin-top:6px">Accès praticien · Usage exclusif Céline Bourbon</div>`;
-  }
+  // Fiche praticien : envoyée uniquement par email à Céline Bourbon — jamais visible par le patient
 }
 
 async function sendDetailedEmail() {
   const dateStr = new Date().toLocaleDateString('fr-FR', {
     weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit'
   });
+
+  // ── SCORES SUMMARY ──────────────────────────────────────────────
   const scoresSummary = MASKS.map(m => {
     const lv = getLevel(scores[m.id]);
-    return `${m.name}: ${scores[m.id]}/64 (${lv.label})`;
+    const bar = '█'.repeat(Math.round(scores[m.id]/64*10)) + '░'.repeat(10 - Math.round(scores[m.id]/64*10));
+    return `${m.name.padEnd(18)} ${bar} ${String(scores[m.id]).padStart(2)}/64  ${lv.label}`;
   }).join('\n');
 
+  // ── JOURNAL COMPLET 112 ITEMS ────────────────────────────────────
   let allResponses = ''; let itemNum = 0;
   MASKS.forEach(mask => {
     const lv = getLevel(scores[mask.id]);
-    allResponses += `\n=== ${mask.name.toUpperCase()} — ${scores[mask.id]}/64 (${lv.label}) ===\n`;
+    allResponses += `\n${'═'.repeat(60)}\n`;
+    allResponses += `${mask.name.toUpperCase()} — ${scores[mask.id]}/64 (${lv.label})\n`;
+    allResponses += `${'─'.repeat(60)}\n`;
     mask.items.forEach(it => {
       itemNum++;
-      const raw = responses[it.id] ?? '–', a = adj(it.id, responses[it.id] ?? 0);
-      const bar = '█'.repeat(a) + '░'.repeat(4-a);
-      allResponses += `  ${String(itemNum).padStart(3,' ')}.${it.inv ? ' [INV]' : '     '} ${bar} brut:${raw} adj:${a}  ${it.text}\n`;
+      const raw = responses[it.id] ?? 0;
+      const a   = adj(it.id, raw);
+      const bar = '█'.repeat(a) + '░'.repeat(4 - a);
+      const tag = it.inv ? '[INV]' : '     ';
+      allResponses += `  ${String(itemNum).padStart(3)}. ${tag} ${bar}  brut:${raw} adj:${a}  ${it.text}\n`;
     });
   });
 
+  // ── ITEMS CRITIQUES ──────────────────────────────────────────────
+  // brut=4 sur items directs  = masque très actif
+  // brut=0 sur items inversés = masque très actif (réponse inverse)
+  let itemsCritiques = '';
+  let critNum = 0;
+  MASKS.forEach(mask => {
+    const critiquesDuMasque = mask.items.filter(it => {
+      const raw = responses[it.id] ?? -1;
+      return (!it.inv && raw === 4) || (it.inv && raw === 0);
+    });
+    if (critiquesDuMasque.length > 0) {
+      itemsCritiques += `\n[${mask.name}]\n`;
+      critiquesDuMasque.forEach(it => {
+        critNum++;
+        const raw = responses[it.id];
+        const tag = it.inv ? 'INV brut=0' : 'brut=4';
+        itemsCritiques += `  • (${tag}) ${it.text}\n`;
+      });
+    }
+  });
+  if (critNum === 0) itemsCritiques = 'Aucun item à score extrême détecté.';
+  else itemsCritiques = `${critNum} item(s) à score critique :\n${itemsCritiques}`;
+
+  // ── INTERPRÉTATIONS DÉTAILLÉES ───────────────────────────────────
+  let interpretations = '';
+  const masquesSignificatifs = MASKS.filter(m => scores[m.id] >= 17);
+  if (masquesSignificatifs.length === 0) {
+    interpretations = 'Tous les masques sont au niveau Faible — profil globalement équilibré.';
+  } else {
+    masquesSignificatifs.forEach(mask => {
+      const lv = getLevel(scores[mask.id]);
+      interpretations += `\n── ${mask.name.toUpperCase()} (${scores[mask.id]}/64 — ${lv.label}) ──\n`;
+      interpretations += `Peur associée : ${mask.peur}\n`;
+      interpretations += `Manifestations : ${mask.manifestations}\n`;
+      interpretations += `Interprétation : ${mask.levels[lv.key]}\n`;
+    });
+  }
+
+  // ── DÉFIS PERSONNALISÉS ──────────────────────────────────────────
+  let defis = '';
+  const masquesDominants = MASKS.filter(m => scores[m.id] >= 33).sort((a,b) => scores[b.id] - scores[a.id]);
+  if (masquesDominants.length === 0) {
+    defis = 'Score global modéré — travailler en priorité sur le masque le plus élevé.';
+  } else {
+    masquesDominants.forEach(mask => {
+      const lv = getLevel(scores[mask.id]);
+      defis += `\n── ${mask.name} (${lv.label}) ──\n`;
+      mask.challenges.forEach(ch => {
+        defis += `  [${ch.level}] ${ch.title}\n`;
+        defis += `    → ${ch.desc}\n`;
+      });
+    });
+  }
+
+  // ── MASK VARS ────────────────────────────────────────────────────
   const maskVars = {};
   MASKS.forEach(m => {
-    const pct = Math.round(scores[m.id]/64*100);
     maskVars[`score_${m.id}`] = `${scores[m.id]}`;
-    maskVars[`pct_${m.id}`]   = `${pct}`;
+    maskVars[`pct_${m.id}`]   = `${Math.round(scores[m.id]/64*100)}`;
     maskVars[`level_${m.id}`] = getLevel(scores[m.id]).label;
   });
 
   const globalPct = Math.round(scores.total/448*100);
   const params = {
-    to_email: CONFIG.ADMIN_EMAIL,
-    to_name:  CONFIG.ADMIN_NAME,
+    to_email:           CONFIG.ADMIN_EMAIL,
+    to_name:            CONFIG.ADMIN_NAME,
     prenom:             demographics.prenom,
     age:                demographics.age,
     genre:              demographics.genre,
@@ -866,7 +917,10 @@ async function sendDetailedEmail() {
     masques_dominants:  MASKS.filter(m => scores[m.id] >= 49).map(m => m.name).join(', ') || 'Aucun',
     masques_eleves:     MASKS.filter(m => scores[m.id] >= 33 && scores[m.id] < 49).map(m => m.name).join(', ') || 'Aucun',
     scores_summary:     scoresSummary,
-    all_responses:      allResponses.substring(0, 8000),
+    items_critiques:    itemsCritiques,
+    interpretations:    interpretations,
+    defis:              defis,
+    all_responses:      allResponses,
     ...maskVars,
   };
 
