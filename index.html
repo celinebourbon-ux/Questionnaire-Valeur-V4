@@ -906,11 +906,14 @@ async function sendDetailedEmail() {
   let criticalSection = '';
   MASKS.forEach(mask => {
     const crits = mask.items
-      .map(it => ({ ...it, a: adj(it.id, responses[it.id] ?? 0) }))
-      .filter(it => it.a >= 3).sort((a, b) => b.a - a.a);
+      .map(it => ({ ...it, raw: responses[it.id] ?? 0 }))
+      .filter(it => it.inv ? it.raw === 0 : it.raw === 4);
     if (crits.length) {
       criticalSection += `\n--- ${mask.name} (${scores[mask.id]}/64 — ${getLevel(scores[mask.id]).label}) ---\n`;
-      crits.forEach(it => { criticalSection += `  [${it.id}] Intensité ${it.a}/4 : ${it.text}\n`; });
+      crits.forEach(it => {
+        const tag = it.inv ? '[INV · brut=0]' : '[brut=4]';
+        criticalSection += `  ${tag} ${it.text}\n`;
+      });
     }
   });
 
@@ -964,7 +967,7 @@ async function sendDetailedEmail() {
     score_global_rem:  `${100 - globalPct}`,
     masques_dominants: MASKS.filter(m => scores[m.id] >= 49).map(m => m.name).join(', ') || 'Aucun',
     masques_eleves:    MASKS.filter(m => scores[m.id] >= 33 && scores[m.id] < 49).map(m => m.name).join(', ') || 'Aucun',
-    items_critiques:   criticalSection  || 'Aucun item avec score ajusté ≥ 3',
+    items_critiques:   criticalSection  || 'Aucun item au score extrême (brut=4 ou inv brut=0)',
     defis_proposes:    challengesSection || 'Aucun masque modéré ou supérieur',
     toutes_reponses:   allResponses,
     scores_masques:    scoresSummary,
