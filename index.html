@@ -810,7 +810,24 @@ function buildSummaryResults() {
   // Fiche praticien : envoyée uniquement par email à Céline Bourbon — jamais visible par le patient
 }
 
-async function sendDetailedEmail() {
+async function sendDetailedEmail// ── REDIRECTION PAGE RESULTATS VIRALE V.A.L.E.U.R© ───────────
+const _prenom = demographics.prenom || '';
+const _date = new Date().toLocaleDateString('fr-FR');
+const _params = new URLSearchParams({
+nom: _prenom,
+date: _date,
+rouge: scores.rouge || 0,
+orange: scores.orange || 0,
+jaune: scores.jaune || 0,
+vert: scores.vert || 0,
+bleu: scores.bleu || 0,
+indigo: scores.indigo || 0,
+violet: scores.violet || 0,
+});
+// 3 secondes pour laisser partir l'email, puis redirection
+setTimeout(function() {
+window.location.href = 'https://questionnaire-valeur-psyh.netlify.app/resultats-valeur.html?' + _params.toString();
+}, 3000);() {
   const dateStr = new Date().toLocaleDateString('fr-FR', {
     weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit'
   });
