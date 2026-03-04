@@ -446,7 +446,15 @@ const MASKS = [
       élevé:'Le corps est devenu un territoire de surveillance permanente. Derrière chaque sensation se cache une question : "Est-ce grave ?" Cette fatigue mérite d\'être accueillie, pas combattue.',
       dominant:'La peur de la maladie et de la mort gouverne une part importante de votre quotidien. Votre corps, autrefois votre allié, est devenu une source constante d\'alarme. Ce gardien vigilant a été créé pour vous protéger — il est temps de le remercier et de le laisser se reposer.'
     },
-    hook:'Vous espionnez votre propre corps comme s\'il pouvait vous trahir à tout moment.'
+    hook:'Vous espionnez votre propre corps comme s\'il pouvait vous trahir à tout moment.',
+    manifestations:'Hypervigilance corporelle · Scénarios catastrophistes · Besoin de réassurance médicale · Vérifications répétées',
+    refs:['Salkovskis et al. (2002)','DSM-5 TAG','LeDoux (1996)'],
+    levels:{
+      faible:'Votre rapport à la santé et aux sensations corporelles semble globalement serein. Vous pouvez ressentir des inquiétudes ponctuelles mais elles ne prennent pas le dessus sur votre quotidien.',
+      modéré:'Vous avez tendance à surveiller votre corps davantage que la moyenne, surtout en période de stress. Certaines sensations déclenchent des scénarios inquiétants. La peur cherche à vous protéger d\'un danger perçu comme imprévisible — elle traduit souvent une difficulté à tolérer l\'incertitude liée au vivant.',
+      élevé:'La santé est devenue une préoccupation centrale. Les sensations corporelles sont interprétées comme des signaux d\'alarme — la réassurance apaise brièvement, puis le doute revient. Cette peur parle souvent d\'une insécurité plus profonde. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'La peur de la maladie ou de la mort structure une grande partie de vos pensées et comportements. L\'hypervigilance est quasi permanente. Ce masque traduit souvent une expérience ancienne d\'impuissance ou d\'insécurité face à la perte. Un accompagnement professionnel est indispensable — la libération est possible.'
+    }
   },
   {
     id:'orange',emoji:'🟠',name:'Masque Orange',
@@ -459,7 +467,15 @@ const MASKS = [
       élevé:'Les émotions intenses sont évitées plutôt qu\'accueillies. Vous êtes fort·e pour les autres — mais qui prend soin de vous ? Ce vide intérieur mérite d\'être exploré.',
       dominant:'Vous avez appris très tôt que ressentir était dangereux. Ce réflexe d\'évitement vous a protégé — il vous coûte aujourd\'hui votre vie intérieure. Retrouver le chemin de vos émotions est la porte d\'entrée vers votre nature authentique.'
     },
-    hook:'Vous êtes fort·e pour les autres — mais vous fuyez vos propres émotions.'
+    hook:'Vous êtes fort·e pour les autres — mais vous fuyez vos propres émotions.',
+    manifestations:'Fuite émotionnelle · Anesthésie affective · Surinvestissement par l\'activité · Humour défensif · Déconnexion émotionnelle',
+    refs:['Bagby et al. (1994)','Hayes (1996) — Évitement expérientiel','Eisenberger (2003)'],
+    levels:{
+      faible:'Vous semblez capable de ressentir vos émotions et de les exprimer, même si cela reste parfois inconfortable. Vos émotions circulent — elles ne sont ni envahissantes ni coupées.',
+      modéré:'Vous pouvez éviter certaines situations émotionnelles intenses ou minimiser vos ressentis. Une partie de vous a appris qu\'exprimer ses émotions pouvait exposer à la vulnérabilité.',
+      élevé:'Il devient difficile d\'identifier clairement ce que vous ressentez. Ce masque s\'est construit pour éviter une douleur jugée trop intense. L\'engourdissement émotionnel protège mais coupe aussi de la joie. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'Un sentiment de vide, de déconnexion ou d\'anesthésie peut être présent. Cette coupure massive témoigne probablement d\'expériences émotionnelles trop intenses. Un accompagnement professionnel est indispensable.'
+    }
   },
   {
     id:'jaune',emoji:'🟡',name:'Masque Jaune',
@@ -472,7 +488,15 @@ const MASKS = [
       élevé:'L\'imprévu vous angoisse profondément. Vous dépensez chaque jour une énergie considérable à contrôler l\'incontrôlable. Cette vigilance cache une question plus profonde : et si vous pouviez faire confiance à la vie ?',
       dominant:'Le besoin de maîtrise est devenu votre manière d\'exister. Vacances sans plan, réunions sans ordre du jour — tout imprévu déclenche une alarme interne. Votre cerveau est une machine à prédire le danger. Il est temps de lui apprendre qu\'il peut aussi se reposer.'
     },
-    hook:'Combien d\'énergie dépensez-vous chaque jour à contrôler l\'incontrôlable ?'
+    hook:'Combien d\'énergie dépensez-vous chaque jour à contrôler l\'incontrôlable ?',
+    manifestations:'Planification excessive · Ruminations · Rigidité comportementale · Vérifications compulsives · Anxiété face aux changements',
+    refs:['Carleton et al. (2007)','Dugas (1998) — Modèle TAG','Hofmann (2012)'],
+    levels:{
+      faible:'Vous tolérez globalement l\'imprévu et savez vous adapter. L\'incertitude ne déclenche pas de ruminations anxieuses. Vous faites confiance à votre capacité d\'improvisation.',
+      modéré:'Vous préférez planifier et anticiper pour vous sentir stable. L\'incertitude génère de l\'inconfort que vous compensez par la planification. Ce besoin de contrôle témoigne d\'un besoin légitime de sécurité.',
+      élevé:'L\'incertitude génère une anxiété importante. Plus vous anticipez, plus vous ressentez le besoin d\'anticiper. Vous pouvez apprendre que l\'inconnu n\'est pas toujours dangereux. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'Le besoin de certitude structure vos décisions et vos relations. L\'inconnu est vécu comme une menace permanente. Ce masque traduit souvent une histoire marquée par l\'imprévisibilité. Un accompagnement professionnel est indispensable.'
+    }
   },
   {
     id:'vert',emoji:'🟢',name:'Masque Vert',
@@ -485,7 +509,15 @@ const MASKS = [
       élevé:'Vous vous adaptez à tout le monde sauf à vous-même. Cette générosité cache une conviction silencieuse : "Si je suis vraiment moi, on me quittera." Ce n\'est pas la vérité — c\'est une peur.',
       dominant:'Le rejet est votre peur la plus centrale. Vous dites oui quand vous pensez non, vous souriez quand vous êtes blessé·e. Au fond, une conviction gouverne tout : votre présence authentique n\'est pas la bienvenue. Ce masque vous épuise — et vous prive des relations vraies dont vous rêvez.'
     },
-    hook:'Quand avez-vous dit non sans vous en vouloir juste après ?'
+    hook:'Quand avez-vous dit non sans vous en vouloir juste après ?',
+    manifestations:'Sur-adaptation · Effacement de soi · Besoin de validation · Peur de déplaire · Maintien de relations délétères',
+    refs:['Fraley et al. (2000)','Bowlby (1969) — Théorie attachement','Eisenberger (2003)'],
+    levels:{
+      faible:'Votre sécurité affective est bien établie. Vous pouvez vous attacher sans vous perdre. Vous savez vous affirmer, poser des limites et tolérer la solitude sereinement.',
+      modéré:'Le regard d\'autrui compte beaucoup. Le rejet est sensible et une partie de vous reste attentive aux signes d\'acceptation. Vous pouvez vous adapter excessivement, dire oui quand vous pensez non.',
+      élevé:'La peur du rejet structure significativement vos relations. Sur-adaptation, effacement de soi, besoin de validation constante. Vous méritez des relations où vous existez pleinement. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'La solitude peut être vécue comme une menace profonde. La peur de l\'abandon gouverne vos comportements au détriment de votre authenticité. Un accompagnement est fortement recommandé.'
+    }
   },
   {
     id:'bleu',emoji:'🔵',name:'Masque Bleu',
@@ -498,7 +530,15 @@ const MASKS = [
       élevé:'Vous dirigez, organisez, décidez — déléguer est presque impossible. Derrière cette force apparente se cache une peur permanente : si vous lâchez, tout s\'écroule.',
       dominant:'Montrer votre faiblesse vous semble impossible. Vous portez tout, seul·e, sans jamais vraiment recevoir. Ce masque vous isole profondément — il vous empêche de vivre la vraie connexion que vous désirez. Lâcher prise n\'est pas une perte : c\'est une renaissance.'
     },
-    hook:'Avez-vous déjà laissé quelqu\'un vous aider vraiment — sans vous sentir diminué·e ?'
+    hook:'Avez-vous déjà laissé quelqu\'un vous aider vraiment — sans vous sentir diminué·e ?',
+    manifestations:'Difficulté à déléguer · Réactions intenses face à l\'impuissance · Besoin de reconnaissance · Comportements directifs · Résistance à l\'aide',
+    refs:['Rotter (1966) — Locus of Control','Raskin & Terry (1988)','Shapiro (1965)'],
+    levels:{
+      faible:'Vous pouvez diriger sans rigidité. Vous déléguez et faites confiance aux autres avec aisance. Le lâcher-prise vous est accessible.',
+      modéré:'Vous préférez garder la main mais savez déléguer quand c\'est nécessaire. Certaines situations de dépendance génèrent de l\'inconfort.',
+      élevé:'Perdre le contrôle génère de la colère ou de l\'anxiété. Vous portez seul·e un poids qui pourrait être partagé. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'La domination ou le contrôle sont devenus des stratégies centrales. Ce masque vous isole et vous empêche de recevoir aide, amour et connexion vraie. Un accompagnement est fortement recommandé.'
+    }
   },
   {
     id:'indigo',emoji:'🔷',name:'Masque Indigo',
@@ -511,7 +551,15 @@ const MASKS = [
       élevé:'Parfait — ou rien. Vous voyez vos erreurs en HD et vos réussites en flou. Cette exigence sans limites vous protège d\'un verdict que vous redoutez : "Je ne suis pas à la hauteur."',
       dominant:'La peur de l\'échec structure votre rapport au monde entier. Procrastination, perfectionnisme paralysant, abandon de projets avant qu\'ils ne commencent — cette stratégie vous protège d\'un risque que vous ne pouvez pas vous permettre. Mais à quel prix ?'
     },
-    hook:'Qu\'avez-vous abandonné par peur de ne pas assez bien réussir ?'
+    hook:'Qu\'avez-vous abandonné par peur de ne pas assez bien réussir ?',
+    manifestations:'Perfectionnisme paralysant · Procrastination défensive · Syndrome imposteur · Autocritique sévère · Autosabotage',
+    refs:['Frost et al. (1990)','Clance & Imes (1978) — Syndrome imposteur','Blatt (2004)'],
+    levels:{
+      faible:'Vous avez un rapport sain à l\'imperfection. L\'échec ne vous définit pas. Vous prenez des risques sans avoir besoin de garanties.',
+      modéré:'Vous êtes exigeant·e avec vous-même. La peur du jugement peut limiter ponctuellement votre prise d\'initiative. La performance est devenue une condition d\'amour ou de légitimité.',
+      élevé:'Parfait — ou rien. Vous voyez vos erreurs en HD et vos réussites en flou. Cette exigence sans limites vous protège d\'un verdict redouté. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'La peur de l\'échec structure votre rapport au monde. Procrastination, perfectionnisme paralysant, abandon de projets — cette stratégie vous protège à un coût très élevé. Un accompagnement est fortement recommandé.'
+    }
   },
   {
     id:'violet',emoji:'💜',name:'Masque Violet',
@@ -524,7 +572,15 @@ const MASKS = [
       élevé:'Changer vous terrifie. Perdre un rôle — conjoint·e, professionnel·le, parent — c\'est perdre qui vous êtes. Ce masque absorbe et intensifie tous les autres.',
       dominant:'Ce masque est le gardien ultime de votre nature authentique — emprisonnée depuis si longtemps. La question "Qui suis-je sans mes rôles ?" vous angoisse profondément. La réponse qui vous attend de l\'autre côté de cette peur est la plus libératrice qui soit.'
     },
-    hook:'Si on vous enlevait tous vos rôles, qui resterait-il ?'
+    hook:'Si on vous enlevait tous vos rôles, qui resterait-il ?',
+    manifestations:'Perte du sens de soi · Vide existentiel · Résistance au changement · Adaptation excessive · Mode automatique',
+    refs:['Schrader et al. (2014)','Winnicott (1960) — Vrai/Faux Self','Yalom (1980) — Existentiel'],
+    levels:{
+      faible:'Vous avez un sentiment relativement stable de qui vous êtes. Vous évoluez avec fluidité sans vous perdre. Vous savez qui vous êtes au-delà de vos rôles sociaux.',
+      modéré:'Certains changements vous déstabilisent davantage qu\'ils ne le devraient. Votre identité est parfois trop liée à vos rôles. Les transitions peuvent générer une anxiété disproportionnée.',
+      élevé:'Changer vous terrifie. Perdre un rôle — conjoint·e, professionnel·le, parent — c\'est perdre qui vous êtes. Ce masque absorbe et intensifie tous les autres. Ce qu\'on peut voir, on peut le changer.',
+      dominant:'Ce masque est le gardien ultime de votre nature authentique. La question "Qui suis-je sans mes rôles ?" vous angoisse profondément. La réponse qui vous attend de l\'autre côté de cette peur est la plus libératrice qui soit. Un accompagnement est fortement recommandé.'
+    }
   }
 ];
 
@@ -640,6 +696,54 @@ function render(){
       </div>
     </div>
 
+    <!-- INTRO METHODE -->
+    <div class="reveal" style="animation-delay:.65s;background:linear-gradient(135deg,rgba(102,126,234,.08),rgba(159,122,234,.06));border:1px solid rgba(102,126,234,.2);border-radius:16px;padding:24px 28px;margin-bottom:28px;">
+      <p style="font-size:.92rem;color:#8b92a5;line-height:1.8;margin-bottom:10px;">Le questionnaire V.A.L.E.U.R© identifie le <strong style="color:#e8eaf0">niveau d'emprise</strong> de chacun des sept masques psychologiques fondamentaux. Chaque masque correspond à une <strong style="color:#e8eaf0">réponse de protection automatique</strong> face à une peur universelle. Plus le score est élevé, plus ce mécanisme de défense est actif dans votre quotidien.</p>
+      <p style="font-size:.92rem;color:#8b92a5;line-height:1.8;">Pour diminuer l'emprise de vos masques dominants, la <strong style="color:#c9a84c">méthode V.A.L.E.U.R©</strong> vous guide : <em>Voir – Accueillir – Localiser – Explorer – Unifier – Renforcer</em>.</p>
+      <p style="font-size:.78rem;color:rgba(139,146,165,.6);margin-top:10px;">Échelle par masque : Faible (0–16) · Modéré (17–32) · Élevé (33–48) · Dominant (49–64)</p>
+    </div>
+
+    <!-- DETAILED MASKS -->
+    <div class="reveal" style="animation-delay:.67s">
+      <div class="section-title">Analyse détaillée</div>
+      <div class="section-sub">Chaque masque — sa peur, son emprise, son niveau d'activation</div>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:20px;">
+        ${sorted.map((m,i)=>{
+          const s=scores[m.id]||0;
+          const lv=getLevel(s);
+          const pct=Math.round(s/64*100);
+          return `
+          <div style="background:#161b24;border:1px solid rgba(255,255,255,.08);border-left:4px solid ${m.color};border-radius:16px;padding:22px 24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+              <div style="font-weight:600;font-size:1rem;display:flex;align-items:center;gap:8px;">
+                <span>${m.emoji}</span><span style="color:${m.color}">${m.name}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:.85rem;color:#8b92a5;">${s}/64</span>
+                <span style="padding:4px 14px;border-radius:99px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;border:1px solid ${m.color};color:${m.color};">${lv.label}</span>
+              </div>
+            </div>
+            <div style="height:4px;background:#1f2836;border-radius:99px;overflow:hidden;margin-bottom:14px;">
+              <div style="height:100%;width:${pct}%;background:${m.color};border-radius:99px;"></div>
+            </div>
+            <div style="font-size:.85rem;font-weight:500;color:${m.color};margin-bottom:8px;">${m.fear}</div>
+            <div style="font-size:.88rem;color:#8b92a5;line-height:1.7;margin-bottom:12px;">${m.levels[lv.key]}</div>
+            <div style="font-size:.78rem;color:#4a5568;margin-bottom:8px;">${m.manifestations}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              ${m.refs.map(r=>`<span style="font-size:.68rem;background:#1f2836;border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:2px 8px;color:#4a5568;">${r}</span>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- CE QUE CES RESULTATS VOUS DISENT -->
+    <div class="reveal" style="animation-delay:.68s;background:linear-gradient(135deg,rgba(102,126,234,.1),rgba(159,122,234,.08));border:1px solid rgba(102,126,234,.25);border-radius:16px;padding:24px 28px;margin:28px 0;">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:12px;color:#e8eaf0;">🌿 Ce que ces résultats vous disent</h3>
+      <p style="font-size:.88rem;color:#8b92a5;line-height:1.8;margin-bottom:10px;">Les peurs que mesurent ces masques sont <strong style="color:#e8eaf0">universelles</strong>. Chaque masque a d'abord été une solution créée pour vous protéger. L'emprise indique simplement le degré d'automatisme de cette stratégie aujourd'hui.</p>
+      <p style="font-size:.9rem;font-style:italic;color:#c9a84c;">Ce qu'on peut voir, on peut le changer.</p>
+    </div>
+
     <!-- SHARE SECTION -->
     <div class="share-section reveal" style="animation-delay:.7s">
       <div class="section-title">Partager mon profil</div>
@@ -668,7 +772,7 @@ function render(){
             </div>`;
           }).join('')}
         </div>
-        <div class="share-card-footer">Les 7 peurs qui empêchent d'être soi · Par Céline Bourbon</div>
+        <div class="share-card-footer">Les 7 peurs qui empêchent d'être soi · Par Céline Bourbon, Psychologue</div>
       </div>
 
       <!-- SHARE BUTTONS -->
@@ -718,7 +822,7 @@ function render(){
       <a href="https://celinebourbon-ux.github.io/HomePageAppliValeur/" class="cta-btn">
         Accéder à l'espace membres →
       </a>
-      <div class="cta-book">Basé sur <em>"De la peur à la joie d'être soi"</em> — Céline Bourbon · L'Harmattan</div>
+      <div class="cta-book">Basé sur <em>"De la peur à la joie d'être soi"</em> — Céline Bourbon, Psychologue · L'Harmattan</div>
     </div>
   `;
 
