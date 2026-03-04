@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Découvrez votre profil des 7 masques — Méthode V.A.L.E.U.R© de Céline Bourbon, Psychologue">
+<meta property="og:title" content="Mon profil V.A.L.E.U.R© — Les 7 peurs qui empêchent d'être soi">
+<meta property="og:description" content="Découvrez quelle peur gouverne votre vie sans que vous le sachiez.">
+<meta property="og:image" content="https://celinebourbon-ux.github.io/HomePageAppliValeur/og-image.jpg">
+<title>Mes Résultats V.A.L.E.U.R© — Méthode Céline Bourbon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:#07080f;
+  font-family:'Jost',sans-serif;
+  color:#e2e8f0;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  /* Anti-copy */
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
+/* allow select on inputs */
+input,textarea{-webkit-user-select:text;user-select:text;}
+
+/* ─── CSS VARS ─────────────────────────────────────────────── */
+:root{
+  --rouge:#e53e3e; --rouge-bg:#1a0808; --rouge-glow:rgba(229,62,62,.25);
+  --orange:#ed8936; --orange-bg:#1a0e06; --orange-glow:rgba(237,137,54,.25);
+  --jaune:#d69e2e; --jaune-bg:#1a1500; --jaune-glow:rgba(214,158,46,.25);
+  --vert:#38a169; --vert-bg:#071a0e; --vert-glow:rgba(56,161,105,.25);
+  --bleu:#3182ce; --bleu-bg:#050d1a; --bleu-glow:rgba(49,130,206,.25);
+  --indigo:#5a67d8; --indigo-bg:#0a0c1e; --indigo-glow:rgba(90,103,216,.25);
+  --violet:#805ad5; --violet-bg:#100820; --violet-glow:rgba(128,90,213,.25);
+  --gold:#c9a84c; --gold-dim:#9a7e39;
+  --navy:#07080f; --card:#0d1120; --border:#1e2840;
+  --text:#e2e8f0; --muted:#6b7a9e;
+  --cream:#f7f3ee;
+}
+
+/* ─── SCROLLBAR ────────────────────────────────────────────── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:#07080f;}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+
+/* ─── ANIMATIONS ───────────────────────────────────────────── */
+@keyframes revealUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes revealScale{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes shimmer{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes rotateHalo{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes barGrow{from{width:0}to{width:var(--w)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 currentColor}50%{box-shadow:0 0 0 8px transparent}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-2%,-1%)}30%{transform:translate(1%,-2%)}50%{transform:translate(-1%,2%)}70%{transform:translate(2%,1%)}90%{transform:translate(-1%,-1%)}}
+
+.reveal{opacity:0;animation:revealUp .7s ease forwards;}
+.reveal-scale{opacity:0;animation:revealScale .6s cubic-bezier(.34,1.56,.64,1) forwards;}
+
+/* ─── GRAIN OVERLAY ────────────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite;
+}
+
+/* ─── LOADING SCREEN ───────────────────────────────────────── */
+#loading{
+  position:fixed;inset:0;background:#07080f;z-index:9000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  transition:opacity .6s ease;
+}
+#loading.hide{opacity:0;pointer-events:none;}
+.loading-v{
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:#000;
+  animation:float 2s ease-in-out infinite;
+  box-shadow:0 0 40px rgba(201,168,76,.4);
+}
+.loading-bar{width:160px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;}
+.loading-fill{height:100%;background:linear-gradient(90deg,var(--gold),transparent);border-radius:1px;animation:shimmer 1.5s ease-in-out infinite;}
+.loading-text{color:var(--muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;}
+
+/* ─── WRAPPER ──────────────────────────────────────────────── */
+#app{max-width:680px;margin:0 auto;padding:0 16px 60px;}
+
+/* ─── HEADER NAV ───────────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 0;margin-bottom:8px;
+}
+.logo-v{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:#000;
+  text-decoration:none;
+  box-shadow:0 4px 16px rgba(201,168,76,.3);
+}
+.topbar-label{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+
+/* ─── HERO ─────────────────────────────────────────────────── */
+.hero{
+  text-align:center;
+  padding:48px 0 40px;
+  position:relative;
+}
+.hero-subtitle{
+  color:var(--gold);font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:16px;font-weight:600;
+}
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,7vw,48px);
+  font-weight:300;color:var(--cream);
+  line-height:1.15;margin-bottom:8px;
+}
+.hero-name strong{font-weight:700;font-style:italic;}
+.hero-date{color:var(--muted);font-size:13px;margin-bottom:32px;}
+
+/* ─── DOMINANT MASK CARD ───────────────────────────────────── */
+.dominant-card{
+  position:relative;border-radius:24px;overflow:hidden;
+  padding:40px 28px;margin-bottom:40px;
+  border:1px solid var(--mask-color, #333);
+  background:var(--mask-bg, #0d1120);
+  animation:revealScale .8s cubic-bezier(.34,1.56,.64,1) .3s both;
+}
+.dominant-card::before{
+  content:'';position:absolute;inset:-1px;border-radius:24px;
+  background:linear-gradient(135deg,var(--mask-color),transparent 50%);
+  opacity:.08;pointer-events:none;
+}
+.dominant-halo{
+  position:absolute;top:-80px;right:-80px;
+  width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle, var(--mask-glow),transparent 70%);
+  pointer-events:none;opacity:.6;
+}
+.dominant-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.06);border:1px solid var(--mask-color);
+  border-radius:100px;padding:6px 16px;margin-bottom:20px;
+  color:var(--mask-color);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;
+}
+.dominant-emoji{font-size:56px;margin-bottom:12px;display:block;animation:float 3s ease-in-out infinite;}
+.dominant-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,6vw,36px);font-weight:700;
+  color:var(--mask-color);margin-bottom:6px;
+}
+.dominant-fear{color:var(--cream);font-size:15px;font-weight:300;margin-bottom:20px;opacity:.85;}
+.dominant-score-row{
+  display:flex;align-items:center;gap:16px;
+  background:rgba(255,255,255,.04);border-radius:12px;
+  padding:14px 18px;margin-bottom:20px;
+}
+.dominant-score-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px;font-weight:700;color:var(--mask-color);
+  line-height:1;
+}
+.dominant-score-meta{flex:1;}
+.dominant-score-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;}
+.dominant-score-level{color:var(--mask-color);font-weight:700;font-size:14px;margin-top:2px;}
+.dominant-insight{
+  color:#c8d3e8;font-size:14px;line-height:1.8;
+  border-left:3px solid var(--mask-color);
+  padding-left:16px;font-style:italic;
+}
+
+/* ─── ALL MASKS BARS ───────────────────────────────────────── */
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:400;color:var(--cream);
+  margin-bottom:4px;
+}
+.section-sub{color:var(--muted);font-size:13px;margin-bottom:20px;}
+
+.masks-bars{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;}
+.mask-bar-row{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:14px 16px;
+  transition:border-color .2s;
+}
+.mask-bar-row:hover{border-color:var(--row-color,#333);}
+.mask-bar-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.mask-bar-emoji{font-size:18px;flex-shrink:0;}
+.mask-bar-name{color:var(--cream);font-size:13px;font-weight:600;flex:1;}
+.mask-bar-score{color:var(--row-color);font-weight:700;font-size:14px;}
+.mask-bar-level{
+  font-size:10px;padding:2px 8px;border-radius:100px;
+  border:1px solid var(--row-color);color:var(--row-color);
+  opacity:.8;margin-left:6px;
+}
+.bar-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.bar-fill{
+  height:100%;border-radius:3px;
+  width:0;
+  background:linear-gradient(90deg,var(--row-color),var(--row-color-dim,#666));
+  transition:width 1.2s cubic-bezier(.16,1,.3,1);
+}
+.mask-bar-fear{color:var(--muted);font-size:11px;margin-top:6px;}
+
+/* ─── INSIGHT BLOCK ────────────────────────────────────────── */
+.insight-block{
+  background:linear-gradient(135deg,rgba(201,168,76,.08),transparent);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:20px;padding:28px;margin-bottom:40px;
+  position:relative;overflow:hidden;
+}
+.insight-block::after{
+  content:'"';
+  position:absolute;top:-20px;right:20px;
+  font-family:'Cormorant Garamond',serif;font-size:180px;font-weight:700;
+  color:rgba(201,168,76,.05);line-height:1;pointer-events:none;
+}
+.insight-label{color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:12px;}
+.insight-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(16px,4vw,20px);font-weight:300;
+  color:var(--cream);line-height:1.6;font-style:italic;
+}
+.insight-author{color:var(--muted);font-size:12px;margin-top:12px;}
+
+/* ─── SHARE SECTION ────────────────────────────────────────── */
+.share-section{margin-bottom:40px;}
+.share-card-preview{
+  background:linear-gradient(135deg,var(--mask-bg2,#0d1120),var(--navy));
+  border:2px solid var(--mask-color2,#333);
+  border-radius:20px;padding:28px;margin-bottom:16px;
+  position:relative;overflow:hidden;text-align:center;
+}
+.share-card-preview::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, var(--share-glow,transparent),transparent 60%);
+  pointer-events:none;
+}
+.share-logo-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-bottom:20px;opacity:.7;
+}
+.share-logo-v{
+  width:28px;height:28px;border-radius:8px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:700;color:#000;
+}
+.share-logo-text{color:var(--muted);font-size:11px;letter-spacing:1px;}
+.share-card-emoji{font-size:44px;display:block;margin-bottom:8px;}
+.share-card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.share-card-mask{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(20px,5vw,28px);font-weight:700;
+  color:var(--mask-color2,#fff);margin-bottom:4px;
+}
+.share-card-fear{color:#a0aec0;font-size:13px;margin-bottom:16px;}
+.share-mini-bars{display:flex;gap:4px;justify-content:center;margin-bottom:16px;}
+.share-mini-bar{width:28px;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.share-mini-track{width:6px;height:40px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;position:relative;}
+.share-mini-fill{position:absolute;bottom:0;width:100%;border-radius:3px;transition:height 1s ease;}
+.share-mini-emoji{font-size:10px;}
+.share-card-footer{color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+
+.share-btns{display:flex;flex-direction:column;gap:10px;}
+.share-btn{
+  display:flex;align-items:center;gap:12px;
+  border-radius:12px;padding:14px 18px;cursor:pointer;
+  font-family:'Jost',sans-serif;font-size:14px;font-weight:600;
+  border:none;transition:all .2s;width:100%;text-align:left;
+}
+.share-btn-copy{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);}
+.share-btn-copy:hover{background:rgba(201,168,76,.18);}
+.share-btn-img{background:rgba(128,90,213,.1);border:1px solid rgba(128,90,213,.3);color:#c3b6f5;}
+.share-btn-img:hover{background:rgba(128,90,213,.18);}
+.share-btn-wa{background:rgba(56,161,105,.1);border:1px solid rgba(56,161,105,.3);color:#9ae6b4;}
+.share-btn-wa:hover{background:rgba(56,161,105,.18);}
+.share-btn-icon{font-size:20px;flex-shrink:0;}
+.share-btn-label{flex:1;}
+.share-btn-label strong{display:block;font-size:14px;}
+.share-btn-label span{font-size:12px;opacity:.7;font-weight:400;}
+.copied-badge{
+  background:var(--vert);color:#fff;font-size:11px;
+  padding:2px 8px;border-radius:20px;
+  opacity:0;transition:opacity .3s;
+}
+.copied-badge.show{opacity:1;}
+
+/* ─── CTA ──────────────────────────────────────────────────── */
+.cta-block{
+  background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(128,90,213,.06));
+  border:1px solid rgba(201,168,76,.25);
+  border-radius:24px;padding:32px 24px;
+  text-align:center;margin-bottom:40px;
+  position:relative;overflow:hidden;
+}
+.cta-block::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.cta-eyebrow{color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:12px;}
+.cta-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,5vw,30px);font-weight:700;
+  color:var(--cream);line-height:1.2;margin-bottom:12px;
+}
+.cta-title em{color:var(--gold);font-style:normal;}
+.cta-sub{color:#8090b0;font-size:14px;line-height:1.7;margin-bottom:24px;}
+.cta-benefits{
+  display:flex;flex-direction:column;gap:8px;
+  text-align:left;margin-bottom:24px;
+}
+.cta-benefit{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(255,255,255,.03);border-radius:10px;padding:10px 14px;
+}
+.cta-benefit-icon{color:var(--gold);flex-shrink:0;font-size:16px;}
+.cta-benefit-text{color:#a8b8d0;font-size:13px;line-height:1.5;}
+.cta-btn{
+  display:block;text-decoration:none;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+  color:#000;font-weight:800;font-size:16px;
+  padding:16px 32px;border-radius:50px;
+  box-shadow:0 6px 30px rgba(201,168,76,.4);
+  transition:transform .2s, box-shadow .2s;
+  font-family:'Jost',sans-serif;
+}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgba(201,168,76,.5);}
+.cta-book{
+  margin-top:16px;color:var(--muted);font-size:12px;font-style:italic;
+}
+.cta-book em{color:#c8b88a;}
+
+/* ─── FOOTER ───────────────────────────────────────────────── */
+.footer{
+  text-align:center;padding:24px 0;
+  border-top:1px solid var(--border);
+  color:var(--muted);font-size:11px;line-height:1.8;
+  letter-spacing:.5px;
+}
+.footer strong{color:#8090b0;}
+
+/* ─── NO RESULTS ───────────────────────────────────────────── */
+.no-results{
+  text-align:center;padding:80px 20px;
+  animation:revealUp .6s ease both;
+}
+.no-results h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;color:var(--cream);margin-bottom:12px;
+}
+.no-results p{color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:24px;}
+
+/* ─── CANVAS (hidden) ──────────────────────────────────────── */
+#shareCanvas{display:none;}
+
+/* ─── MOBILE TWEAKS ────────────────────────────────────────── */
+@media(max-width:480px){
+  .dominant-card{padding:28px 20px;}
+  .dominant-score-num{font-size:32px;}
+}
+
+/* ─── PRINT ────────────────────────────────────────────────── */
+@media print{
+  body{background:#fff;color:#000;}
+  .share-section,.cta-block,.topbar{display:none!important;}
+  .dominant-card,.mask-bar-row{border-color:#ddd!important;background:#f5f5f5!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- COPYRIGHT PROTECTION -->
+<script>
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&['c','s','u','a','p'].includes(e.key.toLowerCase()))e.preventDefault();
+  if(e.key==='F12'||((e.ctrlKey||e.metaKey)&&e.shiftKey&&['i','j','c'].includes(e.key.toLowerCase())))e.preventDefault();
+});
+</script>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="loading-v">V</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+  <div class="loading-text">Analyse de votre profil…</div>
+</div>
+
+<canvas id="shareCanvas" width="1080" height="1080"></canvas>
+
+<div id="app" style="opacity:0;transition:opacity .5s .2s;">
+
+  <!-- NAV -->
+  <div class="topbar">
+    <a href="https://celinebourbon-ux.github.io/HomePageAppliValeur/" class="logo-v">V</a>
+    <span class="topbar-label">Méthode V.A.L.E.U.R©</span>
+    <span style="color:var(--muted);font-size:11px;">© C. Bourbon</span>
+  </div>
+
+  <!-- MAIN CONTENT (injected by JS) -->
+  <div id="main-content"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <strong>© 2025 Méthode V.A.L.E.U.R©</strong> — Céline Bourbon, Psychologue<br>
+    Contenu protégé · Reproduction interdite · Tous droits réservés<br>
+    <em>De la peur à la joie d'être soi</em> — Éditions L'Harmattan
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   © 2025 Méthode V.A.L.E.U.R© — Céline Bourbon, Psychologue
+   Tous droits réservés. Toute reproduction interdite.
+   Basé sur "De la peur à la joie d'être soi" — L'Harmattan
+   ============================================================ */
+
+// ── MASKS DATA ──────────────────────────────────────────────
+const MASKS = [
+  {
+    id:'rouge',emoji:'🔴',name:'Masque Rouge',
+    fear:'Peur de la mort / de la maladie',
+    color:'#e53e3e',bg:'#1a0808',glow:'rgba(229,62,62,.2)',
+    tag:'Hypervigilance somatique',
+    insight:{
+      faible:'Votre rapport à votre corps est globalement apaisé. Vous faites confiance à votre organisme.',
+      modéré:'Vous portez une attention particulière à votre corps. Cette vigilance vous protège — elle mérite d\'être apprivoisée.',
+      élevé:'Le corps est devenu un territoire de surveillance permanente. Derrière chaque sensation se cache une question : "Est-ce grave ?" Cette fatigue mérite d\'être accueillie, pas combattue.',
+      dominant:'La peur de la maladie et de la mort gouverne une part importante de votre quotidien. Votre corps, autrefois votre allié, est devenu une source constante d\'alarme. Ce gardien vigilant a été créé pour vous protéger — il est temps de le remercier et de le laisser se reposer.'
+    },
+    hook:'Vous espionnez votre propre corps comme s\'il pouvait vous trahir à tout moment.'
+  },
+  {
+    id:'orange',emoji:'🟠',name:'Masque Orange',
+    fear:'Peur de la douleur / de la souffrance',
+    color:'#ed8936',bg:'#1a0e06',glow:'rgba(237,137,54,.2)',
+    tag:'Évitement émotionnel',
+    insight:{
+      faible:'Vous accueillez vos émotions avec une relative aisance. Votre vie intérieure est accessible.',
+      modéré:'Vous avez tendance à contourner certaines émotions difficiles. "Faire avec" est devenu un réflexe défensif.',
+      élevé:'Les émotions intenses sont évitées plutôt qu\'accueillies. Vous êtes fort·e pour les autres — mais qui prend soin de vous ? Ce vide intérieur mérite d\'être exploré.',
+      dominant:'Vous avez appris très tôt que ressentir était dangereux. Ce réflexe d\'évitement vous a protégé — il vous coûte aujourd\'hui votre vie intérieure. Retrouver le chemin de vos émotions est la porte d\'entrée vers votre nature authentique.'
+    },
+    hook:'Vous êtes fort·e pour les autres — mais vous fuyez vos propres émotions.'
+  },
+  {
+    id:'jaune',emoji:'🟡',name:'Masque Jaune',
+    fear:'Peur de l\'inconnu / de l\'incertitude',
+    color:'#d69e2e',bg:'#1a1500',glow:'rgba(214,158,46,.2)',
+    tag:'Obsession de contrôle',
+    insight:{
+      faible:'Vous composez bien avec l\'incertitude. L\'imprévu ne vous déstabilise pas excessivement.',
+      modéré:'L\'incertitude génère chez vous une tension prévisible. Vous préférez anticiper — c\'est sage, jusqu\'à un certain point.',
+      élevé:'L\'imprévu vous angoisse profondément. Vous dépensez chaque jour une énergie considérable à contrôler l\'incontrôlable. Cette vigilance cache une question plus profonde : et si vous pouviez faire confiance à la vie ?',
+      dominant:'Le besoin de maîtrise est devenu votre manière d\'exister. Vacances sans plan, réunions sans ordre du jour — tout imprévu déclenche une alarme interne. Votre cerveau est une machine à prédire le danger. Il est temps de lui apprendre qu\'il peut aussi se reposer.'
+    },
+    hook:'Combien d\'énergie dépensez-vous chaque jour à contrôler l\'incontrôlable ?'
+  },
+  {
+    id:'vert',emoji:'🟢',name:'Masque Vert',
+    fear:'Peur du rejet / de l\'abandon',
+    color:'#38a169',bg:'#071a0e',glow:'rgba(56,161,105,.2)',
+    tag:'Insécurité relationnelle',
+    insight:{
+      faible:'Vos relations se fondent sur une sécurité intérieure solide. Vous n\'avez pas besoin d\'approbation constante.',
+      modéré:'La crainte du rejet influence parfois vos choix relationnels. Dire non reste un défi.',
+      élevé:'Vous vous adaptez à tout le monde sauf à vous-même. Cette générosité cache une conviction silencieuse : "Si je suis vraiment moi, on me quittera." Ce n\'est pas la vérité — c\'est une peur.',
+      dominant:'Le rejet est votre peur la plus centrale. Vous dites oui quand vous pensez non, vous souriez quand vous êtes blessé·e. Au fond, une conviction gouverne tout : votre présence authentique n\'est pas la bienvenue. Ce masque vous épuise — et vous prive des relations vraies dont vous rêvez.'
+    },
+    hook:'Quand avez-vous dit non sans vous en vouloir juste après ?'
+  },
+  {
+    id:'bleu',emoji:'🔵',name:'Masque Bleu',
+    fear:'Peur de l\'impuissance',
+    color:'#3182ce',bg:'#050d1a',glow:'rgba(49,130,206,.2)',
+    tag:'Hypercontrôle relationnel',
+    insight:{
+      faible:'Vous acceptez avec aisance de ne pas tout maîtriser. Demander de l\'aide ne vous coûte pas.',
+      modéré:'La vulnérabilité vous met parfois mal à l\'aise. Montrer vos limites reste difficile.',
+      élevé:'Vous dirigez, organisez, décidez — déléguer est presque impossible. Derrière cette force apparente se cache une peur permanente : si vous lâchez, tout s\'écroule.',
+      dominant:'Montrer votre faiblesse vous semble impossible. Vous portez tout, seul·e, sans jamais vraiment recevoir. Ce masque vous isole profondément — il vous empêche de vivre la vraie connexion que vous désirez. Lâcher prise n\'est pas une perte : c\'est une renaissance.'
+    },
+    hook:'Avez-vous déjà laissé quelqu\'un vous aider vraiment — sans vous sentir diminué·e ?'
+  },
+  {
+    id:'indigo',emoji:'🔷',name:'Masque Indigo',
+    fear:'Peur de l\'échec / de l\'inadéquation',
+    color:'#5a67d8',bg:'#0a0c1e',glow:'rgba(90,103,216,.2)',
+    tag:'Anxiété de performance',
+    insight:{
+      faible:'Vous avez un rapport sain à l\'imperfection. L\'échec ne vous définit pas.',
+      modéré:'Vous cherchez la perfection dans certains domaines. La critique vous touche plus profondément qu\'elle ne le devrait.',
+      élevé:'Parfait — ou rien. Vous voyez vos erreurs en HD et vos réussites en flou. Cette exigence sans limites vous protège d\'un verdict que vous redoutez : "Je ne suis pas à la hauteur."',
+      dominant:'La peur de l\'échec structure votre rapport au monde entier. Procrastination, perfectionnisme paralysant, abandon de projets avant qu\'ils ne commencent — cette stratégie vous protège d\'un risque que vous ne pouvez pas vous permettre. Mais à quel prix ?'
+    },
+    hook:'Qu\'avez-vous abandonné par peur de ne pas assez bien réussir ?'
+  },
+  {
+    id:'violet',emoji:'💜',name:'Masque Violet',
+    fear:'Peur de perdre son identité',
+    color:'#805ad5',bg:'#100820',glow:'rgba(128,90,213,.2)',
+    tag:'Angoisse existentielle',
+    insight:{
+      faible:'Vous vivez les transitions et les changements avec une relative stabilité intérieure.',
+      modéré:'Certains changements vous déstabilisent davantage qu\'ils ne le devraient. Votre identité est liée à vos rôles.',
+      élevé:'Changer vous terrifie. Perdre un rôle — conjoint·e, professionnel·le, parent — c\'est perdre qui vous êtes. Ce masque absorbe et intensifie tous les autres.',
+      dominant:'Ce masque est le gardien ultime de votre nature authentique — emprisonnée depuis si longtemps. La question "Qui suis-je sans mes rôles ?" vous angoisse profondément. La réponse qui vous attend de l\'autre côté de cette peur est la plus libératrice qui soit.'
+    },
+    hook:'Si on vous enlevait tous vos rôles, qui resterait-il ?'
+  }
+];
+
+// ── LEVELS ───────────────────────────────────────────────────
+function getLevel(s){
+  if(s<=16)return{key:'faible',label:'Faible',color:'#48bb78'};
+  if(s<=32)return{key:'modéré',label:'Modéré',color:'#d69e2e'};
+  if(s<=48)return{key:'élevé',label:'Élevé',color:'#ed8936'};
+  return{key:'dominant',label:'Dominant',color:'#e53e3e'};
+}
+
+// ── URL PARAMS PARSER ────────────────────────────────────────
+function parseParams(){
+  const p=new URLSearchParams(window.location.search);
+  const scores={};
+  MASKS.forEach(m=>{const v=parseInt(p.get(m.id));if(!isNaN(v))scores[m.id]=Math.max(0,Math.min(64,v));});
+  return{
+    nom:p.get('nom')||p.get('prenom')||'',
+    date:p.get('date')||'',
+    scores,
+    total:Object.values(scores).reduce((a,b)=>a+b,0)
+  };
+}
+
+// ── DOMINANT MASK ────────────────────────────────────────────
+function getDominant(scores){
+  let max=-1,dom=null;
+  MASKS.forEach(m=>{if((scores[m.id]||0)>max){max=scores[m.id]||0;dom=m;}});
+  return dom;
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function render(){
+  const data=parseParams();
+  const {scores,nom,date,total}=data;
+  const hasScores=Object.keys(scores).length>=3;
+
+  if(!hasScores){
+    renderNoResults();
+    return;
+  }
+
+  const dominant=getDominant(scores);
+  const domScore=scores[dominant.id]||0;
+  const domLevel=getLevel(domScore);
+
+  // Sort masks by score desc
+  const sorted=[...MASKS].sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0));
+
+  const nomDisplay=nom?nom.split(' ')[0]:'vous';
+  const dateDisplay=date||new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+
+  const html=`
+    <!-- HERO -->
+    <div class="hero reveal" style="animation-delay:.1s">
+      <div class="hero-subtitle">Vos résultats personnalisés</div>
+      <div class="hero-name">Le profil de <strong>${esc(nomDisplay)}</strong></div>
+      <div class="hero-date">Méthode V.A.L.E.U.R© · ${dateDisplay}</div>
+    </div>
+
+    <!-- DOMINANT CARD -->
+    <div class="dominant-card reveal" id="dominant-card"
+      style="--mask-color:${dominant.color};--mask-bg:${dominant.bg};--mask-glow:${dominant.glow};animation-delay:.3s">
+      <div class="dominant-halo"></div>
+      <div class="dominant-tag">
+        <span>★</span> Masque dominant
+      </div>
+      <span class="dominant-emoji">${dominant.emoji}</span>
+      <div class="dominant-name">${dominant.name}</div>
+      <div class="dominant-fear">${dominant.fear}</div>
+      <div class="dominant-score-row">
+        <div class="dominant-score-num">${domScore}</div>
+        <div class="dominant-score-meta">
+          <div class="dominant-score-label">Score / 64 points</div>
+          <div class="dominant-score-level">${domLevel.label} · ${dominant.tag}</div>
+        </div>
+      </div>
+      <div class="dominant-insight">
+        ${dominant.insight[domLevel.key]}
+      </div>
+    </div>
+
+    <!-- INSIGHT HOOK -->
+    <div class="insight-block reveal" style="animation-delay:.5s">
+      <div class="insight-label">✦ Ce que cela révèle</div>
+      <div class="insight-text">${dominant.hook}</div>
+      <div class="insight-author">— Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue</div>
+    </div>
+
+    <!-- ALL MASKS -->
+    <div class="reveal" style="animation-delay:.6s">
+      <div class="section-title">Cartographie complète</div>
+      <div class="section-sub">Les 7 masques — de votre plus actif au plus silencieux</div>
+      <div class="masks-bars" id="masks-bars">
+        ${sorted.map((m,i)=>{
+          const s=scores[m.id]||0;
+          const pct=Math.round(s/64*100);
+          const lv=getLevel(s);
+          return `
+            <div class="mask-bar-row" style="--row-color:${m.color}">
+              <div class="mask-bar-top">
+                <span class="mask-bar-emoji">${m.emoji}</span>
+                <span class="mask-bar-name">${m.name}</span>
+                <span class="mask-bar-score" style="color:${m.color}">${s}/64</span>
+                <span class="mask-bar-level" style="border-color:${m.color};color:${m.color}">${lv.label}</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" data-w="${pct}%" style="background:${m.color};--row-color-dim:${m.color}88"></div>
+              </div>
+              <div class="mask-bar-fear">${m.fear}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- SHARE SECTION -->
+    <div class="share-section reveal" style="animation-delay:.7s">
+      <div class="section-title">Partager mon profil</div>
+      <div class="section-sub">Invitez ceux qui vous connaissent à découvrir la méthode</div>
+
+      <!-- CARD PREVIEW -->
+      <div class="share-card-preview" id="share-card-preview"
+        style="--mask-color2:${dominant.color};--mask-bg2:${dominant.bg};--share-glow:${dominant.glow}">
+        <div class="share-logo-row">
+          <div class="share-logo-v">V</div>
+          <span class="share-logo-text">MÉTHODE V.A.L.E.U.R©</span>
+        </div>
+        <span class="share-card-emoji">${dominant.emoji}</span>
+        <div class="share-card-title">Mon masque dominant</div>
+        <div class="share-card-mask" style="color:${dominant.color}">${dominant.name}</div>
+        <div class="share-card-fear">${dominant.fear}</div>
+        <div class="share-mini-bars">
+          ${MASKS.map(m=>{
+            const s=scores[m.id]||0;
+            const h=Math.round(s/64*36);
+            return `<div class="share-mini-bar">
+              <div class="share-mini-track">
+                <div class="share-mini-fill" style="height:${h}px;background:${m.color};"></div>
+              </div>
+              <span class="share-mini-emoji">${m.emoji}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="share-card-footer">Les 7 peurs qui empêchent d'être soi · Par Céline Bourbon</div>
+      </div>
+
+      <!-- SHARE BUTTONS -->
+      <div class="share-btns">
+        <button class="share-btn share-btn-copy" onclick="copyProfile()">
+          <span class="share-btn-icon">📋</span>
+          <span class="share-btn-label">
+            <strong>Copier mon profil</strong>
+            <span>Texte formaté pour Instagram, WhatsApp, email</span>
+          </span>
+          <span class="copied-badge" id="copied-badge">Copié !</span>
+        </button>
+        <button class="share-btn share-btn-img" onclick="downloadCard()">
+          <span class="share-btn-icon">🖼️</span>
+          <span class="share-btn-label">
+            <strong>Télécharger ma carte</strong>
+            <span>Image pour story Instagram ou post LinkedIn</span>
+          </span>
+        </button>
+        <button class="share-btn share-btn-wa" onclick="shareWhatsApp()">
+          <span class="share-btn-icon">💬</span>
+          <span class="share-btn-label">
+            <strong>Partager sur WhatsApp</strong>
+            <span>Envoyez votre profil à vos proches</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block reveal" style="animation-delay:.8s">
+      <div class="cta-eyebrow">✦ Votre prochaine étape</div>
+      <div class="cta-title">
+        Découvrir les <em>7 peurs<br>qui empêchent d'être soi</em>
+      </div>
+      <div class="cta-sub">
+        Ce questionnaire vous a donné une cartographie. La méthode V.A.L.E.U.R© vous donne les clés pour vous en libérer — module par module, étape par étape.
+      </div>
+      <div class="cta-benefits">
+        ${[
+          ['🎭','6 modules guidés pour travailler chaque masque en profondeur'],
+          ['📓','Journal de bord intégré pour suivre votre transformation'],
+          ['🎓','Fondé sur un livre publié aux Éditions L\'Harmattan'],
+          ['👁️','Accès immédiat · À votre rythme · Mobile-first']
+        ].map(([i,t])=>`<div class="cta-benefit"><span class="cta-benefit-icon">${i}</span><span class="cta-benefit-text">${t}</span></div>`).join('')}
+      </div>
+      <a href="https://celinebourbon-ux.github.io/HomePageAppliValeur/" class="cta-btn">
+        Accéder à l'espace membres →
+      </a>
+      <div class="cta-book">Basé sur <em>"De la peur à la joie d'être soi"</em> — Céline Bourbon · L'Harmattan</div>
+    </div>
+  `;
+
+  document.getElementById('main-content').innerHTML=html;
+
+  // animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(el=>{
+      el.style.width=el.dataset.w;
+    });
+  },500);
+
+  // store data for sharing
+  window._shareData={nom:nomDisplay,dominant,domScore,domLevel,scores,total};
+}
+
+function renderNoResults(){
+  document.getElementById('main-content').innerHTML=`
+    <div class="no-results">
+      <div style="font-size:64px;margin-bottom:20px">🗺️</div>
+      <h2>Passez le questionnaire V.A.L.E.U.R©</h2>
+      <p>Pour obtenir votre profil personnalisé des 7 masques, complétez d'abord le questionnaire.</p>
+      <a href="https://questionnaire-valeur-psyh.netlify.app" 
+         style="display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#000;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px;">
+        Passer le questionnaire →
+      </a>
+    </div>`;
+}
+
+// ── SHARE FUNCTIONS ───────────────────────────────────────────
+function copyProfile(){
+  const d=window._shareData;
+  if(!d)return;
+  const sorted=[...MASKS].sort((a,b)=>(d.scores[b.id]||0)-(d.scores[a.id]||0));
+  const bars=sorted.map(m=>{
+    const s=d.scores[m.id]||0;
+    const lv=getLevel(s);
+    const bar='█'.repeat(Math.round(s/64*10))+'░'.repeat(10-Math.round(s/64*10));
+    return`  ${m.emoji} ${bar}  ${s}/64  ${lv.label}`;
+  }).join('\n');
+
+  const text=`🎭 Mon profil V.A.L.E.U.R© — Les 7 peurs qui empêchent d'être soi
+
+✦ Masque dominant : ${d.dominant.emoji} ${d.dominant.name}
+   ${d.dominant.fear}
+   Score : ${d.domScore}/64 — ${d.domLevel.label}
+
+📊 Cartographie complète :
+${bars}
+
+🌿 ${d.dominant.hook}
+
+Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue
+📖 "De la peur à la joie d'être soi" — Éditions L'Harmattan
+→ celinebourbon-ux.github.io/HomePageAppliValeur/`;
+
+  navigator.clipboard?.writeText(text).then(()=>{
+    const badge=document.getElementById('copied-badge');
+    if(badge){badge.classList.add('show');setTimeout(()=>badge.classList.remove('show'),2500);}
+  });
+}
+
+function shareWhatsApp(){
+  const d=window._shareData;
+  if(!d)return;
+  const text=encodeURIComponent(
+    `🎭 Mon masque dominant : ${d.dominant.emoji} ${d.dominant.name}\n`+
+    `${d.dominant.fear}\n\n`+
+    `Découvrez vos 7 masques avec la Méthode V.A.L.E.U.R© de Céline Bourbon\n`+
+    `→ celinebourbon-ux.github.io/HomePageAppliValeur/`
+  );
+  window.open(`https://wa.me/?text=${text}`,'_blank');
+}
+
+function downloadCard(){
+  const d=window._shareData;
+  if(!d)return;
+  const canvas=document.getElementById('shareCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=1080,H=1080;
+
+  // Background
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#07080f');bg.addColorStop(.5,'#0d1120');bg.addColorStop(1,'#07080f');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  // Glow
+  const glow=ctx.createRadialGradient(W/2,H*.35,0,W/2,H*.35,400);
+  glow.addColorStop(0,d.dominant.color+'40');glow.addColorStop(1,'transparent');
+  ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+
+  // Border
+  ctx.strokeStyle=d.dominant.color+'66';ctx.lineWidth=3;
+  roundRect(ctx,20,20,W-40,H-40,24);ctx.stroke();
+
+  // Logo V
+  ctx.fillStyle=d.dominant.color;
+  roundRect(ctx,W/2-36,70,72,72,18);ctx.fill();
+  ctx.fillStyle='#000';ctx.font='bold 40px serif';ctx.textAlign='center';
+  ctx.fillText('V',W/2,126);
+
+  // Tagline
+  ctx.fillStyle='#6b7a9e';ctx.font='500 22px Jost,sans-serif';ctx.textAlign='center';
+  ctx.fillText('MÉTHODE V.A.L.E.U.R©',W/2,190);
+
+  // Subtitle
+  ctx.fillStyle=d.dominant.color;ctx.font='600 20px Jost,sans-serif';
+  ctx.fillText('MON MASQUE DOMINANT',W/2,240);
+
+  // Emoji (as text)
+  ctx.font='90px serif';ctx.textAlign='center';ctx.fillText(d.dominant.emoji,W/2,360);
+
+  // Mask name
+  ctx.fillStyle=d.dominant.color;
+  ctx.font='bold 52px Georgia,serif';ctx.textAlign='center';
+  ctx.fillText(d.dominant.name,W/2,440);
+
+  // Fear
+  ctx.fillStyle='#c8d3e8';ctx.font='300 30px Georgia,serif';ctx.textAlign='center';
+  ctx.fillText(d.dominant.fear,W/2,490);
+
+  // Score pill
+  ctx.fillStyle=d.dominant.color+'22';
+  roundRect(ctx,W/2-120,520,240,60,30);ctx.fill();
+  ctx.strokeStyle=d.dominant.color+'88';ctx.lineWidth=2;
+  roundRect(ctx,W/2-120,520,240,60,30);ctx.stroke();
+  ctx.fillStyle=d.dominant.color;ctx.font='bold 28px Jost,sans-serif';ctx.textAlign='center';
+  ctx.fillText(`${d.domScore}/64 — ${d.domLevel.label}`,W/2,558);
+
+  // Mini bars
+  const barW=80,barH=120,gap=20;
+  const total=MASKS.length;
+  const totalW=total*(barW+gap)-gap;
+  let bx=(W-totalW)/2;
+  const by=630;
+
+  MASKS.forEach(m=>{
+    const s=d.scores[m.id]||0;
+    const h=Math.round(s/64*barH);
+    ctx.fillStyle='#ffffff10';roundRect(ctx,bx,by,barW,barH,6);ctx.fill();
+    if(h>0){
+      ctx.fillStyle=m.color;
+      roundRect(ctx,bx,by+barH-h,barW,h,6);ctx.fill();
+    }
+    ctx.font='24px serif';ctx.textAlign='center';
+    ctx.fillText(m.emoji,bx+barW/2,by+barH+30);
+    bx+=barW+gap;
+  });
+
+  // Quote
+  ctx.fillStyle='#6b7a9e';ctx.font='italic 22px Georgia,serif';ctx.textAlign='center';
+  wrapText(ctx,`"${d.dominant.hook}"`,W/2,830,680,30);
+
+  // Footer
+  ctx.fillStyle='#4a5568';ctx.font='20px Jost,sans-serif';ctx.textAlign='center';
+  ctx.fillText('Céline Bourbon, Psychologue · De la peur à la joie d\'être soi · L\'Harmattan',W/2,950);
+  ctx.fillText('© 2025 Méthode V.A.L.E.U.R© · Tous droits réservés',W/2,990);
+
+  const link=document.createElement('a');
+  link.download=`profil-valeur-${d.dominant.id}.png`;
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);
+  ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);
+  ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+
+function wrapText(ctx,text,x,y,maxW,lh){
+  const words=text.split(' '),lines=[];let line='';
+  words.forEach(w=>{const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW){lines.push(line);line=w;}else line=t;});
+  lines.push(line);
+  const startY=y-(lines.length-1)*lh/2;
+  lines.forEach((l,i)=>ctx.fillText(l,x,startY+i*lh));
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── INIT ──────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loading').classList.add('hide');
+    document.getElementById('app').style.opacity='1';
+    render();
+    // reveal animations with intersection observer
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.style.animationPlayState='running';});
+    },{threshold:.1});
+    document.querySelectorAll('.reveal,.reveal-scale').forEach(el=>{
+      el.style.animationPlayState='paused';
+      obs.observe(el);
+    });
+  },1200);
+});
+</script>
+</body>
+</html>
