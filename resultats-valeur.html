@@ -137,6 +137,7 @@ body::before{
   border:1px solid var(--mask-color, #333);
   background:var(--mask-bg, #0d1120);
   animation:revealScale .8s cubic-bezier(.34,1.56,.64,1) .3s both;
+  text-align:center;
 }
 .dominant-card::before{
   content:'';position:absolute;inset:-1px;border-radius:24px;
@@ -180,6 +181,7 @@ body::before{
   color:#c8d3e8;font-size:14px;line-height:1.8;
   border-left:3px solid var(--mask-color);
   padding-left:16px;font-style:italic;
+  text-align:left;
 }
 
 /* ─── ALL MASKS BARS ───────────────────────────────────────── */
@@ -377,6 +379,183 @@ body::before{
   .dominant-score-num{font-size:32px;}
 }
 
+/* ─── ARCHETYPE IDENTITY ───────────────────────────────────── */
+.archetype-identity{
+  text-align:center;padding:20px 0 12px;
+}
+.archetype-label{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--mask-color);opacity:.8;font-weight:600;margin-bottom:6px;
+}
+.archetype-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,7vw,42px);font-weight:700;font-style:italic;
+  color:var(--cream);line-height:1.1;
+  text-shadow:0 0 40px var(--mask-color);
+}
+.archetype-sub{
+  font-size:13px;color:var(--muted);font-weight:300;
+  margin-top:5px;font-style:italic;line-height:1.5;
+}
+
+/* ─── REVEAL PHRASES ("c'est exactement moi") ─────────────── */
+.reveal-phrases{
+  margin:20px 0;display:flex;flex-direction:column;gap:10px;text-align:left;
+}
+.reveal-phrase{
+  display:flex;align-items:flex-start;gap:12px;
+  background:rgba(255,255,255,.03);
+  border-left:2px solid var(--mask-color);
+  border-radius:0 10px 10px 0;
+  padding:12px 16px;
+}
+.reveal-phrase-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--mask-color);flex-shrink:0;margin-top:7px;
+  box-shadow:0 0 8px var(--mask-color);
+}
+.reveal-phrase p{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:15.5px;color:#c8d3e8;line-height:1.65;
+}
+.reveal-phrase p strong{color:var(--cream);font-style:normal;}
+
+/* ─── BEFORE / AFTER ───────────────────────────────────────── */
+.before-after{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  margin:24px 0;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);
+}
+.ba-side{padding:18px 16px;}
+.ba-shadow{background:rgba(0,0,0,.35);border-right:1px solid rgba(255,255,255,.06);}
+.ba-light{background:rgba(255,255,255,.03);}
+.ba-head{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.ba-head-shadow{color:var(--muted);}
+.ba-head-light{color:var(--mask-color);}
+.ba-item{
+  font-size:13px;line-height:1.7;color:rgba(200,211,232,.65);
+  padding:3px 0;font-weight:300;
+}
+.ba-item-light{color:rgba(200,211,232,.85);}
+.ba-nature-name{
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-style:italic;
+  font-size:16px;color:var(--mask-color);margin-top:10px;
+}
+
+/* ─── FREEDOM PROGRESS BAR ─────────────────────────────────── */
+.freedom-bar-wrap{
+  margin:20px 0;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:16px 18px;
+}
+.freedom-bar-top{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+}
+.freedom-bar-label{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.5px;}
+.freedom-bar-pct{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;
+  color:var(--mask-color);
+}
+.freedom-track{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+.freedom-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--mask-color),rgba(255,255,255,.7));
+  transition:width 1.2s cubic-bezier(.25,.46,.45,.94) .8s;
+  width:0;
+}
+.freedom-note{font-size:11.5px;color:var(--muted);margin-top:8px;font-style:italic;}
+
+/* ─── MIRROR QUESTION ───────────────────────────────────────── */
+.mirror-question{
+  background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(128,90,213,.05));
+  border:1px solid rgba(201,168,76,.2);border-radius:18px;
+  padding:24px 22px;margin:28px 0;text-align:center;position:relative;overflow:hidden;
+}
+.mirror-question::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.mirror-icon{font-size:28px;margin-bottom:10px;}
+.mirror-q-text{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(16px,4vw,19px);color:var(--cream);line-height:1.65;margin-bottom:14px;
+}
+.mirror-sub{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ─── COMPAT TEASER ─────────────────────────────────────────── */
+.compat-teaser{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:18px 20px;margin:20px 0;
+}
+.compat-head{
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.compat-head::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.2);}
+.compat-pair{
+  display:flex;align-items:center;gap:10px;font-size:13px;color:#8090b0;
+  line-height:1.6;margin-bottom:8px;
+}
+.compat-pair:last-child{margin-bottom:0;}
+.compat-emojis{font-size:18px;flex-shrink:0;letter-spacing:2px;}
+.compat-lock{
+  font-size:11px;color:var(--gold);opacity:.7;
+  border:1px solid rgba(201,168,76,.3);border-radius:20px;
+  padding:3px 12px;margin-left:auto;flex-shrink:0;white-space:nowrap;
+}
+
+
+/* ─── ARCHETYPE IDENTITY ────────────────────────────── */
+.archetype-identity{text-align:center;padding:18px 0 10px;}
+.archetype-label{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--mask-color);opacity:.8;font-weight:700;margin-bottom:5px;}
+.archetype-name{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,7vw,40px);font-weight:700;font-style:italic;color:var(--cream);line-height:1.1;text-shadow:0 0 40px var(--mask-color);}
+.archetype-tagline{font-size:12.5px;color:var(--muted);font-weight:300;margin-top:5px;font-style:italic;line-height:1.5;}
+
+/* ─── REVEAL PHRASES ─────────────────────────────────── */
+.reveal-phrases{margin:18px 0;display:flex;flex-direction:column;gap:10px;}
+.rp{display:flex;align-items:flex-start;gap:11px;background:rgba(255,255,255,.025);border-left:2px solid var(--mask-color);border-radius:0 10px 10px 0;padding:12px 15px;}
+.rp-dot{width:5px;height:5px;border-radius:50%;background:var(--mask-color);flex-shrink:0;margin-top:8px;box-shadow:0 0 8px var(--mask-color);}
+.rp p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#c8d3e8;line-height:1.65;}
+
+/* ─── BEFORE / AFTER ─────────────────────────────────── */
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:20px 0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.07);}
+.ba-col{padding:16px 15px;}
+.ba-shadow-col{background:rgba(0,0,0,.35);border-right:1px solid rgba(255,255,255,.05);}
+.ba-light-col{background:rgba(255,255,255,.025);}
+.ba-head{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.ba-head-s{color:var(--muted);}
+.ba-head-l{color:var(--mask-color);}
+.ba-item{font-size:12.5px;line-height:1.7;color:rgba(200,211,232,.6);padding:2px 0;font-weight:300;}
+.ba-item-l{color:rgba(200,211,232,.85);}
+.ba-nature{font-family:'Cormorant Garamond',serif;font-weight:700;font-style:italic;font-size:15px;color:var(--mask-color);margin-top:10px;}
+
+/* ─── FREEDOM BAR ────────────────────────────────────── */
+.freedom-wrap{margin:18px 0;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:15px 18px;}
+.freedom-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.freedom-label{font-size:10.5px;color:var(--muted);font-weight:500;letter-spacing:.5px;}
+.freedom-pct{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--mask-color);}
+.freedom-track{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.freedom-fill{height:100%;border-radius:3px;width:0;transition:width 1.3s cubic-bezier(.25,.46,.45,.94) .6s;}
+.freedom-note{font-size:11px;color:var(--muted);margin-top:7px;font-style:italic;}
+
+/* ─── MIRROR QUESTION ────────────────────────────────── */
+.mirror-q{background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(128,90,213,.04));border:1px solid rgba(201,168,76,.18);border-radius:18px;padding:22px 20px;margin:28px 0;text-align:center;position:relative;overflow:hidden;}
+.mirror-q::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent);}
+.mirror-q-icon{font-size:24px;margin-bottom:8px;}
+.mirror-q-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,3.5vw,18px);color:var(--cream);line-height:1.65;margin-bottom:12px;}
+.mirror-q-sub{font-size:12.5px;color:var(--muted);line-height:1.7;}
+
+/* ─── COMPAT TEASER ──────────────────────────────────── */
+.compat-box{background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px 18px;margin:20px 0;}
+.compat-head{font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.compat-head::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.15);}
+.compat-row{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:#7a8aaa;line-height:1.6;margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.04);}
+.compat-row:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.compat-emj{font-size:16px;flex-shrink:0;letter-spacing:2px;margin-top:1px;}
+.compat-lock{font-size:10px;color:var(--gold);opacity:.65;border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:2px 10px;margin-left:auto;flex-shrink:0;white-space:nowrap;}
 /* ─── PRINT ────────────────────────────────────────────────── */
 @media print{
   body{background:#fff;color:#000;}
@@ -437,6 +616,7 @@ document.addEventListener('keydown',e=>{
 const MASKS = [
   {
     id:'rouge',emoji:'🔴',name:'Masque Rouge',
+    archetype:"La Sentinelle",archetypeSub:"Celle·celui qui monte la garde même quand il n’y a plus de danger",revelPhrases:["Vous avez tapé vos symptômes sur internet à 23h. Vous saviez que vous ne devriez pas. Vous ne pouviez pas vous arrêter.","La moindre douleur devient une question urgente : <em>est-ce grave ?</em> Votre corps est devenu un territoire sous surveillance permanente.","Vous avez du mal à profiter d’un moment de bien-être — parce qu’une part de vous guette déjà ce qui pourrait mal tourner."],natureName:"La Présence vivante",natureDesc:"Exister pleinement dans l’instant, sans surveiller. La joie simple d’être dans son corps. Une vitalité qui se donne la permission d’être.",freedomPct:{faible:82,modéré:65,élevé:45,dominant:28},baShadow:["Surveiller le corps sans relâche","Difficulté à se détendre vraiment","Scénarios catastrophistes","Fatigue d’une vigilance sans fin"],baLight:["Confiance dans le corps et ses signaux","Présence pleine dans l’instant","Énergie vitale disponible pour vivre","La santé comme alliée, pas ennemie"],
     fear:'Peur de la mort / de la maladie',
     color:'#e53e3e',bg:'#1a0808',glow:'rgba(229,62,62,.2)',
     tag:'Hypervigilance somatique',
@@ -458,6 +638,7 @@ const MASKS = [
   },
   {
     id:'orange',emoji:'🟠',name:'Masque Orange',
+    archetype:"Le / La Blindé·e",archetypeSub:"Celle·celui dont l’armure intérieure ne laisse plus rien entrer — ni la douleur, ni la joie",revelPhrases:["Vous avez demandé « ça va ? » à tout le monde cette semaine. Personne ne vous l’a demandé, à vous. Et vous avez trouvé ça normal.","On dit de vous que vous êtes solide. Que vous gérez. Que vous êtes là pour les autres. À l’intérieur : un vide que vous ne nommez jamais.","Quand une conversation devient trop intense, vous changez de sujet. Ou vous faites une blague. Ce réflexe vous coûte votre vie intérieure."],natureName:"L’Intelligence du cœur",natureDesc:"Une empathie fine, une intuition profonde, une créativité née de la sensibilité. Accueillie, votre vie intérieure devient votre plus grande force.",freedomPct:{faible:80,modéré:63,élevé:44,dominant:27},baShadow:["Déconnexion de sa vie intérieure","Servir les autres, s’oublier soi","Le vide que l’action ne comble pas","La solitude d’être toujours « fort·e »"],baLight:["Accès à sa vie émotionnelle profonde","Empathie et intuition libérées","Créativité née de la sensibilité","Recevoir autant que donner"],
     fear:'Peur de la douleur / de la souffrance',
     color:'#ed8936',bg:'#1a0e06',glow:'rgba(237,137,54,.2)',
     tag:'Évitement émotionnel',
@@ -479,6 +660,7 @@ const MASKS = [
   },
   {
     id:'jaune',emoji:'🟡',name:'Masque Jaune',
+    archetype:"Le / La Cartographe",archetypeSub:"Celle·celui qui doit tout cartographier avant de faire un seul pas",revelPhrases:["Il y a un projet dans votre tête depuis des mois. Vous attendez d’avoir toutes les informations pour commencer. Vous attendez encore.","Un changement de programme de dernière minute peut gâcher votre journée entière. Ce n’est pas du caprice — c’est de l’anxiété déguisée en organisation.","Vous planifiez vos vacances pour ne pas avoir à les vivre. La surprise n’est pas un plaisir : c’est une menace."],natureName:"La Curiosité aventurière",natureDesc:"L’agilité naturelle de naviguer dans l’inconnu avec légèreté. Voir les possibilités là où d’autres ne voient que des obstacles.",freedomPct:{faible:81,modéré:64,élevé:46,dominant:30},baShadow:["Énergie épuisée à contrôler l’incontrôlable","Projets différés indéfiniment","Anxiété chronique face à l’imprévu","Rigidité qui étouffe la spontanéité"],baLight:["Agilité dans l’inconnu","Curiosité face à l’imprévu","Décisions prises sans tout contrôler","La vie comme terrain d’exploration"],
     fear:'Peur de l\'inconnu / de l\'incertitude',
     color:'#d69e2e',bg:'#1a1500',glow:'rgba(214,158,46,.2)',
     tag:'Obsession de contrôle',
@@ -500,6 +682,7 @@ const MASKS = [
   },
   {
     id:'vert',emoji:'🟢',name:'Masque Vert',
+    archetype:"L’Écho",archetypeSub:"Celle·celui dont la voix ne résonne que des mots des autres",revelPhrases:["Vous avez dit oui. Vous pensiez non. Vous avez souri en raccrochant. Puis vous êtes resté·e cinq minutes sans bouger.","Vous êtes l’ami·e disponible. Celle·celui qu’on appelle quand ça ne va pas. Mais quand c’est vous qui n’allez pas — vous ne le dites pas.","En groupe, vous ajustez vos opinions selon la salle. C’est automatique. Vous ne le voyez même plus. Vous avez commencé à disparaître."],natureName:"L’Amour de soi authentique",natureDesc:"La capacité d’exister pleinement dans la relation, sans disparaître. Être aimé·e pour ce que vous êtes — pas pour ce que vous faites.",freedomPct:{faible:83,modéré:66,élevé:47,dominant:31},baShadow:["Dire oui quand on pense non","Opinions ajustées selon la salle","Relations épuisantes à sens unique","Se perdre pour rester aimé·e"],baLight:["Exister pleinement dans la relation","Dire non sans culpabilité","Attirer ce qui est vrai, pas rassurant","Être aimé·e pour qui l’on est"],
     fear:'Peur du rejet / de l\'abandon',
     color:'#38a169',bg:'#071a0e',glow:'rgba(56,161,105,.2)',
     tag:'Insécurité relationnelle',
@@ -521,6 +704,7 @@ const MASKS = [
   },
   {
     id:'bleu',emoji:'🔵',name:'Masque Bleu',
+    archetype:"L’Atlas",archetypeSub:"Celle·celui condamné·e à porter le ciel sur ses épaules — seul·e",revelPhrases:["Quelqu’un vous a proposé son aide. Vous avez répondu « non merci, ça va ». Derrière : la peur que si vous acceptez, vous perdez quelque chose d’essentiel.","Vous dirigez. Vous organisez. Vous anticipez. Les gens pensent que vous aimez ça. En vérité : vous ne savez pas comment arrêter.","Déléguer vous coûte plus d’énergie que de tout faire vous-même. Parce que de toute façon, ce sera mal fait. Et si la vraie raison était : <em>si je lâche, qui suis-je ?</em>"],natureName:"L’Influence rayonnante",natureDesc:"Diriger non par la maîtrise mais par la présence. Inspirer plutôt que contrôler. Recevoir autant que donner — et découvrir que ce n’est pas une perte.",freedomPct:{faible:80,modéré:62,élevé:43,dominant:26},baShadow:["Porter seul·e ce qui pourrait être partagé","Difficulté à recevoir aide et amour","Épuisement du contrôle permanent","Isolement derrière l’apparente force"],baLight:["Diriger par la présence, pas la maîtrise","Recevoir l’aide sans se diminuer","Influence sincère et inspirante","Connexion authentique avec les autres"],
     fear:'Peur de l\'impuissance',
     color:'#3182ce',bg:'#050d1a',glow:'rgba(49,130,206,.2)',
     tag:'Hypercontrôle relationnel',
@@ -542,6 +726,7 @@ const MASKS = [
   },
   {
     id:'indigo',emoji:'🔷',name:'Masque Indigo',
+    archetype:"L’Imposteur·se",archetypeSub:"Celle·celui qui s’impose d’être parfait·e avant d’avoir le droit d’exister",revelPhrases:["Il y a un projet que vous n’avez jamais commencé. Pas par manque de temps. Par peur de voir jusqu’où vous pourriez vraiment aller.","Vous recevez un compliment. Votre premier réflexe : trouver pourquoi vous ne le méritez pas vraiment. Trouver la faille.","Parfait — ou rien. Entre les deux, vous choisissez souvent rien. Et vous appelez ça de la procrastination."],natureName:"La Créativité audacieuse",natureDesc:"Oser commencer sans être sûr·e de réussir. L’échec devient information, pas verdict. Une pensée stratégique libérée du besoin de perfection.",freedomPct:{faible:79,modéré:62,élevé:44,dominant:28},baShadow:["Projets jamais commencés par peur d’échouer","Compliments accueillis avec méfiance","Paralysie perfectionniste","Se juger sans jamais se voir"],baLight:["Commencer sans garantie de réussir","L’échec comme guide, pas verdict","Créativité audacieuse libérée","Se voir avec justesse et bienveillance"],
     fear:'Peur de l\'échec / de l\'inadéquation',
     color:'#5a67d8',bg:'#0a0c1e',glow:'rgba(90,103,216,.2)',
     tag:'Anxiété de performance',
@@ -563,6 +748,7 @@ const MASKS = [
   },
   {
     id:'violet',emoji:'💜',name:'Masque Violet',
+    archetype:"Le / La Caméléon",archetypeSub:"Le masque des masques — celui qui change de peau pour ne jamais se perdre… et finit par ne plus se retrouver",revelPhrases:["Quelqu’un vous a dit : <em>« tu as changé. »</em> Et vous avez eu peur. Comme si changer signifiait mourir un peu.","Les transitions vous déstabilisent plus profondément que les autres — déménagement, rupture, retraite. Vous perdez le sol sous vos pieds.","Vous avez construit une version très précise de qui vous êtes. Vous la protégez — même quand elle vous étouffe."],natureName:"La Fluidité authentique",natureDesc:"Changer sans se perdre. Évoluer comme l’eau — qui prend la forme du récipient mais reste toujours elle-même. La joie d’exister sans avoir besoin de se définir.",freedomPct:{faible:77,modéré:60,élevé:42,dominant:25},baShadow:["Résistance à tout changement positif","Identité figée qui étouffe","Peur que changer = disparaître","Énergie épuisée à rester identique"],baLight:["Changer sans se perdre","Identité vivante et fluide","Joie d’exister sans se définir","Authenticité joyeuse et créative"],
     fear:'Peur de perdre son identité',
     color:'#805ad5',bg:'#100820',glow:'rgba(128,90,213,.2)',
     tag:'Angoisse existentielle',
@@ -645,9 +831,8 @@ function render(){
     <div class="dominant-card reveal" id="dominant-card"
       style="--mask-color:${dominant.color};--mask-bg:${dominant.bg};--mask-glow:${dominant.glow};animation-delay:.3s">
       <div class="dominant-halo"></div>
-      <div class="dominant-tag">
-        <span>★</span> Masque dominant
-      </div>
+      <div class="dominant-tag"><span>★</span> Masque dominant</div>
+
       <span class="dominant-emoji">${dominant.emoji}</span>
       <div class="dominant-name">${dominant.name}</div>
       <div class="dominant-fear">${dominant.fear}</div>
@@ -658,14 +843,47 @@ function render(){
           <div class="dominant-score-level">${domLevel.label} · ${dominant.tag}</div>
         </div>
       </div>
-      <div class="dominant-insight">
-        ${dominant.insight[domLevel.key]}
+      <div class="dominant-insight">${dominant.insight[domLevel.key]}</div>
+
+      ${dominant.revelPhrases ? `
+      <div class="reveal-phrases">
+        ${dominant.revelPhrases.map(p=>`<div class="rp"><div class="rp-dot"></div><p>${p}</p></div>`).join('')}
+      </div>` : ''}
+
+      <div class="freedom-wrap">
+        <div class="freedom-top">
+          <div class="freedom-label">Potentiel de transformation</div>
+          <div class="freedom-pct" id="fpct">${dominant.freedomPct ? dominant.freedomPct[domLevel.key] : 60}%</div>
+        </div>
+        <div class="freedom-track">
+          <div class="freedom-fill" id="ffill" style="background:${dominant.color}"></div>
+        </div>
+        <div class="freedom-note">Ce que la méthode V.A.L.E.U.R© permet d'atteindre — à votre rythme.</div>
       </div>
     </div>
 
+    <!-- BEFORE / AFTER -->
+    ${dominant.baShadow ? `
+    <div class="reveal" style="animation-delay:.42s">
+      <div class="section-title">Sous le masque → Votre nature profonde</div>
+      <div class="section-sub">Ce que ce masque vous coûte — et ce qu'il protège en vous</div>
+      <div class="before-after">
+        <div class="ba-col ba-shadow-col">
+          <div class="ba-head ba-head-s">☁ Sous le masque</div>
+          ${dominant.baShadow.map(t=>`<div class="ba-item">— ${t}</div>`).join('')}
+        </div>
+        <div class="ba-col ba-light-col">
+          <div class="ba-head ba-head-l" style="color:${dominant.color}">✦ Votre nature profonde</div>
+          ${dominant.baLight.map(t=>`<div class="ba-item ba-item-l">+ ${t}</div>`).join('')}
+          <div class="ba-nature" style="color:${dominant.color}">${dominant.natureName||''}</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8;padding:13px 16px;background:rgba(255,255,255,.02);border-radius:12px;font-style:italic;margin-top:10px;">${dominant.natureDesc||''}</div>
+    </div>` : ''}
+
     <!-- INSIGHT HOOK -->
     <div class="insight-block reveal" style="animation-delay:.5s">
-      <div class="insight-label">✦ Ce que cela révèle</div>
+      <div class="insight-label">✦ La question qui réveille</div>
       <div class="insight-text">${dominant.hook}</div>
       <div class="insight-author">— Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue</div>
     </div>
@@ -773,6 +991,7 @@ function render(){
           }).join('')}
         </div>
         <div class="share-card-footer">Les 7 peurs qui empêchent d'être soi · Par Céline Bourbon, Psychologue</div>
+        <div style="margin-top:10px;font-size:12px;color:var(--mask-color2,#c9a84c);font-weight:600;letter-spacing:.5px;">🔍 La peur qui pilote ta vie a un nom. Découvre lequel.</div>
       </div>
 
       <!-- SHARE BUTTONS -->
@@ -802,6 +1021,33 @@ function render(){
       </div>
     </div>
 
+    <!-- MIRROR QUESTION -->
+    <div class="mirror-q reveal" style="animation-delay:.72s">
+      <div class="mirror-q-icon">🪞</div>
+      <div class="mirror-q-text">« Et si vous faisiez passer ce test à quelqu'un qui vous connaît bien&nbsp;?<br>Parfois, ceux qui nous aiment voient nos masques avant nous. »</div>
+      <div class="mirror-q-sub">Il arrive que notre masque dominant soit visible de l'extérieur longtemps avant qu'on le nomme soi-même.<br>Inviter un proche à faire le test peut ouvrir une conversation que vous n'avez jamais eue.</div>
+    </div>
+
+    <!-- COMPAT TEASER -->
+    <div class="compat-box reveal" style="animation-delay:.74s">
+      <div class="compat-head">✦ Compatibilité des masques · Bientôt disponible</div>
+      <div class="compat-row">
+        <span class="compat-emj">🟢 🔵</span>
+        <span>Masque Vert + Masque Bleu — la dynamique qui épuise les deux partenaires, sans que personne ne le nomme.</span>
+        <span class="compat-lock">🔒 Membres</span>
+      </div>
+      <div class="compat-row">
+        <span class="compat-emj">🔷 💜</span>
+        <span>Masque Indigo + Masque Violet — le perfectionniste qui ne change jamais par peur de ne plus se reconnaître.</span>
+        <span class="compat-lock">🔒 Membres</span>
+      </div>
+      <div class="compat-row">
+        <span class="compat-emj">🔴 🟠</span>
+        <span>Masque Rouge + Masque Orange — surveillance permanente et armure émotionnelle : la combinaison la plus épuisante.</span>
+        <span class="compat-lock">🔒 Membres</span>
+      </div>
+    </div>
+
     <!-- CTA -->
     <div class="cta-block reveal" style="animation-delay:.8s">
       <div class="cta-eyebrow">✦ Votre prochaine étape</div>
@@ -828,11 +1074,14 @@ function render(){
 
   document.getElementById('main-content').innerHTML=html;
 
-  // animate bars
+  // animate bars + freedom bar
   setTimeout(()=>{
     document.querySelectorAll('.bar-fill').forEach(el=>{
       el.style.width=el.dataset.w;
     });
+    const ff=document.getElementById('ffill');
+    const fp=dominant.freedomPct ? dominant.freedomPct[domLevel.key] : null;
+    if(ff && fp) setTimeout(()=>{ ff.style.width=fp+'%'; },300);
   },500);
 
   // store data for sharing
@@ -864,19 +1113,22 @@ function copyProfile(){
     return`  ${m.emoji} ${bar}  ${s}/64  ${lv.label}`;
   }).join('\n');
 
-  const text=`🎭 Mon profil V.A.L.E.U.R© — Les 7 peurs qui empêchent d'être soi
+  const _rp2 = d.dominant.revelPhrases ? d.dominant.revelPhrases[0].replace(/<[^>]+>/g,'') : d.dominant.hook;
+  const text=`${d.dominant.emoji} Mon profil V.A.L.E.U.R©
 
-✦ Masque dominant : ${d.dominant.emoji} ${d.dominant.name}
-   ${d.dominant.fear}
-   Score : ${d.domScore}/64 — ${d.domLevel.label}
+Mon masque dominant : ${d.dominant.name}
+${d.dominant.fear}
 
-📊 Cartographie complète :
+La phrase qui m'a réveillé·e :
+« ${_rp2} »
+
+📊 Mes 7 masques :
 ${bars}
 
-🌿 ${d.dominant.hook}
+Ce qu'on peut voir, on peut le changer.
 
 Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue
-📖 "De la peur à la joie d'être soi" — Éditions L'Harmattan
+📖 "De la peur à la joie d'être soi" — L'Harmattan
 → celinebourbon-ux.github.io/HomePageAppliValeur/`;
 
   navigator.clipboard?.writeText(text).then(()=>{
@@ -888,11 +1140,15 @@ Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue
 function shareWhatsApp(){
   const d=window._shareData;
   if(!d)return;
+  const _rp = d.dominant.revelPhrases ? d.dominant.revelPhrases[0].replace(/<[^>]+>/g,'') : d.dominant.hook;
   const text=encodeURIComponent(
-    `🎭 Mon masque dominant : ${d.dominant.emoji} ${d.dominant.name}\n`+
+    `${d.dominant.emoji} Je viens de faire un test psy qui m'a mis·e face à quelque chose que je n'avais jamais vraiment nommé.\n\n`+
+    `Mon masque dominant : *${d.dominant.name}*\n`+
     `${d.dominant.fear}\n\n`+
-    `Découvrez vos 7 masques avec la Méthode V.A.L.E.U.R© de Céline Bourbon\n`+
-    `→ celinebourbon-ux.github.io/HomePageAppliValeur/`
+    `La phrase qui m'a scotché·e :\n« ${_rp} »\n\n`+
+    `Si tu veux te faire peur — dans le bon sens 😶\n`+
+    `→ celinebourbon-ux.github.io/HomePageAppliValeur/\n\n`+
+    `Méthode V.A.L.E.U.R© · Céline Bourbon, Psychologue`
   );
   window.open(`https://wa.me/?text=${text}`,'_blank');
 }
