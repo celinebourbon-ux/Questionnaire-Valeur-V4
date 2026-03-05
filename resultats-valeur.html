@@ -853,12 +853,12 @@ function render(){
       <div class="freedom-wrap">
         <div class="freedom-top">
           <div class="freedom-label">Potentiel de transformation</div>
-          <div class="freedom-pct" id="fpct">${dominant.freedomPct ? dominant.freedomPct[domLevel.key] : 60}%</div>
+          <div class="freedom-pct" id="fpct">${Math.round(domScore/64*100)}%</div>
         </div>
         <div class="freedom-track">
           <div class="freedom-fill" id="ffill" style="background:${dominant.color}"></div>
         </div>
-        <div class="freedom-note">Ce que la méthode V.A.L.E.U.R© permet d'atteindre — à votre rythme.</div>
+        <div class="freedom-note">Plus votre masque est actif, plus votre potentiel de transformation est grand.</div>
       </div>
     </div>
 
@@ -1080,8 +1080,8 @@ function render(){
       el.style.width=el.dataset.w;
     });
     const ff=document.getElementById('ffill');
-    const fp=dominant.freedomPct ? dominant.freedomPct[domLevel.key] : null;
-    if(ff && fp) setTimeout(()=>{ ff.style.width=fp+'%'; },300);
+    const fp=Math.round(domScore/64*100);
+    if(ff) setTimeout(()=>{ ff.style.width=fp+'%'; },300);
   },500);
 
   // store data for sharing
