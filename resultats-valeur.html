@@ -420,7 +420,7 @@ body::before{
 }
 .reveal-phrase p strong{color:var(--cream);font-style:normal;}
 
-/* ─── BEFORE / AFTER ───────────────────────────────────────── */
+/* ─── BEFORE / AFTER (old) ─── */
 .before-after{
   display:grid;grid-template-columns:1fr 1fr;gap:0;
   margin:24px 0;border-radius:16px;overflow:hidden;
@@ -562,6 +562,66 @@ body::before{
   .share-section,.cta-block,.topbar{display:none!important;}
   .dominant-card,.mask-bar-row{border-color:#ddd!important;background:#f5f5f5!important;}
 }
+
+/* ─── BEFORE / AFTER — REDESIGN ──────────────────────────── */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+
+/* ─── SHADOW CARD — 3D EFFECT ─────────────────────────────── */
+.ba-shadow-card{
+  background:linear-gradient(160deg,#111318 0%,#0a0b0f 100%);
+  border:1px solid rgba(255,255,255,.12);
+  border-bottom:3px solid rgba(0,0,0,.8);
+  border-right:3px solid rgba(0,0,0,.6);
+  border-radius:16px;padding:18px 14px;
+  position:relative;overflow:hidden;
+  box-shadow:
+    4px 6px 18px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.07),
+    inset 0 0 30px rgba(0,0,0,.4);
+  transform:perspective(600px) rotateY(2deg) rotateX(1deg);
+}
+.ba-shadow-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;border-radius:16px;
+  background:repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,255,.018) 0px,
+    rgba(255,255,255,.018) 1px,
+    transparent 1px,transparent 9px
+  );
+}
+.ba-shadow-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+  border-radius:16px 16px 0 0;
+}
+
+.ba-s-head{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:rgba(180,190,210,.75);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.ba-s-head::before{content:'';width:6px;height:6px;border-radius:50%;background:rgba(180,190,210,.5);flex-shrink:0;}
+.ba-s-item{font-size:11.5px;line-height:1.65;color:rgba(200,210,225,.8);padding:3.5px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:5px;}
+.ba-s-item:last-child{border-bottom:none;}
+.ba-s-dash{color:rgba(180,190,210,.6);flex-shrink:0;}
+.ba-light-card{
+  border:1px solid var(--mask-color,#38a169);border-radius:16px;padding:18px 14px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--mask-bg,#071a0e),rgba(0,0,0,.6));
+  box-shadow:0 4px 28px var(--mask-glow,rgba(56,161,105,.2));
+}
+.ba-light-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mask-color,#38a169),transparent);}
+.ba-l-head{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:var(--mask-color,#38a169);margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+.ba-l-head::before{content:'✦';font-size:7px;}
+.ba-l-item{font-size:11.5px;line-height:1.65;color:rgba(220,230,245,.85);padding:3.5px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:flex-start;gap:5px;}
+.ba-l-item:last-child{border-bottom:none;}
+.ba-l-plus{color:var(--mask-color,#38a169);flex-shrink:0;font-weight:700;}
+.ba-arrow{text-align:center;font-size:13px;color:var(--mask-color,#38a169);opacity:.8;display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 10px;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.ba-arrow::before,.ba-arrow::after{content:'';flex:1;height:1px;opacity:.3;}
+.ba-arrow::before{background:linear-gradient(90deg,transparent,var(--mask-color,#38a169));}
+.ba-arrow::after{background:linear-gradient(90deg,var(--mask-color,#38a169),transparent);}
+.ba-nature-block{background:linear-gradient(135deg,var(--mask-bg,#071a0e),rgba(0,0,0,.4));border:1px solid var(--mask-color,#38a169);border-radius:14px;padding:16px 17px;display:flex;align-items:flex-start;gap:13px;box-shadow:0 0 28px var(--mask-glow,rgba(56,161,105,.15));}
+.ba-nature-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;background:rgba(255,255,255,.07);}
+.ba-nature-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--mask-color,#38a169);opacity:.8;margin-bottom:3px;}
+.ba-nature-name{font-family:'Cormorant Garamond',serif;font-weight:700;font-style:italic;font-size:16px;color:var(--cream);}
+.ba-nature-desc{font-size:12px;color:rgba(200,211,232,.6);line-height:1.7;margin-top:4px;}
+
 </style>
 </head>
 <body>
@@ -865,20 +925,27 @@ function render(){
     <!-- BEFORE / AFTER -->
     ${dominant.baShadow ? `
     <div class="reveal" style="animation-delay:.42s">
-      <div class="section-title">Sous le masque → Votre nature profonde</div>
-      <div class="section-sub">Ce que ce masque vous coûte — et ce qu'il protège en vous</div>
-      <div class="before-after">
-        <div class="ba-col ba-shadow-col">
-          <div class="ba-head ba-head-s">☁ Sous le masque</div>
-          ${dominant.baShadow.map(t=>`<div class="ba-item">— ${t}</div>`).join('')}
+      <div class="section-title" style="text-align:center;">Sous le masque → Votre nature profonde</div>
+      <div class="section-sub" style="text-align:center;">Ce que ce masque vous coûte — et ce qu'il protège en vous</div>
+      <div class="ba-grid">
+        <div class="ba-shadow-card">
+          <div class="ba-s-head">Sous le masque</div>
+          ${dominant.baShadow.map(t=>`<div class="ba-s-item"><span class="ba-s-dash">—</span>${t}</div>`).join('')}
         </div>
-        <div class="ba-col ba-light-col">
-          <div class="ba-head ba-head-l" style="color:${dominant.color}">✦ Votre nature profonde</div>
-          ${dominant.baLight.map(t=>`<div class="ba-item ba-item-l">+ ${t}</div>`).join('')}
-          <div class="ba-nature" style="color:${dominant.color}">${dominant.natureName||''}</div>
+        <div class="ba-light-card">
+          <div class="ba-l-head">Votre nature profonde</div>
+          ${dominant.baLight.map(t=>`<div class="ba-l-item"><span class="ba-l-plus">+</span>${t}</div>`).join('')}
         </div>
       </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.8;padding:13px 16px;background:rgba(255,255,255,.02);border-radius:12px;font-style:italic;margin-top:10px;">${dominant.natureDesc||''}</div>
+      <div class="ba-arrow">Votre nature authentique libérée</div>
+      <div class="ba-nature-block">
+        <div class="ba-nature-icon">${dominant.emoji}</div>
+        <div>
+          <div class="ba-nature-label">Votre nature profonde</div>
+          <div class="ba-nature-name">${dominant.natureName||''}</div>
+          <div class="ba-nature-desc">${dominant.natureDesc||''}</div>
+        </div>
+      </div>
     </div>` : ''}
 
     <!-- INSIGHT HOOK -->
@@ -1091,7 +1158,48 @@ function render(){
 function renderNoResults(){
   document.getElementById('main-content').innerHTML=`
     <div class="no-results">
-      <div style="font-size:64px;margin-bottom:20px">🗺️</div>
+      <div style="margin-bottom:24px;display:flex;justify-content:center;">
+        <svg width="180" height="60" viewBox="0 0 180 60" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow-r"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <!-- 7 gem shapes, evenly spaced -->
+          <!-- Rouge -->
+          <polygon points="13,6 20,18 13,30 6,18" fill="#e53e3e" opacity=".9" filter="url(#glow-r)"/>
+          <polygon points="13,8 19,18 13,28 7,18" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+          <!-- Orange -->
+          <polygon points="39,6 46,18 39,30 32,18" fill="#ed8936" opacity=".9" filter="url(#glow-r)"/>
+          <polygon points="39,8 45,18 39,28 33,18" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+          <!-- Jaune -->
+          <polygon points="65,6 72,18 65,30 58,18" fill="#d69e2e" opacity=".9" filter="url(#glow-r)"/>
+          <polygon points="65,8 71,18 65,28 59,18" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+          <!-- Vert -->
+          <polygon points="91,4 100,18 91,32 82,18" fill="#38a169" opacity=".95" filter="url(#glow-r)"/>
+          <polygon points="91,7 98,18 91,29 84,18" fill="none" stroke="rgba(255,255,255,.35)" stroke-width=".9"/>
+          <!-- Bleu -->
+          <polygon points="117,6 124,18 117,30 110,18" fill="#3182ce" opacity=".9" filter="url(#glow-r)"/>
+          <polygon points="117,8 123,18 117,28 111,18" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+          <!-- Indigo -->
+          <polygon points="143,6 150,18 143,30 136,18" fill="#5a67d8" opacity=".9" filter="url(#glow-r)"/>
+          <polygon points="143,8 149,18 143,28 137,18" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+          <!-- Violet -->
+          <polygon points="169,6 176,18 169,30 162,18" fill="#805ad5" opacity=".9" filter="url(#glow-r)"/>
+          <polygon points="169,8 175,18 169,28 163,18" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+          <!-- Sparkles on dominant gem -->
+          <line x1="91" y1="0" x2="91" y2="4" stroke="#38a169" stroke-width="1.2" opacity=".8"/>
+          <line x1="91" y1="32" x2="91" y2="36" stroke="#38a169" stroke-width="1.2" opacity=".8"/>
+          <line x1="78" y1="18" x2="82" y2="18" stroke="#38a169" stroke-width="1.2" opacity=".8"/>
+          <line x1="100" y1="18" x2="104" y2="18" stroke="#38a169" stroke-width="1.2" opacity=".8"/>
+          <!-- Labels -->
+          <text x="13" y="48" text-anchor="middle" font-size="7" fill="#e53e3e" opacity=".7" font-family="Jost,sans-serif">Rouge</text>
+          <text x="39" y="48" text-anchor="middle" font-size="7" fill="#ed8936" opacity=".7" font-family="Jost,sans-serif">Orange</text>
+          <text x="65" y="48" text-anchor="middle" font-size="7" fill="#d69e2e" opacity=".7" font-family="Jost,sans-serif">Jaune</text>
+          <text x="91" y="50" text-anchor="middle" font-size="7.5" fill="#38a169" opacity=".9" font-family="Jost,sans-serif" font-weight="600">Vert</text>
+          <text x="117" y="48" text-anchor="middle" font-size="7" fill="#3182ce" opacity=".7" font-family="Jost,sans-serif">Bleu</text>
+          <text x="143" y="48" text-anchor="middle" font-size="7" fill="#5a67d8" opacity=".7" font-family="Jost,sans-serif">Indigo</text>
+          <text x="169" y="48" text-anchor="middle" font-size="7" fill="#805ad5" opacity=".7" font-family="Jost,sans-serif">Violet</text>
+        </svg>
+      </div>
       <h2>Passez le questionnaire V.A.L.E.U.R©</h2>
       <p>Pour obtenir votre profil personnalisé des 7 masques, complétez d'abord le questionnaire.</p>
       <a href="https://questionnaire-valeur-psyh.netlify.app" 
