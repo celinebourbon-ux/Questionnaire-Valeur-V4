@@ -9,6 +9,7 @@
 <title>Mes Résultats V.A.L.E.U.R© — Méthode Céline Bourbon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Jost:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -814,9 +815,21 @@ body::after{
     <span class="cta-label">Votre transformation commence ici</span>
     <h2 class="cta-h">Votre masque est identifié.<br><em>Votre libération peut commencer.</em></h2>
     <p class="cta-sub">Ce questionnaire n'est que le début. La Méthode V.A.L.E.U.R© vous guide pas à pas — de la peur à la joie d'être soi.</p>
-    <a href="https://celinebourbon-ux.github.io/HomePageAppliValeur/" class="cta-btn">
+
+    <!-- Badge sync status (affiché si connecté) -->
+    <div id="sync-badge" style="display:none;align-items:center;gap:10px;background:rgba(74,171,122,.1);border:1px solid rgba(74,171,122,.3);border-radius:30px;padding:10px 22px;margin-bottom:20px;font-size:.82rem;color:#4aab7a;justify-content:center">
+      <span>✓</span><span id="sync-msg">Scores sauvegardés dans votre espace</span>
+    </div>
+
+    <a href="https://celinebourbon-ux.github.io/HomePageAppliValeur/" class="cta-btn" id="cta-main-btn">
       Accéder à mon espace V.A.L.E.U.R© →
     </a>
+
+    <!-- Lien connexion si pas encore connecté -->
+    <div id="sync-login-hint" style="display:none;margin-top:14px;font-size:.78rem;color:rgba(90,106,138,.7)">
+      Pas encore de compte ? <a href="https://celinebourbon-ux.github.io/HomePageAppliValeur/login.html" style="color:var(--gold);text-decoration:none">Créez votre espace gratuit →</a>
+    </div>
+
     <div class="cta-byline">
       Céline Bourbon · Psychologue<br>
       <em>"De la peur à la joie d'être soi"</em> · Éditions L'Harmattan
@@ -1252,6 +1265,68 @@ VALEUR_STEPS.forEach(step=>{
 });
 
 // ── LOADING ──────────────────────────────────────────────────────
+// ── SUPABASE AUTO-SYNC ─────────────────────────────────────────────
+// Même domaine → localStorage Supabase partagé avec HomePageAppliValeur
+(async function syncScoresToSupabase() {
+  try {
+    const SB = supabase.createClient(
+      'https://ecetwkusxzbqoztokgtk.supabase.co',
+      'sb_publishable_OAESsD6hq6D38azq6Pjxuw_28frwX6M'
+    );
+
+    const { data: { session } } = await SB.auth.getSession();
+
+    if (!session) {
+      // Pas connecté → montrer hint login
+      document.getElementById('sync-login-hint').style.display = 'block';
+      return;
+    }
+
+    // Utilisateur connecté → calculer masque dominant
+    const maskKeys = ['rouge','orange','jaune','vert','bleu','indigo','violet'];
+    let maxScore = -1, dominantKey = 'rouge';
+    maskKeys.forEach(k => {
+      const v = scores[k] || 0;
+      if (v > maxScore) { maxScore = v; dominantKey = k; }
+    });
+
+    const update = {
+      questionnaire_done: true,
+      masque_dominant: dominantKey,
+      score_rouge:   scores.rouge   || 0,
+      score_orange:  scores.orange  || 0,
+      score_jaune:   scores.jaune   || 0,
+      score_vert:    scores.vert    || 0,
+      score_bleu:    scores.bleu    || 0,
+      score_indigo:  scores.indigo  || 0,
+      score_violet:  scores.violet  || 0,
+      updated_at: new Date().toISOString()
+    };
+
+    // Upsert profil (crée si absent)
+    await SB.from('user_profiles').upsert(
+      { id: session.user.id, email: session.user.email, ...update },
+      { onConflict: 'id' }
+    );
+
+    // Afficher confirmation
+    const prenom = session.user.user_metadata?.prenom || session.user.email.split('@')[0];
+    document.getElementById('sync-msg').textContent =
+      '\u2713 Scores sauvegardés pour ' + prenom + ' — votre carte personnage est prête';
+    const badge = document.getElementById('sync-badge');
+    badge.style.display = 'flex';
+
+    // Mettre à jour le bouton CTA
+    const btn = document.getElementById('cta-main-btn');
+    btn.textContent = 'Voir ma carte personnage \u2192';
+    btn.style.background = 'linear-gradient(135deg,#c98a30,#C9A84C,#F0D080)';
+
+  } catch(e) {
+    // Silencieux — ne pas bloquer l'affichage si Supabase échoue
+    console.warn('Sync Supabase:', e);
+  }
+})();
+
 window.addEventListener('load',()=>{
   setTimeout(()=>{
     document.getElementById('loading').classList.add('hide');
